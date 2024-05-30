@@ -4,7 +4,7 @@ import Inner from "./inner";
 function App() {
   return (
     <Authenticator>
-      {({ signOut, user }) => <Inner user={user} />}
+      {({ signOut, user }) => <Inner user={user} signOut={signOut} />}
     </Authenticator>
   );
 }
