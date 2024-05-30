@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 
 const client = generateClient<Schema>();
 
 function Specialties() {
+  const { user } = useAuthenticator((context) => [context.user]);
   const [specialties, setSpecialties] = useState<
     Array<Schema["Specialty"]["type"]>
   >([]);
@@ -13,7 +15,7 @@ function Specialties() {
     client.models.Specialty.observeQuery().subscribe({
       next: (data) => setSpecialties([...data.items]),
     });
-  }, []);
+  }, [user]);
 
   return (
     <ul>

@@ -99,6 +99,7 @@ export default function SpecialtyCreateForm(props) {
                 ...modelFields,
               },
             },
+            authMode: "userPool",
           });
           if (onSuccess) {
             onSuccess(modelFields);

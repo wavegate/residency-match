@@ -7,7 +7,11 @@ function App() {
   return (
     <ThemeProvider>
       <Authenticator>
-        {({ signOut, user }) => <Inner user={user} signOut={signOut} />}
+        {({ signOut, user }) => (
+          <Authenticator.Provider>
+            <Inner user={user} signOut={signOut} />
+          </Authenticator.Provider>
+        )}
       </Authenticator>
     </ThemeProvider>
   );
