@@ -7,11 +7,63 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
+  ProgramType: a.enum([
+    "P", // preliminary program
+    "C", // categorical program
+    "M", // primary program
+    "A", // advanced program
+    "R", // physician program
+    "F", // fellowship program
+  ]),
   Todo: a
     .model({
       content: a.string(),
     })
     .authorization((allow) => [allow.owner()]),
+  Specialty: a
+    .model({
+      name: a.string(),
+      acgmeSpecialtyCode: a.string(),
+      institutions: a.hasMany("SpecialtyInstitution", "specialtyId"),
+    })
+    .authorization((allow) => [
+      allow.publicApiKey().to(["read"]),
+      allow.group("Admin").to(["read", "create", "update", "delete"]),
+    ]),
+  Program: a
+    .model({
+      name: a.string(),
+      nrmpProgramCode: a.string(),
+      type: a.ref("ProgramType"),
+      institutionId: a.id(),
+      institution: a.belongsTo("Institution", "institutionId"),
+    })
+    .authorization((allow) => [
+      allow.publicApiKey().to(["read"]),
+      allow.group("Admin").to(["read", "create", "update", "delete"]),
+    ]),
+  Institution: a
+    .model({
+      name: a.string(),
+      institutionCode: a.string(),
+      programs: a.hasMany("Program", "institutionId"),
+      specialties: a.hasMany("SpecialtyInstitution", "institutionId"),
+    })
+    .authorization((allow) => [
+      allow.publicApiKey().to(["read"]),
+      allow.group("Admin").to(["read", "create", "update", "delete"]),
+    ]),
+  SpecialtyInstitution: a
+    .model({
+      specialtyId: a.id().required(),
+      institutionId: a.id().required(),
+      specialty: a.belongsTo("Specialty", "specialtyId"),
+      institution: a.belongsTo("Institution", "institutionId"),
+    })
+    .authorization((allow) => [
+      allow.publicApiKey().to(["read"]),
+      allow.group("Admin").to(["read", "create", "update", "delete"]),
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -19,7 +71,10 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: "userPool",
+    defaultAuthorizationMode: "apiKey",
+    apiKeyAuthorizationMode: {
+      expiresInDays: 30,
+    },
   },
 });
 

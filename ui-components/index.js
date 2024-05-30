@@ -1,0 +1,10 @@
+export { default as TodoCreateForm } from "./TodoCreateForm";
+export { default as TodoUpdateForm } from "./TodoUpdateForm";
+export { default as SpecialtyCreateForm } from "./SpecialtyCreateForm";
+export { default as SpecialtyUpdateForm } from "./SpecialtyUpdateForm";
+export { default as ProgramCreateForm } from "./ProgramCreateForm";
+export { default as ProgramUpdateForm } from "./ProgramUpdateForm";
+export { default as InstitutionCreateForm } from "./InstitutionCreateForm";
+export { default as InstitutionUpdateForm } from "./InstitutionUpdateForm";
+export { default as SpecialtyInstitutionCreateForm } from "./SpecialtyInstitutionCreateForm";
+export { default as SpecialtyInstitutionUpdateForm } from "./SpecialtyInstitutionUpdateForm";

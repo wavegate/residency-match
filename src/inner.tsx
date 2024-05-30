@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-import "@aws-amplify/ui-react/styles.css";
 import { AuthUser } from "aws-amplify/auth";
 import { AuthEventData } from "@aws-amplify/ui";
+import Specialties from "./specialties";
+import SpecialtyCreateForm from "../ui-components/SpecialtyCreateForm";
 
 const client = generateClient<Schema>();
 
@@ -16,21 +17,34 @@ function Inner({ signOut, user }: InnerProps) {
   const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
 
   useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
+    client.models.Todo.observeQuery({ authMode: "userPool" }).subscribe({
       next: (data) => setTodos([...data.items]),
     });
   }, [user]);
 
   function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
+    client.models.Todo.create(
+      {
+        content: window.prompt("Todo content"),
+      },
+      {
+        authMode: "userPool",
+      }
+    );
   }
 
   function deleteTodo(id: string) {
-    client.models.Todo.delete({ id });
+    client.models.Todo.delete(
+      { id },
+      {
+        authMode: "userPool",
+      }
+    );
   }
 
   return (
     <main>
+      <SpecialtyCreateForm />
       <h1>{user?.signInDetails?.loginId}'s todos</h1>
       <button onClick={createTodo}>+ new</button>
       <ul>
@@ -48,6 +62,7 @@ function Inner({ signOut, user }: InnerProps) {
         </a>
       </div>
       <button onClick={signOut}>Sign out</button>
+      <Specialties />
     </main>
   );
 }
