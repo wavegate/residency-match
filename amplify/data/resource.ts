@@ -80,23 +80,7 @@ const schema = a.schema({
       program: a.belongsTo("Program", "programId"),
       impression: a.string(),
       additionalComments: a.string(),
-      graduateType: a.enum(["US", "IMG"]),
-      medicalDegree: a.ref("MedicalDegree"),
-      step1Score: a.integer(),
-      step2Score: a.integer(),
-      comlex1Score: a.integer(),
-      comlex2Score: a.integer(),
-      redFlags: a.boolean(),
-      aoa: a.boolean(),
-      sigmaSigmaPi: a.boolean(),
-      goldHumanism: a.boolean(),
-      numPublicationsPosters: a.integer(),
-      numWorkExperiences: a.integer(),
-      numVolunteerExperiences: a.integer(),
-      classRank: a.float(),
-      numApplications: a.integer(),
-      numInterviews: a.integer(),
-      numWithdrawals: a.integer(),
+      userProfile: a.hasOne("UserProfile", "interviewInviteId"),
     })
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
@@ -106,6 +90,8 @@ const schema = a.schema({
     ]),
   UserProfile: a
     .model({
+      interviewInviteId: a.id(),
+      interviewInvite: a.belongsTo("InterviewInvite", "interviewInviteId"),
       graduateType: a.enum(["US", "IMG"]),
       medicalDegree: a.ref("MedicalDegree"),
       codeName: a.string(),

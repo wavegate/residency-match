@@ -208,6 +208,7 @@ export default function UserProfileCreateForm(props) {
                 ...modelFields,
               },
             },
+            authMode: "userPool",
           });
           if (onSuccess) {
             onSuccess(modelFields);

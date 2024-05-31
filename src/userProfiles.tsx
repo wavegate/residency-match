@@ -5,20 +5,20 @@ import { Button, useAuthenticator } from "@aws-amplify/ui-react";
 
 const client = generateClient<Schema>();
 
-function Institutions() {
+function UserProfiles() {
   const { user } = useAuthenticator((context) => [context.user]);
-  const [institutions, setInstitutions] = useState<
-    Array<Schema["Institution"]["type"]>
+  const [userProfiles, setUserProfiles] = useState<
+    Array<Schema["UserProfile"]["type"]>
   >([]);
 
   useEffect(() => {
-    client.models.Institution.observeQuery().subscribe({
-      next: (data) => setInstitutions([...data.items]),
+    client.models.UserProfile.observeQuery().subscribe({
+      next: (data) => setUserProfiles([...data.items]),
     });
   }, [user]);
 
-  function deleteInstitution(id: string) {
-    client.models.Institution.delete(
+  function deleteUserProfile(id: string) {
+    client.models.UserProfile.delete(
       { id },
       {
         authMode: "userPool",
@@ -28,12 +28,12 @@ function Institutions() {
 
   return (
     <div>
-      <h1>Institutions</h1>
+      <h1>User Profiles</h1>
       <ul>
-        {institutions.map((institution) => (
-          <li key={institution.id}>
-            <h2>{institution.name}</h2>
-            <Button onClick={() => deleteInstitution(institution.id)}>
+        {userProfiles.map((userProfile) => (
+          <li key={userProfile.id}>
+            <h2>{userProfile.codeName}</h2>
+            <Button onClick={() => deleteUserProfile(userProfile.id)}>
               Delete
             </Button>
           </li>
@@ -43,4 +43,4 @@ function Institutions() {
   );
 }
 
-export default Institutions;
+export default UserProfiles;
