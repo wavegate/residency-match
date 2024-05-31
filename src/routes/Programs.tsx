@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
+import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { Button, useAuthenticator } from "@aws-amplify/ui-react";
+import usePermissions from "../hooks/usePermissions";
+import ProgramCreateForm from "../ui-components/ProgramCreateForm";
 
 const client = generateClient<Schema>();
-
-function Programs() {
+export default function Programs() {
   const { user } = useAuthenticator((context) => [context.user]);
   const [programs, setPrograms] = useState<Array<Schema["Program"]["type"]>>(
     []
   );
 
+  const permissions = usePermissions();
+
   useEffect(() => {
     client.models.Program.observeQuery().subscribe({
-      next: (data) => {
-        setPrograms([...data.items]);
-      },
+      next: (data) => setPrograms([...data.items]),
     });
   }, [user]);
 
@@ -27,7 +28,6 @@ function Programs() {
       }
     );
   }
-
   return (
     <div>
       <h1>Programs</h1>
@@ -39,8 +39,7 @@ function Programs() {
           </li>
         ))}
       </ul>
+      {permissions.includes("Admin") && <ProgramCreateForm />}
     </div>
   );
 }
-
-export default Programs;

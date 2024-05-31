@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
+import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { Button, useAuthenticator } from "@aws-amplify/ui-react";
+import usePermissions from "../hooks/usePermissions";
+import InstitutionCreateForm from "../ui-components/InstitutionCreateForm";
 
 const client = generateClient<Schema>();
-
-function Institutions() {
+export default function Institutions() {
   const { user } = useAuthenticator((context) => [context.user]);
   const [institutions, setInstitutions] = useState<
     Array<Schema["Institution"]["type"]>
   >([]);
+
+  const permissions = usePermissions();
 
   useEffect(() => {
     client.models.Institution.observeQuery().subscribe({
@@ -25,7 +28,6 @@ function Institutions() {
       }
     );
   }
-
   return (
     <div>
       <h1>Institutions</h1>
@@ -39,8 +41,7 @@ function Institutions() {
           </li>
         ))}
       </ul>
+      {permissions.includes("Admin") && <InstitutionCreateForm />}
     </div>
   );
 }
-
-export default Institutions;

@@ -149,7 +149,6 @@ export default function ProgramCreateForm(props) {
             if (clearOnSuccess) {
               resetStateValues();
             }
-            console.log("hi");
           } catch (err) {
             if (onError) {
               const messages = err.errors.map((e) => e.message).join("\n");

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { Button, useAuthenticator } from "@aws-amplify/ui-react";
+import usePermissions from "../hooks/usePermissions";
 
 const client = generateClient<Schema>();
 export default function Specialties() {
@@ -10,6 +11,8 @@ export default function Specialties() {
   const [specialties, setSpecialties] = useState<
     Array<Schema["Specialty"]["type"]>
   >([]);
+
+  const permissions = usePermissions();
 
   useEffect(() => {
     client.models.Specialty.observeQuery().subscribe({
@@ -38,7 +41,7 @@ export default function Specialties() {
           </li>
         ))}
       </ul>
-      <SpecialtyCreateForm />
+      {permissions.includes("Admin") && <SpecialtyCreateForm />}
     </div>
   );
 }

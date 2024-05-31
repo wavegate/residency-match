@@ -6,11 +6,13 @@ import {
   Flex,
   Grid,
   SwitchField,
+  SelectField,
   TextField,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { createInterviewInvite } from "./graphql/mutations";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 const client = generateClient();
 export default function InterviewInviteCreateForm(props) {
   const {
@@ -31,8 +33,10 @@ export default function InterviewInviteCreateForm(props) {
     instate: false,
     impression: "",
     additionalComments: "",
+    programId: "",
   };
   const [anonymous, setAnonymous] = React.useState(initialValues.anonymous);
+  const [programId, setProgramId] = React.useState(initialValues.programId);
   const [inviteDateTime, setInviteDateTime] = React.useState(
     initialValues.inviteDateTime
   );
@@ -54,6 +58,7 @@ export default function InterviewInviteCreateForm(props) {
     setInstate(initialValues.instate);
     setImpression(initialValues.impression);
     setAdditionalComments(initialValues.additionalComments);
+    setProgramId(initialValues.programId);
     setErrors({});
   };
   const validations = {
@@ -64,6 +69,7 @@ export default function InterviewInviteCreateForm(props) {
     instate: [],
     impression: [],
     additionalComments: [],
+    programId: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -99,6 +105,17 @@ export default function InterviewInviteCreateForm(props) {
     }, {});
     return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   };
+
+  const { user } = useAuthenticator((context) => [context.user]);
+
+  const [programs, setPrograms] = React.useState([]);
+
+  React.useEffect(() => {
+    client.models.Program.observeQuery().subscribe({
+      next: (data) => setPrograms([...data.items]),
+    });
+  }, [user]);
+
   return (
     <>
       <h1>Create Interview Invite</h1>
@@ -117,6 +134,7 @@ export default function InterviewInviteCreateForm(props) {
             instate,
             impression,
             additionalComments,
+            programId,
           };
           const validationResponses = await Promise.all(
             Object.keys(validations).reduce((promises, fieldName) => {
@@ -171,6 +189,41 @@ export default function InterviewInviteCreateForm(props) {
         {...getOverrideProps(overrides, "InterviewInviteCreateForm")}
         {...rest}
       >
+        <SelectField
+          label="Program"
+          placeholder="Please select an option"
+          isDisabled={false}
+          value={programId}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (onChange) {
+              const modelFields = {
+                name,
+                nrmpProgramCode,
+                type,
+                programId: value,
+              };
+              const result = onChange(modelFields);
+              value = result?.programId ?? value;
+            }
+            if (errors.programId?.hasError) {
+              runValidationTasks("programId", value);
+            }
+            setProgramId(value);
+          }}
+          onBlur={() => runValidationTasks("programId", programId)}
+          errorMessage={errors.programId?.errorMessage}
+          hasError={errors.programId?.hasError}
+          {...getOverrideProps(overrides, "programId")}
+        >
+          {programs.map((program) => {
+            return (
+              <option key={program.id} value={program.id}>
+                {program.name}
+              </option>
+            );
+          })}
+        </SelectField>
         <SwitchField
           label="Anonymous"
           defaultChecked={false}
