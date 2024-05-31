@@ -53,7 +53,6 @@ export const getInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
-        specialtyId
         type
         updatedAt
         __typename
@@ -89,15 +88,6 @@ export const getProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
-      specialty {
-        acgmeSpecialtyCode
-        createdAt
-        id
-        name
-        updatedAt
-        __typename
-      }
-      specialtyId
       type
       updatedAt
       __typename
@@ -115,10 +105,6 @@ export const getSpecialty = /* GraphQL */ `
         __typename
       }
       name
-      programs {
-        nextToken
-        __typename
-      }
       updatedAt
       __typename
     }
@@ -274,7 +260,6 @@ export const listPrograms = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
-        specialtyId
         type
         updatedAt
         __typename

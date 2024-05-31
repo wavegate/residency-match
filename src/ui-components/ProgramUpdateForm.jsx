@@ -1,14 +1,22 @@
 /* eslint-disable */
 "use client";
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import {
+  Button,
+  Flex,
+  Grid,
+  SelectField,
+  TextField,
+} from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { createSpecialty } from "./graphql/mutations";
+import { getProgram } from "./graphql/queries";
+import { updateProgram } from "./graphql/mutations";
 const client = generateClient();
-export default function SpecialtyCreateForm(props) {
+export default function ProgramUpdateForm(props) {
   const {
-    clearOnSuccess = true,
+    id: idProp,
+    program: programModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -19,21 +27,44 @@ export default function SpecialtyCreateForm(props) {
   } = props;
   const initialValues = {
     name: "",
-    acgmeSpecialtyCode: "",
+    nrmpProgramCode: "",
+    type: "",
   };
   const [name, setName] = React.useState(initialValues.name);
-  const [acgmeSpecialtyCode, setAcgmeSpecialtyCode] = React.useState(
-    initialValues.acgmeSpecialtyCode
+  const [nrmpProgramCode, setNrmpProgramCode] = React.useState(
+    initialValues.nrmpProgramCode
   );
+  const [type, setType] = React.useState(initialValues.type);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setName(initialValues.name);
-    setAcgmeSpecialtyCode(initialValues.acgmeSpecialtyCode);
+    const cleanValues = programRecord
+      ? { ...initialValues, ...programRecord }
+      : initialValues;
+    setName(cleanValues.name);
+    setNrmpProgramCode(cleanValues.nrmpProgramCode);
+    setType(cleanValues.type);
     setErrors({});
   };
+  const [programRecord, setProgramRecord] = React.useState(programModelProp);
+  React.useEffect(() => {
+    const queryData = async () => {
+      const record = idProp
+        ? (
+            await client.graphql({
+              query: getProgram.replaceAll("__typename", ""),
+              variables: { id: idProp },
+            })
+          )?.data?.getProgram
+        : programModelProp;
+      setProgramRecord(record);
+    };
+    queryData();
+  }, [idProp, programModelProp]);
+  React.useEffect(resetStateValues, [programRecord]);
   const validations = {
     name: [],
-    acgmeSpecialtyCode: [],
+    nrmpProgramCode: [],
+    type: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -61,8 +92,9 @@ export default function SpecialtyCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name,
-          acgmeSpecialtyCode,
+          name: name ?? null,
+          nrmpProgramCode: nrmpProgramCode ?? null,
+          type: type ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -93,18 +125,16 @@ export default function SpecialtyCreateForm(props) {
             }
           });
           await client.graphql({
-            query: createSpecialty.replaceAll("__typename", ""),
+            query: updateProgram.replaceAll("__typename", ""),
             variables: {
               input: {
+                id: programRecord.id,
                 ...modelFields,
               },
             },
           });
           if (onSuccess) {
             onSuccess(modelFields);
-          }
-          if (clearOnSuccess) {
-            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -113,7 +143,7 @@ export default function SpecialtyCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "SpecialtyCreateForm")}
+      {...getOverrideProps(overrides, "ProgramUpdateForm")}
       {...rest}
     >
       <TextField
@@ -126,7 +156,8 @@ export default function SpecialtyCreateForm(props) {
           if (onChange) {
             const modelFields = {
               name: value,
-              acgmeSpecialtyCode,
+              nrmpProgramCode,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -142,44 +173,101 @@ export default function SpecialtyCreateForm(props) {
         {...getOverrideProps(overrides, "name")}
       ></TextField>
       <TextField
-        label="Acgme specialty code"
+        label="Nrmp program code"
         isRequired={false}
         isReadOnly={false}
-        value={acgmeSpecialtyCode}
+        value={nrmpProgramCode}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               name,
-              acgmeSpecialtyCode: value,
+              nrmpProgramCode: value,
+              type,
             };
             const result = onChange(modelFields);
-            value = result?.acgmeSpecialtyCode ?? value;
+            value = result?.nrmpProgramCode ?? value;
           }
-          if (errors.acgmeSpecialtyCode?.hasError) {
-            runValidationTasks("acgmeSpecialtyCode", value);
+          if (errors.nrmpProgramCode?.hasError) {
+            runValidationTasks("nrmpProgramCode", value);
           }
-          setAcgmeSpecialtyCode(value);
+          setNrmpProgramCode(value);
         }}
-        onBlur={() =>
-          runValidationTasks("acgmeSpecialtyCode", acgmeSpecialtyCode)
-        }
-        errorMessage={errors.acgmeSpecialtyCode?.errorMessage}
-        hasError={errors.acgmeSpecialtyCode?.hasError}
-        {...getOverrideProps(overrides, "acgmeSpecialtyCode")}
+        onBlur={() => runValidationTasks("nrmpProgramCode", nrmpProgramCode)}
+        errorMessage={errors.nrmpProgramCode?.errorMessage}
+        hasError={errors.nrmpProgramCode?.hasError}
+        {...getOverrideProps(overrides, "nrmpProgramCode")}
       ></TextField>
+      <SelectField
+        label="Type"
+        placeholder="Please select an option"
+        isDisabled={false}
+        value={type}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              nrmpProgramCode,
+              type: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.type ?? value;
+          }
+          if (errors.type?.hasError) {
+            runValidationTasks("type", value);
+          }
+          setType(value);
+        }}
+        onBlur={() => runValidationTasks("type", type)}
+        errorMessage={errors.type?.errorMessage}
+        hasError={errors.type?.hasError}
+        {...getOverrideProps(overrides, "type")}
+      >
+        <option
+          children="P"
+          value="P"
+          {...getOverrideProps(overrides, "typeoption0")}
+        ></option>
+        <option
+          children="C"
+          value="C"
+          {...getOverrideProps(overrides, "typeoption1")}
+        ></option>
+        <option
+          children="M"
+          value="M"
+          {...getOverrideProps(overrides, "typeoption2")}
+        ></option>
+        <option
+          children="A"
+          value="A"
+          {...getOverrideProps(overrides, "typeoption3")}
+        ></option>
+        <option
+          children="R"
+          value="R"
+          {...getOverrideProps(overrides, "typeoption4")}
+        ></option>
+        <option
+          children="F"
+          value="F"
+          {...getOverrideProps(overrides, "typeoption5")}
+        ></option>
+      </SelectField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Clear"
+          children="Reset"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          {...getOverrideProps(overrides, "ClearButton")}
+          isDisabled={!(idProp || programModelProp)}
+          {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -189,7 +277,10 @@ export default function SpecialtyCreateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || programModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

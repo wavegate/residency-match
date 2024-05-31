@@ -4,9 +4,9 @@ import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { createSpecialty } from "./graphql/mutations";
+import { createInstitution } from "./graphql/mutations";
 const client = generateClient();
-export default function SpecialtyCreateForm(props) {
+export default function InstitutionCreateForm(props) {
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -19,21 +19,21 @@ export default function SpecialtyCreateForm(props) {
   } = props;
   const initialValues = {
     name: "",
-    acgmeSpecialtyCode: "",
+    institutionCode: "",
   };
   const [name, setName] = React.useState(initialValues.name);
-  const [acgmeSpecialtyCode, setAcgmeSpecialtyCode] = React.useState(
-    initialValues.acgmeSpecialtyCode
+  const [institutionCode, setInstitutionCode] = React.useState(
+    initialValues.institutionCode
   );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
-    setAcgmeSpecialtyCode(initialValues.acgmeSpecialtyCode);
+    setInstitutionCode(initialValues.institutionCode);
     setErrors({});
   };
   const validations = {
     name: [],
-    acgmeSpecialtyCode: [],
+    institutionCode: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -62,7 +62,7 @@ export default function SpecialtyCreateForm(props) {
         event.preventDefault();
         let modelFields = {
           name,
-          acgmeSpecialtyCode,
+          institutionCode,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -93,12 +93,13 @@ export default function SpecialtyCreateForm(props) {
             }
           });
           await client.graphql({
-            query: createSpecialty.replaceAll("__typename", ""),
+            query: createInstitution.replaceAll("__typename", ""),
             variables: {
               input: {
                 ...modelFields,
               },
             },
+            authMode: "userPool",
           });
           if (onSuccess) {
             onSuccess(modelFields);
@@ -113,7 +114,7 @@ export default function SpecialtyCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "SpecialtyCreateForm")}
+      {...getOverrideProps(overrides, "InstitutionCreateForm")}
       {...rest}
     >
       <TextField
@@ -126,7 +127,7 @@ export default function SpecialtyCreateForm(props) {
           if (onChange) {
             const modelFields = {
               name: value,
-              acgmeSpecialtyCode,
+              institutionCode,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -142,31 +143,29 @@ export default function SpecialtyCreateForm(props) {
         {...getOverrideProps(overrides, "name")}
       ></TextField>
       <TextField
-        label="Acgme specialty code"
+        label="Institution code"
         isRequired={false}
         isReadOnly={false}
-        value={acgmeSpecialtyCode}
+        value={institutionCode}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               name,
-              acgmeSpecialtyCode: value,
+              institutionCode: value,
             };
             const result = onChange(modelFields);
-            value = result?.acgmeSpecialtyCode ?? value;
+            value = result?.institutionCode ?? value;
           }
-          if (errors.acgmeSpecialtyCode?.hasError) {
-            runValidationTasks("acgmeSpecialtyCode", value);
+          if (errors.institutionCode?.hasError) {
+            runValidationTasks("institutionCode", value);
           }
-          setAcgmeSpecialtyCode(value);
+          setInstitutionCode(value);
         }}
-        onBlur={() =>
-          runValidationTasks("acgmeSpecialtyCode", acgmeSpecialtyCode)
-        }
-        errorMessage={errors.acgmeSpecialtyCode?.errorMessage}
-        hasError={errors.acgmeSpecialtyCode?.hasError}
-        {...getOverrideProps(overrides, "acgmeSpecialtyCode")}
+        onBlur={() => runValidationTasks("institutionCode", institutionCode)}
+        errorMessage={errors.institutionCode?.errorMessage}
+        hasError={errors.institutionCode?.hasError}
+        {...getOverrideProps(overrides, "institutionCode")}
       ></TextField>
       <Flex
         justifyContent="space-between"

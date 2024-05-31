@@ -4,7 +4,13 @@ import { generateClient } from "aws-amplify/data";
 import { AuthUser } from "aws-amplify/auth";
 import { AuthEventData } from "@aws-amplify/ui";
 import Specialties from "./specialties";
-import SpecialtyCreateForm from "../ui-components/SpecialtyCreateForm";
+import Institutions from "./institutions";
+import SpecialtyCreateForm from "./ui-components/SpecialtyCreateForm";
+import InterviewInviteCreateForm from "./ui-components/InterviewInviteCreateForm";
+import ProgramCreateForm from "./ui-components/ProgramCreateForm";
+import UserProfileCreateForm from "./ui-components/UserProfileCreateForm";
+import InstitutionCreateForm from "./ui-components/InstitutionCreateForm";
+import Programs from "./programs";
 
 const client = generateClient<Schema>();
 
@@ -45,6 +51,10 @@ function Inner({ signOut, user }: InnerProps) {
   return (
     <main>
       <SpecialtyCreateForm />
+      <InterviewInviteCreateForm />
+      <ProgramCreateForm />
+      <UserProfileCreateForm />
+      <InstitutionCreateForm />
       <h1>{user?.signInDetails?.loginId}'s todos</h1>
       <button onClick={createTodo}>+ new</button>
       <ul>
@@ -63,6 +73,8 @@ function Inner({ signOut, user }: InnerProps) {
       </div>
       <button onClick={signOut}>Sign out</button>
       <Specialties />
+      <Institutions />
+      <Programs />
     </main>
   );
 }

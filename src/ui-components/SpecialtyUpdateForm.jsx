@@ -4,11 +4,13 @@ import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { createSpecialty } from "./graphql/mutations";
+import { getSpecialty } from "./graphql/queries";
+import { updateSpecialty } from "./graphql/mutations";
 const client = generateClient();
-export default function SpecialtyCreateForm(props) {
+export default function SpecialtyUpdateForm(props) {
   const {
-    clearOnSuccess = true,
+    id: idProp,
+    specialty: specialtyModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -27,10 +29,30 @@ export default function SpecialtyCreateForm(props) {
   );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setName(initialValues.name);
-    setAcgmeSpecialtyCode(initialValues.acgmeSpecialtyCode);
+    const cleanValues = specialtyRecord
+      ? { ...initialValues, ...specialtyRecord }
+      : initialValues;
+    setName(cleanValues.name);
+    setAcgmeSpecialtyCode(cleanValues.acgmeSpecialtyCode);
     setErrors({});
   };
+  const [specialtyRecord, setSpecialtyRecord] =
+    React.useState(specialtyModelProp);
+  React.useEffect(() => {
+    const queryData = async () => {
+      const record = idProp
+        ? (
+            await client.graphql({
+              query: getSpecialty.replaceAll("__typename", ""),
+              variables: { id: idProp },
+            })
+          )?.data?.getSpecialty
+        : specialtyModelProp;
+      setSpecialtyRecord(record);
+    };
+    queryData();
+  }, [idProp, specialtyModelProp]);
+  React.useEffect(resetStateValues, [specialtyRecord]);
   const validations = {
     name: [],
     acgmeSpecialtyCode: [],
@@ -61,8 +83,8 @@ export default function SpecialtyCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name,
-          acgmeSpecialtyCode,
+          name: name ?? null,
+          acgmeSpecialtyCode: acgmeSpecialtyCode ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -93,18 +115,16 @@ export default function SpecialtyCreateForm(props) {
             }
           });
           await client.graphql({
-            query: createSpecialty.replaceAll("__typename", ""),
+            query: updateSpecialty.replaceAll("__typename", ""),
             variables: {
               input: {
+                id: specialtyRecord.id,
                 ...modelFields,
               },
             },
           });
           if (onSuccess) {
             onSuccess(modelFields);
-          }
-          if (clearOnSuccess) {
-            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -113,7 +133,7 @@ export default function SpecialtyCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "SpecialtyCreateForm")}
+      {...getOverrideProps(overrides, "SpecialtyUpdateForm")}
       {...rest}
     >
       <TextField
@@ -173,13 +193,14 @@ export default function SpecialtyCreateForm(props) {
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Clear"
+          children="Reset"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          {...getOverrideProps(overrides, "ClearButton")}
+          isDisabled={!(idProp || specialtyModelProp)}
+          {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -189,7 +210,10 @@ export default function SpecialtyCreateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || specialtyModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

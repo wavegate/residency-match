@@ -4,11 +4,13 @@ import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { createSpecialty } from "./graphql/mutations";
+import { getInstitution } from "./graphql/queries";
+import { updateInstitution } from "./graphql/mutations";
 const client = generateClient();
-export default function SpecialtyCreateForm(props) {
+export default function InstitutionUpdateForm(props) {
   const {
-    clearOnSuccess = true,
+    id: idProp,
+    institution: institutionModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -19,21 +21,41 @@ export default function SpecialtyCreateForm(props) {
   } = props;
   const initialValues = {
     name: "",
-    acgmeSpecialtyCode: "",
+    institutionCode: "",
   };
   const [name, setName] = React.useState(initialValues.name);
-  const [acgmeSpecialtyCode, setAcgmeSpecialtyCode] = React.useState(
-    initialValues.acgmeSpecialtyCode
+  const [institutionCode, setInstitutionCode] = React.useState(
+    initialValues.institutionCode
   );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setName(initialValues.name);
-    setAcgmeSpecialtyCode(initialValues.acgmeSpecialtyCode);
+    const cleanValues = institutionRecord
+      ? { ...initialValues, ...institutionRecord }
+      : initialValues;
+    setName(cleanValues.name);
+    setInstitutionCode(cleanValues.institutionCode);
     setErrors({});
   };
+  const [institutionRecord, setInstitutionRecord] =
+    React.useState(institutionModelProp);
+  React.useEffect(() => {
+    const queryData = async () => {
+      const record = idProp
+        ? (
+            await client.graphql({
+              query: getInstitution.replaceAll("__typename", ""),
+              variables: { id: idProp },
+            })
+          )?.data?.getInstitution
+        : institutionModelProp;
+      setInstitutionRecord(record);
+    };
+    queryData();
+  }, [idProp, institutionModelProp]);
+  React.useEffect(resetStateValues, [institutionRecord]);
   const validations = {
     name: [],
-    acgmeSpecialtyCode: [],
+    institutionCode: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -61,8 +83,8 @@ export default function SpecialtyCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name,
-          acgmeSpecialtyCode,
+          name: name ?? null,
+          institutionCode: institutionCode ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -93,18 +115,16 @@ export default function SpecialtyCreateForm(props) {
             }
           });
           await client.graphql({
-            query: createSpecialty.replaceAll("__typename", ""),
+            query: updateInstitution.replaceAll("__typename", ""),
             variables: {
               input: {
+                id: institutionRecord.id,
                 ...modelFields,
               },
             },
           });
           if (onSuccess) {
             onSuccess(modelFields);
-          }
-          if (clearOnSuccess) {
-            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -113,7 +133,7 @@ export default function SpecialtyCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "SpecialtyCreateForm")}
+      {...getOverrideProps(overrides, "InstitutionUpdateForm")}
       {...rest}
     >
       <TextField
@@ -126,7 +146,7 @@ export default function SpecialtyCreateForm(props) {
           if (onChange) {
             const modelFields = {
               name: value,
-              acgmeSpecialtyCode,
+              institutionCode,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -142,44 +162,43 @@ export default function SpecialtyCreateForm(props) {
         {...getOverrideProps(overrides, "name")}
       ></TextField>
       <TextField
-        label="Acgme specialty code"
+        label="Institution code"
         isRequired={false}
         isReadOnly={false}
-        value={acgmeSpecialtyCode}
+        value={institutionCode}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               name,
-              acgmeSpecialtyCode: value,
+              institutionCode: value,
             };
             const result = onChange(modelFields);
-            value = result?.acgmeSpecialtyCode ?? value;
+            value = result?.institutionCode ?? value;
           }
-          if (errors.acgmeSpecialtyCode?.hasError) {
-            runValidationTasks("acgmeSpecialtyCode", value);
+          if (errors.institutionCode?.hasError) {
+            runValidationTasks("institutionCode", value);
           }
-          setAcgmeSpecialtyCode(value);
+          setInstitutionCode(value);
         }}
-        onBlur={() =>
-          runValidationTasks("acgmeSpecialtyCode", acgmeSpecialtyCode)
-        }
-        errorMessage={errors.acgmeSpecialtyCode?.errorMessage}
-        hasError={errors.acgmeSpecialtyCode?.hasError}
-        {...getOverrideProps(overrides, "acgmeSpecialtyCode")}
+        onBlur={() => runValidationTasks("institutionCode", institutionCode)}
+        errorMessage={errors.institutionCode?.errorMessage}
+        hasError={errors.institutionCode?.hasError}
+        {...getOverrideProps(overrides, "institutionCode")}
       ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Clear"
+          children="Reset"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          {...getOverrideProps(overrides, "ClearButton")}
+          isDisabled={!(idProp || institutionModelProp)}
+          {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -189,7 +208,10 @@ export default function SpecialtyCreateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || institutionModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

@@ -4,11 +4,13 @@ import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { createSpecialty } from "./graphql/mutations";
+import { getTodo } from "./graphql/queries";
+import { updateTodo } from "./graphql/mutations";
 const client = generateClient();
-export default function SpecialtyCreateForm(props) {
+export default function TodoUpdateForm(props) {
   const {
-    clearOnSuccess = true,
+    id: idProp,
+    todo: todoModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -18,22 +20,35 @@ export default function SpecialtyCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    name: "",
-    acgmeSpecialtyCode: "",
+    content: "",
   };
-  const [name, setName] = React.useState(initialValues.name);
-  const [acgmeSpecialtyCode, setAcgmeSpecialtyCode] = React.useState(
-    initialValues.acgmeSpecialtyCode
-  );
+  const [content, setContent] = React.useState(initialValues.content);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setName(initialValues.name);
-    setAcgmeSpecialtyCode(initialValues.acgmeSpecialtyCode);
+    const cleanValues = todoRecord
+      ? { ...initialValues, ...todoRecord }
+      : initialValues;
+    setContent(cleanValues.content);
     setErrors({});
   };
+  const [todoRecord, setTodoRecord] = React.useState(todoModelProp);
+  React.useEffect(() => {
+    const queryData = async () => {
+      const record = idProp
+        ? (
+            await client.graphql({
+              query: getTodo.replaceAll("__typename", ""),
+              variables: { id: idProp },
+            })
+          )?.data?.getTodo
+        : todoModelProp;
+      setTodoRecord(record);
+    };
+    queryData();
+  }, [idProp, todoModelProp]);
+  React.useEffect(resetStateValues, [todoRecord]);
   const validations = {
-    name: [],
-    acgmeSpecialtyCode: [],
+    content: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -61,8 +76,7 @@ export default function SpecialtyCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name,
-          acgmeSpecialtyCode,
+          content: content ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -93,18 +107,16 @@ export default function SpecialtyCreateForm(props) {
             }
           });
           await client.graphql({
-            query: createSpecialty.replaceAll("__typename", ""),
+            query: updateTodo.replaceAll("__typename", ""),
             variables: {
               input: {
+                id: todoRecord.id,
                 ...modelFields,
               },
             },
           });
           if (onSuccess) {
             onSuccess(modelFields);
-          }
-          if (clearOnSuccess) {
-            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -113,73 +125,46 @@ export default function SpecialtyCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "SpecialtyCreateForm")}
+      {...getOverrideProps(overrides, "TodoUpdateForm")}
       {...rest}
     >
       <TextField
-        label="Name"
+        label="Content"
         isRequired={false}
         isReadOnly={false}
-        value={name}
+        value={content}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              name: value,
-              acgmeSpecialtyCode,
+              content: value,
             };
             const result = onChange(modelFields);
-            value = result?.name ?? value;
+            value = result?.content ?? value;
           }
-          if (errors.name?.hasError) {
-            runValidationTasks("name", value);
+          if (errors.content?.hasError) {
+            runValidationTasks("content", value);
           }
-          setName(value);
+          setContent(value);
         }}
-        onBlur={() => runValidationTasks("name", name)}
-        errorMessage={errors.name?.errorMessage}
-        hasError={errors.name?.hasError}
-        {...getOverrideProps(overrides, "name")}
-      ></TextField>
-      <TextField
-        label="Acgme specialty code"
-        isRequired={false}
-        isReadOnly={false}
-        value={acgmeSpecialtyCode}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              acgmeSpecialtyCode: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.acgmeSpecialtyCode ?? value;
-          }
-          if (errors.acgmeSpecialtyCode?.hasError) {
-            runValidationTasks("acgmeSpecialtyCode", value);
-          }
-          setAcgmeSpecialtyCode(value);
-        }}
-        onBlur={() =>
-          runValidationTasks("acgmeSpecialtyCode", acgmeSpecialtyCode)
-        }
-        errorMessage={errors.acgmeSpecialtyCode?.errorMessage}
-        hasError={errors.acgmeSpecialtyCode?.hasError}
-        {...getOverrideProps(overrides, "acgmeSpecialtyCode")}
+        onBlur={() => runValidationTasks("content", content)}
+        errorMessage={errors.content?.errorMessage}
+        hasError={errors.content?.hasError}
+        {...getOverrideProps(overrides, "content")}
       ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Clear"
+          children="Reset"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          {...getOverrideProps(overrides, "ClearButton")}
+          isDisabled={!(idProp || todoModelProp)}
+          {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -189,7 +174,10 @@ export default function SpecialtyCreateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || todoModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

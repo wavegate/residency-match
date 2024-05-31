@@ -25,6 +25,56 @@ export const createInstitution = /* GraphQL */ `
     }
   }
 `;
+export const createInterviewInvite = /* GraphQL */ `
+  mutation CreateInterviewInvite(
+    $condition: ModelInterviewInviteConditionInput
+    $input: CreateInterviewInviteInput!
+  ) {
+    createInterviewInvite(condition: $condition, input: $input) {
+      additionalComments
+      anonymous
+      aoa
+      classRank
+      comlex1Score
+      comlex2Score
+      createdAt
+      geographicPreference
+      goldHumanism
+      graduateType
+      id
+      impression
+      instate
+      inviteDateTime
+      medicalDegree
+      numApplications
+      numInterviews
+      numPublicationsPosters
+      numVolunteerExperiences
+      numWithdrawals
+      numWorkExperiences
+      owner
+      program {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        specialtyId
+        type
+        updatedAt
+        __typename
+      }
+      programId
+      redFlags
+      sigmaSigmaPi
+      signal
+      step1Score
+      step2Score
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createProgram = /* GraphQL */ `
   mutation CreateProgram(
     $condition: ModelProgramConditionInput
@@ -42,8 +92,21 @@ export const createProgram = /* GraphQL */ `
         __typename
       }
       institutionId
+      interviewInvites {
+        nextToken
+        __typename
+      }
       name
       nrmpProgramCode
+      specialty {
+        acgmeSpecialtyCode
+        createdAt
+        id
+        name
+        updatedAt
+        __typename
+      }
+      specialtyId
       type
       updatedAt
       __typename
@@ -64,6 +127,10 @@ export const createSpecialty = /* GraphQL */ `
         __typename
       }
       name
+      programs {
+        nextToken
+        __typename
+      }
       updatedAt
       __typename
     }
@@ -115,6 +182,38 @@ export const createTodo = /* GraphQL */ `
     }
   }
 `;
+export const createUserProfile = /* GraphQL */ `
+  mutation CreateUserProfile(
+    $condition: ModelUserProfileConditionInput
+    $input: CreateUserProfileInput!
+  ) {
+    createUserProfile(condition: $condition, input: $input) {
+      aoa
+      classRank
+      codeName
+      comlex1Score
+      comlex2Score
+      createdAt
+      goldHumanism
+      graduateType
+      id
+      medicalDegree
+      numApplications
+      numInterviews
+      numPublicationsPosters
+      numVolunteerExperiences
+      numWithdrawals
+      numWorkExperiences
+      owner
+      redFlags
+      sigmaSigmaPi
+      step1Score
+      step2Score
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const deleteInstitution = /* GraphQL */ `
   mutation DeleteInstitution(
     $condition: ModelInstitutionConditionInput
@@ -138,6 +237,56 @@ export const deleteInstitution = /* GraphQL */ `
     }
   }
 `;
+export const deleteInterviewInvite = /* GraphQL */ `
+  mutation DeleteInterviewInvite(
+    $condition: ModelInterviewInviteConditionInput
+    $input: DeleteInterviewInviteInput!
+  ) {
+    deleteInterviewInvite(condition: $condition, input: $input) {
+      additionalComments
+      anonymous
+      aoa
+      classRank
+      comlex1Score
+      comlex2Score
+      createdAt
+      geographicPreference
+      goldHumanism
+      graduateType
+      id
+      impression
+      instate
+      inviteDateTime
+      medicalDegree
+      numApplications
+      numInterviews
+      numPublicationsPosters
+      numVolunteerExperiences
+      numWithdrawals
+      numWorkExperiences
+      owner
+      program {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        specialtyId
+        type
+        updatedAt
+        __typename
+      }
+      programId
+      redFlags
+      sigmaSigmaPi
+      signal
+      step1Score
+      step2Score
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const deleteProgram = /* GraphQL */ `
   mutation DeleteProgram(
     $condition: ModelProgramConditionInput
@@ -155,8 +304,21 @@ export const deleteProgram = /* GraphQL */ `
         __typename
       }
       institutionId
+      interviewInvites {
+        nextToken
+        __typename
+      }
       name
       nrmpProgramCode
+      specialty {
+        acgmeSpecialtyCode
+        createdAt
+        id
+        name
+        updatedAt
+        __typename
+      }
+      specialtyId
       type
       updatedAt
       __typename
@@ -177,6 +339,10 @@ export const deleteSpecialty = /* GraphQL */ `
         __typename
       }
       name
+      programs {
+        nextToken
+        __typename
+      }
       updatedAt
       __typename
     }
@@ -228,6 +394,38 @@ export const deleteTodo = /* GraphQL */ `
     }
   }
 `;
+export const deleteUserProfile = /* GraphQL */ `
+  mutation DeleteUserProfile(
+    $condition: ModelUserProfileConditionInput
+    $input: DeleteUserProfileInput!
+  ) {
+    deleteUserProfile(condition: $condition, input: $input) {
+      aoa
+      classRank
+      codeName
+      comlex1Score
+      comlex2Score
+      createdAt
+      goldHumanism
+      graduateType
+      id
+      medicalDegree
+      numApplications
+      numInterviews
+      numPublicationsPosters
+      numVolunteerExperiences
+      numWithdrawals
+      numWorkExperiences
+      owner
+      redFlags
+      sigmaSigmaPi
+      step1Score
+      step2Score
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const updateInstitution = /* GraphQL */ `
   mutation UpdateInstitution(
     $condition: ModelInstitutionConditionInput
@@ -251,6 +449,56 @@ export const updateInstitution = /* GraphQL */ `
     }
   }
 `;
+export const updateInterviewInvite = /* GraphQL */ `
+  mutation UpdateInterviewInvite(
+    $condition: ModelInterviewInviteConditionInput
+    $input: UpdateInterviewInviteInput!
+  ) {
+    updateInterviewInvite(condition: $condition, input: $input) {
+      additionalComments
+      anonymous
+      aoa
+      classRank
+      comlex1Score
+      comlex2Score
+      createdAt
+      geographicPreference
+      goldHumanism
+      graduateType
+      id
+      impression
+      instate
+      inviteDateTime
+      medicalDegree
+      numApplications
+      numInterviews
+      numPublicationsPosters
+      numVolunteerExperiences
+      numWithdrawals
+      numWorkExperiences
+      owner
+      program {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        specialtyId
+        type
+        updatedAt
+        __typename
+      }
+      programId
+      redFlags
+      sigmaSigmaPi
+      signal
+      step1Score
+      step2Score
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const updateProgram = /* GraphQL */ `
   mutation UpdateProgram(
     $condition: ModelProgramConditionInput
@@ -268,8 +516,21 @@ export const updateProgram = /* GraphQL */ `
         __typename
       }
       institutionId
+      interviewInvites {
+        nextToken
+        __typename
+      }
       name
       nrmpProgramCode
+      specialty {
+        acgmeSpecialtyCode
+        createdAt
+        id
+        name
+        updatedAt
+        __typename
+      }
+      specialtyId
       type
       updatedAt
       __typename
@@ -290,6 +551,10 @@ export const updateSpecialty = /* GraphQL */ `
         __typename
       }
       name
+      programs {
+        nextToken
+        __typename
+      }
       updatedAt
       __typename
     }
@@ -336,6 +601,38 @@ export const updateTodo = /* GraphQL */ `
       createdAt
       id
       owner
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateUserProfile = /* GraphQL */ `
+  mutation UpdateUserProfile(
+    $condition: ModelUserProfileConditionInput
+    $input: UpdateUserProfileInput!
+  ) {
+    updateUserProfile(condition: $condition, input: $input) {
+      aoa
+      classRank
+      codeName
+      comlex1Score
+      comlex2Score
+      createdAt
+      goldHumanism
+      graduateType
+      id
+      medicalDegree
+      numApplications
+      numInterviews
+      numPublicationsPosters
+      numVolunteerExperiences
+      numWithdrawals
+      numWorkExperiences
+      owner
+      redFlags
+      sigmaSigmaPi
+      step1Score
+      step2Score
       updatedAt
       __typename
     }

@@ -58,7 +58,6 @@ export const onCreateInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
-        specialtyId
         type
         updatedAt
         __typename
@@ -94,15 +93,6 @@ export const onCreateProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
-      specialty {
-        acgmeSpecialtyCode
-        createdAt
-        id
-        name
-        updatedAt
-        __typename
-      }
-      specialtyId
       type
       updatedAt
       __typename
@@ -122,10 +112,6 @@ export const onCreateSpecialty = /* GraphQL */ `
         __typename
       }
       name
-      programs {
-        nextToken
-        __typename
-      }
       updatedAt
       __typename
     }
@@ -264,7 +250,6 @@ export const onDeleteInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
-        specialtyId
         type
         updatedAt
         __typename
@@ -300,15 +285,6 @@ export const onDeleteProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
-      specialty {
-        acgmeSpecialtyCode
-        createdAt
-        id
-        name
-        updatedAt
-        __typename
-      }
-      specialtyId
       type
       updatedAt
       __typename
@@ -328,10 +304,6 @@ export const onDeleteSpecialty = /* GraphQL */ `
         __typename
       }
       name
-      programs {
-        nextToken
-        __typename
-      }
       updatedAt
       __typename
     }
@@ -470,7 +442,6 @@ export const onUpdateInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
-        specialtyId
         type
         updatedAt
         __typename
@@ -506,15 +477,6 @@ export const onUpdateProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
-      specialty {
-        acgmeSpecialtyCode
-        createdAt
-        id
-        name
-        updatedAt
-        __typename
-      }
-      specialtyId
       type
       updatedAt
       __typename
@@ -534,10 +496,6 @@ export const onUpdateSpecialty = /* GraphQL */ `
         __typename
       }
       name
-      programs {
-        nextToken
-        __typename
-      }
       updatedAt
       __typename
     }

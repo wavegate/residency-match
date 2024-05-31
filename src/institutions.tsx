@@ -5,28 +5,28 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 
 const client = generateClient<Schema>();
 
-function Specialties() {
+function Institutions() {
   const { user } = useAuthenticator((context) => [context.user]);
-  const [specialties, setSpecialties] = useState<
-    Array<Schema["Specialty"]["type"]>
+  const [institutions, setInstitutions] = useState<
+    Array<Schema["Institution"]["type"]>
   >([]);
 
   useEffect(() => {
-    client.models.Specialty.observeQuery().subscribe({
-      next: (data) => setSpecialties([...data.items]),
+    client.models.Institution.observeQuery().subscribe({
+      next: (data) => setInstitutions([...data.items]),
     });
   }, [user]);
 
   return (
     <div>
-      <h1>Specialties</h1>
+      <h1>Institutions</h1>
       <ul>
-        {specialties.map((specialty) => (
-          <li key={specialty.id}>{specialty.name}</li>
+        {institutions.map((institution) => (
+          <li key={institution.id}>{institution.name}</li>
         ))}
       </ul>
     </div>
   );
 }
 
-export default Specialties;
+export default Institutions;

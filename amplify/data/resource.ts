@@ -7,6 +7,7 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
+  MedicalDegree: a.enum(["MD", "DO"]),
   ProgramType: a.enum([
     "P", // preliminary program
     "C", // categorical program
@@ -25,22 +26,26 @@ const schema = a.schema({
       name: a.string(),
       acgmeSpecialtyCode: a.string(),
       institutions: a.hasMany("SpecialtyInstitution", "specialtyId"),
+      programs: a.hasMany("Program", "specialtyId"),
     })
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
-      allow.group("Admin").to(["read", "create", "update", "delete"]),
+      allow.group("Admin"),
     ]),
   Program: a
     .model({
       name: a.string(),
       nrmpProgramCode: a.string(),
       type: a.ref("ProgramType"),
-      institutionId: a.id(),
+      institutionId: a.id().required(),
       institution: a.belongsTo("Institution", "institutionId"),
+      specialtyId: a.id().required(),
+      specialty: a.belongsTo("Specialty", "specialtyId"),
+      interviewInvites: a.hasMany("InterviewInvite", "programId"),
     })
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
-      allow.group("Admin").to(["read", "create", "update", "delete"]),
+      allow.group("Admin"),
     ]),
   Institution: a
     .model({
@@ -51,7 +56,7 @@ const schema = a.schema({
     })
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
-      allow.group("Admin").to(["read", "create", "update", "delete"]),
+      allow.group("Admin"),
     ]),
   SpecialtyInstitution: a
     .model({
@@ -62,7 +67,68 @@ const schema = a.schema({
     })
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
-      allow.group("Admin").to(["read", "create", "update", "delete"]),
+      allow.group("Admin"),
+    ]),
+  InterviewInvite: a
+    .model({
+      anonymous: a.boolean(),
+      inviteDateTime: a.datetime().required(),
+      geographicPreference: a.boolean(),
+      signal: a.boolean(),
+      instate: a.boolean(),
+      programId: a.id(),
+      program: a.belongsTo("Program", "programId"),
+      impression: a.string(),
+      additionalComments: a.string(),
+      graduateType: a.enum(["US", "IMG"]),
+      medicalDegree: a.ref("MedicalDegree"),
+      step1Score: a.integer(),
+      step2Score: a.integer(),
+      comlex1Score: a.integer(),
+      comlex2Score: a.integer(),
+      redFlags: a.boolean(),
+      aoa: a.boolean(),
+      sigmaSigmaPi: a.boolean(),
+      goldHumanism: a.boolean(),
+      numPublicationsPosters: a.integer(),
+      numWorkExperiences: a.integer(),
+      numVolunteerExperiences: a.integer(),
+      classRank: a.float(),
+      numApplications: a.integer(),
+      numInterviews: a.integer(),
+      numWithdrawals: a.integer(),
+    })
+    .authorization((allow) => [
+      allow.publicApiKey().to(["read"]),
+      allow.group("Admin"),
+      allow.group("Moderator"),
+      allow.owner(),
+    ]),
+  UserProfile: a
+    .model({
+      graduateType: a.enum(["US", "IMG"]),
+      medicalDegree: a.ref("MedicalDegree"),
+      codeName: a.string(),
+      step1Score: a.integer(),
+      step2Score: a.integer(),
+      comlex1Score: a.integer(),
+      comlex2Score: a.integer(),
+      redFlags: a.boolean(),
+      aoa: a.boolean(),
+      sigmaSigmaPi: a.boolean(),
+      goldHumanism: a.boolean(),
+      numPublicationsPosters: a.integer(),
+      numWorkExperiences: a.integer(),
+      numVolunteerExperiences: a.integer(),
+      classRank: a.float(),
+      numApplications: a.integer(),
+      numInterviews: a.integer(),
+      numWithdrawals: a.integer(),
+    })
+    .authorization((allow) => [
+      allow.publicApiKey().to(["read"]),
+      allow.group("Admin"),
+      allow.owner(),
     ]),
 });
 

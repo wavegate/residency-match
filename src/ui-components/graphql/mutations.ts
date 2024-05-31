@@ -2,11 +2,12 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateInstitution = /* GraphQL */ `
-  subscription OnCreateInstitution(
-    $filter: ModelSubscriptionInstitutionFilterInput
+export const createInstitution = /* GraphQL */ `
+  mutation CreateInstitution(
+    $condition: ModelInstitutionConditionInput
+    $input: CreateInstitutionInput!
   ) {
-    onCreateInstitution(filter: $filter) {
+    createInstitution(condition: $condition, input: $input) {
       createdAt
       id
       institutionCode
@@ -24,12 +25,12 @@ export const onCreateInstitution = /* GraphQL */ `
     }
   }
 `;
-export const onCreateInterviewInvite = /* GraphQL */ `
-  subscription OnCreateInterviewInvite(
-    $filter: ModelSubscriptionInterviewInviteFilterInput
-    $owner: String
+export const createInterviewInvite = /* GraphQL */ `
+  mutation CreateInterviewInvite(
+    $condition: ModelInterviewInviteConditionInput
+    $input: CreateInterviewInviteInput!
   ) {
-    onCreateInterviewInvite(filter: $filter, owner: $owner) {
+    createInterviewInvite(condition: $condition, input: $input) {
       additionalComments
       anonymous
       aoa
@@ -58,7 +59,6 @@ export const onCreateInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
-        specialtyId
         type
         updatedAt
         __typename
@@ -74,9 +74,12 @@ export const onCreateInterviewInvite = /* GraphQL */ `
     }
   }
 `;
-export const onCreateProgram = /* GraphQL */ `
-  subscription OnCreateProgram($filter: ModelSubscriptionProgramFilterInput) {
-    onCreateProgram(filter: $filter) {
+export const createProgram = /* GraphQL */ `
+  mutation CreateProgram(
+    $condition: ModelProgramConditionInput
+    $input: CreateProgramInput!
+  ) {
+    createProgram(condition: $condition, input: $input) {
       createdAt
       id
       institution {
@@ -109,11 +112,12 @@ export const onCreateProgram = /* GraphQL */ `
     }
   }
 `;
-export const onCreateSpecialty = /* GraphQL */ `
-  subscription OnCreateSpecialty(
-    $filter: ModelSubscriptionSpecialtyFilterInput
+export const createSpecialty = /* GraphQL */ `
+  mutation CreateSpecialty(
+    $condition: ModelSpecialtyConditionInput
+    $input: CreateSpecialtyInput!
   ) {
-    onCreateSpecialty(filter: $filter) {
+    createSpecialty(condition: $condition, input: $input) {
       acgmeSpecialtyCode
       createdAt
       id
@@ -122,20 +126,17 @@ export const onCreateSpecialty = /* GraphQL */ `
         __typename
       }
       name
-      programs {
-        nextToken
-        __typename
-      }
       updatedAt
       __typename
     }
   }
 `;
-export const onCreateSpecialtyInstitution = /* GraphQL */ `
-  subscription OnCreateSpecialtyInstitution(
-    $filter: ModelSubscriptionSpecialtyInstitutionFilterInput
+export const createSpecialtyInstitution = /* GraphQL */ `
+  mutation CreateSpecialtyInstitution(
+    $condition: ModelSpecialtyInstitutionConditionInput
+    $input: CreateSpecialtyInstitutionInput!
   ) {
-    onCreateSpecialtyInstitution(filter: $filter) {
+    createSpecialtyInstitution(condition: $condition, input: $input) {
       createdAt
       id
       institution {
@@ -161,12 +162,12 @@ export const onCreateSpecialtyInstitution = /* GraphQL */ `
     }
   }
 `;
-export const onCreateTodo = /* GraphQL */ `
-  subscription OnCreateTodo(
-    $filter: ModelSubscriptionTodoFilterInput
-    $owner: String
+export const createTodo = /* GraphQL */ `
+  mutation CreateTodo(
+    $condition: ModelTodoConditionInput
+    $input: CreateTodoInput!
   ) {
-    onCreateTodo(filter: $filter, owner: $owner) {
+    createTodo(condition: $condition, input: $input) {
       content
       createdAt
       id
@@ -176,12 +177,12 @@ export const onCreateTodo = /* GraphQL */ `
     }
   }
 `;
-export const onCreateUserProfile = /* GraphQL */ `
-  subscription OnCreateUserProfile(
-    $filter: ModelSubscriptionUserProfileFilterInput
-    $owner: String
+export const createUserProfile = /* GraphQL */ `
+  mutation CreateUserProfile(
+    $condition: ModelUserProfileConditionInput
+    $input: CreateUserProfileInput!
   ) {
-    onCreateUserProfile(filter: $filter, owner: $owner) {
+    createUserProfile(condition: $condition, input: $input) {
       aoa
       classRank
       codeName
@@ -208,11 +209,12 @@ export const onCreateUserProfile = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInstitution = /* GraphQL */ `
-  subscription OnDeleteInstitution(
-    $filter: ModelSubscriptionInstitutionFilterInput
+export const deleteInstitution = /* GraphQL */ `
+  mutation DeleteInstitution(
+    $condition: ModelInstitutionConditionInput
+    $input: DeleteInstitutionInput!
   ) {
-    onDeleteInstitution(filter: $filter) {
+    deleteInstitution(condition: $condition, input: $input) {
       createdAt
       id
       institutionCode
@@ -230,12 +232,12 @@ export const onDeleteInstitution = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteInterviewInvite = /* GraphQL */ `
-  subscription OnDeleteInterviewInvite(
-    $filter: ModelSubscriptionInterviewInviteFilterInput
-    $owner: String
+export const deleteInterviewInvite = /* GraphQL */ `
+  mutation DeleteInterviewInvite(
+    $condition: ModelInterviewInviteConditionInput
+    $input: DeleteInterviewInviteInput!
   ) {
-    onDeleteInterviewInvite(filter: $filter, owner: $owner) {
+    deleteInterviewInvite(condition: $condition, input: $input) {
       additionalComments
       anonymous
       aoa
@@ -264,7 +266,6 @@ export const onDeleteInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
-        specialtyId
         type
         updatedAt
         __typename
@@ -280,9 +281,12 @@ export const onDeleteInterviewInvite = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteProgram = /* GraphQL */ `
-  subscription OnDeleteProgram($filter: ModelSubscriptionProgramFilterInput) {
-    onDeleteProgram(filter: $filter) {
+export const deleteProgram = /* GraphQL */ `
+  mutation DeleteProgram(
+    $condition: ModelProgramConditionInput
+    $input: DeleteProgramInput!
+  ) {
+    deleteProgram(condition: $condition, input: $input) {
       createdAt
       id
       institution {
@@ -300,26 +304,18 @@ export const onDeleteProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
-      specialty {
-        acgmeSpecialtyCode
-        createdAt
-        id
-        name
-        updatedAt
-        __typename
-      }
-      specialtyId
       type
       updatedAt
       __typename
     }
   }
 `;
-export const onDeleteSpecialty = /* GraphQL */ `
-  subscription OnDeleteSpecialty(
-    $filter: ModelSubscriptionSpecialtyFilterInput
+export const deleteSpecialty = /* GraphQL */ `
+  mutation DeleteSpecialty(
+    $condition: ModelSpecialtyConditionInput
+    $input: DeleteSpecialtyInput!
   ) {
-    onDeleteSpecialty(filter: $filter) {
+    deleteSpecialty(condition: $condition, input: $input) {
       acgmeSpecialtyCode
       createdAt
       id
@@ -328,20 +324,17 @@ export const onDeleteSpecialty = /* GraphQL */ `
         __typename
       }
       name
-      programs {
-        nextToken
-        __typename
-      }
       updatedAt
       __typename
     }
   }
 `;
-export const onDeleteSpecialtyInstitution = /* GraphQL */ `
-  subscription OnDeleteSpecialtyInstitution(
-    $filter: ModelSubscriptionSpecialtyInstitutionFilterInput
+export const deleteSpecialtyInstitution = /* GraphQL */ `
+  mutation DeleteSpecialtyInstitution(
+    $condition: ModelSpecialtyInstitutionConditionInput
+    $input: DeleteSpecialtyInstitutionInput!
   ) {
-    onDeleteSpecialtyInstitution(filter: $filter) {
+    deleteSpecialtyInstitution(condition: $condition, input: $input) {
       createdAt
       id
       institution {
@@ -367,12 +360,12 @@ export const onDeleteSpecialtyInstitution = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteTodo = /* GraphQL */ `
-  subscription OnDeleteTodo(
-    $filter: ModelSubscriptionTodoFilterInput
-    $owner: String
+export const deleteTodo = /* GraphQL */ `
+  mutation DeleteTodo(
+    $condition: ModelTodoConditionInput
+    $input: DeleteTodoInput!
   ) {
-    onDeleteTodo(filter: $filter, owner: $owner) {
+    deleteTodo(condition: $condition, input: $input) {
       content
       createdAt
       id
@@ -382,12 +375,12 @@ export const onDeleteTodo = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteUserProfile = /* GraphQL */ `
-  subscription OnDeleteUserProfile(
-    $filter: ModelSubscriptionUserProfileFilterInput
-    $owner: String
+export const deleteUserProfile = /* GraphQL */ `
+  mutation DeleteUserProfile(
+    $condition: ModelUserProfileConditionInput
+    $input: DeleteUserProfileInput!
   ) {
-    onDeleteUserProfile(filter: $filter, owner: $owner) {
+    deleteUserProfile(condition: $condition, input: $input) {
       aoa
       classRank
       codeName
@@ -414,11 +407,12 @@ export const onDeleteUserProfile = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInstitution = /* GraphQL */ `
-  subscription OnUpdateInstitution(
-    $filter: ModelSubscriptionInstitutionFilterInput
+export const updateInstitution = /* GraphQL */ `
+  mutation UpdateInstitution(
+    $condition: ModelInstitutionConditionInput
+    $input: UpdateInstitutionInput!
   ) {
-    onUpdateInstitution(filter: $filter) {
+    updateInstitution(condition: $condition, input: $input) {
       createdAt
       id
       institutionCode
@@ -436,12 +430,12 @@ export const onUpdateInstitution = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateInterviewInvite = /* GraphQL */ `
-  subscription OnUpdateInterviewInvite(
-    $filter: ModelSubscriptionInterviewInviteFilterInput
-    $owner: String
+export const updateInterviewInvite = /* GraphQL */ `
+  mutation UpdateInterviewInvite(
+    $condition: ModelInterviewInviteConditionInput
+    $input: UpdateInterviewInviteInput!
   ) {
-    onUpdateInterviewInvite(filter: $filter, owner: $owner) {
+    updateInterviewInvite(condition: $condition, input: $input) {
       additionalComments
       anonymous
       aoa
@@ -470,7 +464,6 @@ export const onUpdateInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
-        specialtyId
         type
         updatedAt
         __typename
@@ -486,9 +479,12 @@ export const onUpdateInterviewInvite = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateProgram = /* GraphQL */ `
-  subscription OnUpdateProgram($filter: ModelSubscriptionProgramFilterInput) {
-    onUpdateProgram(filter: $filter) {
+export const updateProgram = /* GraphQL */ `
+  mutation UpdateProgram(
+    $condition: ModelProgramConditionInput
+    $input: UpdateProgramInput!
+  ) {
+    updateProgram(condition: $condition, input: $input) {
       createdAt
       id
       institution {
@@ -506,26 +502,18 @@ export const onUpdateProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
-      specialty {
-        acgmeSpecialtyCode
-        createdAt
-        id
-        name
-        updatedAt
-        __typename
-      }
-      specialtyId
       type
       updatedAt
       __typename
     }
   }
 `;
-export const onUpdateSpecialty = /* GraphQL */ `
-  subscription OnUpdateSpecialty(
-    $filter: ModelSubscriptionSpecialtyFilterInput
+export const updateSpecialty = /* GraphQL */ `
+  mutation UpdateSpecialty(
+    $condition: ModelSpecialtyConditionInput
+    $input: UpdateSpecialtyInput!
   ) {
-    onUpdateSpecialty(filter: $filter) {
+    updateSpecialty(condition: $condition, input: $input) {
       acgmeSpecialtyCode
       createdAt
       id
@@ -534,20 +522,17 @@ export const onUpdateSpecialty = /* GraphQL */ `
         __typename
       }
       name
-      programs {
-        nextToken
-        __typename
-      }
       updatedAt
       __typename
     }
   }
 `;
-export const onUpdateSpecialtyInstitution = /* GraphQL */ `
-  subscription OnUpdateSpecialtyInstitution(
-    $filter: ModelSubscriptionSpecialtyInstitutionFilterInput
+export const updateSpecialtyInstitution = /* GraphQL */ `
+  mutation UpdateSpecialtyInstitution(
+    $condition: ModelSpecialtyInstitutionConditionInput
+    $input: UpdateSpecialtyInstitutionInput!
   ) {
-    onUpdateSpecialtyInstitution(filter: $filter) {
+    updateSpecialtyInstitution(condition: $condition, input: $input) {
       createdAt
       id
       institution {
@@ -573,12 +558,12 @@ export const onUpdateSpecialtyInstitution = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateTodo = /* GraphQL */ `
-  subscription OnUpdateTodo(
-    $filter: ModelSubscriptionTodoFilterInput
-    $owner: String
+export const updateTodo = /* GraphQL */ `
+  mutation UpdateTodo(
+    $condition: ModelTodoConditionInput
+    $input: UpdateTodoInput!
   ) {
-    onUpdateTodo(filter: $filter, owner: $owner) {
+    updateTodo(condition: $condition, input: $input) {
       content
       createdAt
       id
@@ -588,12 +573,12 @@ export const onUpdateTodo = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateUserProfile = /* GraphQL */ `
-  subscription OnUpdateUserProfile(
-    $filter: ModelSubscriptionUserProfileFilterInput
-    $owner: String
+export const updateUserProfile = /* GraphQL */ `
+  mutation UpdateUserProfile(
+    $condition: ModelUserProfileConditionInput
+    $input: UpdateUserProfileInput!
   ) {
-    onUpdateUserProfile(filter: $filter, owner: $owner) {
+    updateUserProfile(condition: $condition, input: $input) {
       aoa
       classRank
       codeName
