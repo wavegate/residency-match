@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-import { useAuthenticator } from "@aws-amplify/ui-react";
+import { Button, useAuthenticator } from "@aws-amplify/ui-react";
 
 const client = generateClient<Schema>();
 
@@ -19,12 +19,24 @@ function Programs() {
     });
   }, [user]);
 
+  function deleteProgram(id: string) {
+    client.models.Program.delete(
+      { id },
+      {
+        authMode: "userPool",
+      }
+    );
+  }
+
   return (
     <div>
       <h1>Programs</h1>
       <ul>
         {programs.map((program) => (
-          <li key={program.id}>{program.name}</li>
+          <li key={program.id}>
+            <h2>{program.name}</h2>
+            <Button onClick={() => deleteProgram(program.id)}>Delete</Button>
+          </li>
         ))}
       </ul>
     </div>
