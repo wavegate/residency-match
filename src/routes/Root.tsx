@@ -5,16 +5,11 @@ import "@aws-amplify/ui-react/styles.css";
 import { Link, Outlet } from "react-router-dom";
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
-} from "@/components/ui/navigation-menu";
+} from "../components/ui/navigation-menu";
 import { Heart, Home, Languages, Plus, Stethoscope } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import dayjs from "dayjs";
 
 function Root() {
