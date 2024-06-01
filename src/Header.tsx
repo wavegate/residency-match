@@ -1,6 +1,5 @@
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { Avatar, AvatarImage, AvatarFallback } from "./components/ui/avatar";
-import dayjs from "dayjs";
 import { Plus, Heart, Languages } from "lucide-react";
 import { Link } from "react-router-dom";
 import { signOut } from "aws-amplify/auth";
@@ -28,9 +27,11 @@ export default function Header() {
           </div>
         </div>
         <div className={`grid grid-cols-[1fr_88px_1fr] `}>
-          <div className={`min-w-0 truncate`}>
-            {user?.signInDetails?.loginId}
-            <Link to="auth">Sign in</Link>
+          <div className={`min-w-0`}>
+            <div className={`min-w-0 truncate`}>
+              {user?.signInDetails?.loginId}
+            </div>
+            {user && <Link to="profile">Profile</Link>}
           </div>
           <div className={`px-[12px]`}>
             <Avatar className={`w-[64px] h-[64px]`}>
@@ -39,8 +40,8 @@ export default function Header() {
             </Avatar>
           </div>
           <div>
-            <div>{dayjs().format("MMMM D, h:mm A")}</div>
-            <button onClick={() => signOut()}>Sign out</button>
+            {user === undefined && <Link to="auth">Sign in</Link>}
+            {user && <button onClick={() => signOut()}>Sign out</button>}
           </div>
         </div>
       </header>

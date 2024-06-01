@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import type { Schema } from "../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
 import { Button, useAuthenticator } from "@aws-amplify/ui-react";
+import { generateClient } from "aws-amplify/api";
+import type { Schema } from "../../amplify/data/resource";
+import { useEffect, useState } from "react";
 
 const client = generateClient<Schema>();
 
-function UserProfiles() {
+export default function Applicants() {
   const { user } = useAuthenticator((context) => [context.user]);
   const [userProfiles, setUserProfiles] = useState<
     Array<Schema["UserProfile"]["type"]>
@@ -17,30 +17,16 @@ function UserProfiles() {
     });
   }, [user]);
 
-  function deleteUserProfile(id: string) {
-    client.models.UserProfile.delete(
-      { id },
-      {
-        authMode: "userPool",
-      }
-    );
-  }
-
   return (
     <div>
-      <h1>User Profiles</h1>
+      <h1>Applicants</h1>
       <ul>
         {userProfiles.map((userProfile) => (
           <li key={userProfile.id}>
             <h2>{userProfile.codeName}</h2>
-            <Button onClick={() => deleteUserProfile(userProfile.id)}>
-              Delete
-            </Button>
           </li>
         ))}
       </ul>
     </div>
   );
 }
-
-export default UserProfiles;

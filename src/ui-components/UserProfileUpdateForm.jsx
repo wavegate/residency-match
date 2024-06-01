@@ -231,6 +231,7 @@ export default function UserProfileUpdateForm(props) {
                 ...modelFields,
               },
             },
+            authMode: "userPool",
           });
           if (onSuccess) {
             onSuccess(modelFields);

@@ -33,12 +33,16 @@ export const createInterviewInvite = /* GraphQL */ `
     createInterviewInvite(condition: $condition, input: $input) {
       additionalComments
       anonymous
+      comlex1Score
+      comlex2Score
       createdAt
       geographicPreference
+      graduateType
       id
       impression
       instate
       inviteDateTime
+      medicalDegree
       owner
       program {
         createdAt
@@ -53,33 +57,9 @@ export const createInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      step1Score
+      step2Score
       updatedAt
-      userProfile {
-        aoa
-        classRank
-        codeName
-        comlex1Score
-        comlex2Score
-        createdAt
-        goldHumanism
-        graduateType
-        id
-        interviewInviteId
-        medicalDegree
-        numApplications
-        numInterviews
-        numPublicationsPosters
-        numVolunteerExperiences
-        numWithdrawals
-        numWorkExperiences
-        owner
-        redFlags
-        sigmaSigmaPi
-        step1Score
-        step2Score
-        updatedAt
-        __typename
-      }
       __typename
     }
   }

@@ -12,8 +12,14 @@ import "@aws-amplify/ui-react/styles.css";
 import Institutions from "./routes/Institutions";
 import Programs from "./routes/Programs";
 import InterviewInvites from "./routes/InterviewInvites";
+import Applicants from "./routes/Applicants";
+import Profile from "./routes/Profile";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 Amplify.configure(outputs);
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -38,6 +44,14 @@ const router = createBrowserRouter([
         element: <Programs />,
       },
       {
+        path: "applicants",
+        element: <Applicants />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+      {
         path: "auth",
         element: <Auth />,
       },
@@ -47,6 +61,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   </React.StrictMode>
 );

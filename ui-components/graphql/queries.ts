@@ -27,12 +27,16 @@ export const getInterviewInvite = /* GraphQL */ `
     getInterviewInvite(id: $id) {
       additionalComments
       anonymous
+      comlex1Score
+      comlex2Score
       createdAt
       geographicPreference
+      graduateType
       id
       impression
       instate
       inviteDateTime
+      medicalDegree
       owner
       program {
         createdAt
@@ -47,33 +51,9 @@ export const getInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      step1Score
+      step2Score
       updatedAt
-      userProfile {
-        aoa
-        classRank
-        codeName
-        comlex1Score
-        comlex2Score
-        createdAt
-        goldHumanism
-        graduateType
-        id
-        interviewInviteId
-        medicalDegree
-        numApplications
-        numInterviews
-        numPublicationsPosters
-        numVolunteerExperiences
-        numWithdrawals
-        numWorkExperiences
-        owner
-        redFlags
-        sigmaSigmaPi
-        step1Score
-        step2Score
-        updatedAt
-        __typename
-      }
       __typename
     }
   }
@@ -185,22 +165,6 @@ export const getUserProfile = /* GraphQL */ `
       goldHumanism
       graduateType
       id
-      interviewInvite {
-        additionalComments
-        anonymous
-        createdAt
-        geographicPreference
-        id
-        impression
-        instate
-        inviteDateTime
-        owner
-        programId
-        signal
-        updatedAt
-        __typename
-      }
-      interviewInviteId
       medicalDegree
       numApplications
       numInterviews
@@ -252,15 +216,21 @@ export const listInterviewInvites = /* GraphQL */ `
       items {
         additionalComments
         anonymous
+        comlex1Score
+        comlex2Score
         createdAt
         geographicPreference
+        graduateType
         id
         impression
         instate
         inviteDateTime
+        medicalDegree
         owner
         programId
         signal
+        step1Score
+        step2Score
         updatedAt
         __typename
       }
@@ -373,7 +343,6 @@ export const listUserProfiles = /* GraphQL */ `
         goldHumanism
         graduateType
         id
-        interviewInviteId
         medicalDegree
         numApplications
         numInterviews

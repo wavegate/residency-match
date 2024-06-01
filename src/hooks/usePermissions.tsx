@@ -19,5 +19,5 @@ export default function usePermissions() {
         console.log(e);
       });
   }, [user]);
-  return permissions;
+  return { permissions, user };
 }

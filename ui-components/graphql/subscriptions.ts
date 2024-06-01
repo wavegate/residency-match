@@ -32,12 +32,16 @@ export const onCreateInterviewInvite = /* GraphQL */ `
     onCreateInterviewInvite(filter: $filter, owner: $owner) {
       additionalComments
       anonymous
+      comlex1Score
+      comlex2Score
       createdAt
       geographicPreference
+      graduateType
       id
       impression
       instate
       inviteDateTime
+      medicalDegree
       owner
       program {
         createdAt
@@ -52,33 +56,9 @@ export const onCreateInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      step1Score
+      step2Score
       updatedAt
-      userProfile {
-        aoa
-        classRank
-        codeName
-        comlex1Score
-        comlex2Score
-        createdAt
-        goldHumanism
-        graduateType
-        id
-        interviewInviteId
-        medicalDegree
-        numApplications
-        numInterviews
-        numPublicationsPosters
-        numVolunteerExperiences
-        numWithdrawals
-        numWorkExperiences
-        owner
-        redFlags
-        sigmaSigmaPi
-        step1Score
-        step2Score
-        updatedAt
-        __typename
-      }
       __typename
     }
   }
@@ -200,22 +180,6 @@ export const onCreateUserProfile = /* GraphQL */ `
       goldHumanism
       graduateType
       id
-      interviewInvite {
-        additionalComments
-        anonymous
-        createdAt
-        geographicPreference
-        id
-        impression
-        instate
-        inviteDateTime
-        owner
-        programId
-        signal
-        updatedAt
-        __typename
-      }
-      interviewInviteId
       medicalDegree
       numApplications
       numInterviews
@@ -263,12 +227,16 @@ export const onDeleteInterviewInvite = /* GraphQL */ `
     onDeleteInterviewInvite(filter: $filter, owner: $owner) {
       additionalComments
       anonymous
+      comlex1Score
+      comlex2Score
       createdAt
       geographicPreference
+      graduateType
       id
       impression
       instate
       inviteDateTime
+      medicalDegree
       owner
       program {
         createdAt
@@ -283,33 +251,9 @@ export const onDeleteInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      step1Score
+      step2Score
       updatedAt
-      userProfile {
-        aoa
-        classRank
-        codeName
-        comlex1Score
-        comlex2Score
-        createdAt
-        goldHumanism
-        graduateType
-        id
-        interviewInviteId
-        medicalDegree
-        numApplications
-        numInterviews
-        numPublicationsPosters
-        numVolunteerExperiences
-        numWithdrawals
-        numWorkExperiences
-        owner
-        redFlags
-        sigmaSigmaPi
-        step1Score
-        step2Score
-        updatedAt
-        __typename
-      }
       __typename
     }
   }
@@ -431,22 +375,6 @@ export const onDeleteUserProfile = /* GraphQL */ `
       goldHumanism
       graduateType
       id
-      interviewInvite {
-        additionalComments
-        anonymous
-        createdAt
-        geographicPreference
-        id
-        impression
-        instate
-        inviteDateTime
-        owner
-        programId
-        signal
-        updatedAt
-        __typename
-      }
-      interviewInviteId
       medicalDegree
       numApplications
       numInterviews
@@ -494,12 +422,16 @@ export const onUpdateInterviewInvite = /* GraphQL */ `
     onUpdateInterviewInvite(filter: $filter, owner: $owner) {
       additionalComments
       anonymous
+      comlex1Score
+      comlex2Score
       createdAt
       geographicPreference
+      graduateType
       id
       impression
       instate
       inviteDateTime
+      medicalDegree
       owner
       program {
         createdAt
@@ -514,33 +446,9 @@ export const onUpdateInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      step1Score
+      step2Score
       updatedAt
-      userProfile {
-        aoa
-        classRank
-        codeName
-        comlex1Score
-        comlex2Score
-        createdAt
-        goldHumanism
-        graduateType
-        id
-        interviewInviteId
-        medicalDegree
-        numApplications
-        numInterviews
-        numPublicationsPosters
-        numVolunteerExperiences
-        numWithdrawals
-        numWorkExperiences
-        owner
-        redFlags
-        sigmaSigmaPi
-        step1Score
-        step2Score
-        updatedAt
-        __typename
-      }
       __typename
     }
   }
@@ -662,22 +570,6 @@ export const onUpdateUserProfile = /* GraphQL */ `
       goldHumanism
       graduateType
       id
-      interviewInvite {
-        additionalComments
-        anonymous
-        createdAt
-        geographicPreference
-        id
-        impression
-        instate
-        inviteDateTime
-        owner
-        programId
-        signal
-        updatedAt
-        __typename
-      }
-      interviewInviteId
       medicalDegree
       numApplications
       numInterviews

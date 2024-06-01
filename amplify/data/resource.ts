@@ -80,7 +80,12 @@ const schema = a.schema({
       program: a.belongsTo("Program", "programId"),
       impression: a.string(),
       additionalComments: a.string(),
-      userProfile: a.hasOne("UserProfile", "interviewInviteId"),
+      graduateType: a.enum(["US", "IMG"]),
+      medicalDegree: a.ref("MedicalDegree"),
+      step1Score: a.integer(),
+      step2Score: a.integer(),
+      comlex1Score: a.integer(),
+      comlex2Score: a.integer(),
     })
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
@@ -90,8 +95,6 @@ const schema = a.schema({
     ]),
   UserProfile: a
     .model({
-      interviewInviteId: a.id(),
-      interviewInvite: a.belongsTo("InterviewInvite", "interviewInviteId"),
       graduateType: a.enum(["US", "IMG"]),
       medicalDegree: a.ref("MedicalDegree"),
       codeName: a.string(),

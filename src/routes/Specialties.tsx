@@ -12,7 +12,7 @@ export default function Specialties() {
     Array<Schema["Specialty"]["type"]>
   >([]);
 
-  const permissions = usePermissions();
+  const { permissions } = usePermissions();
 
   useEffect(() => {
     client.models.Specialty.observeQuery().subscribe({

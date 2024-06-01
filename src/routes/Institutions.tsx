@@ -12,7 +12,7 @@ export default function Institutions() {
     Array<Schema["Institution"]["type"]>
   >([]);
 
-  const permissions = usePermissions();
+  const { permissions } = usePermissions();
 
   useEffect(() => {
     client.models.Institution.observeQuery().subscribe({

@@ -12,7 +12,7 @@ export default function Programs() {
     []
   );
 
-  const permissions = usePermissions();
+  const { permissions } = usePermissions();
 
   useEffect(() => {
     client.models.Program.observeQuery().subscribe({
