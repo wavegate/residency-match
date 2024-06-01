@@ -4,6 +4,7 @@ import { generateClient } from "aws-amplify/data";
 import { Button, useAuthenticator } from "@aws-amplify/ui-react";
 import usePermissions from "../hooks/usePermissions";
 import InstitutionCreateForm from "../ui-components/InstitutionCreateForm";
+import { useNavigate } from "react-router-dom";
 
 const client = generateClient<Schema>();
 export default function Institutions() {
@@ -28,6 +29,7 @@ export default function Institutions() {
       }
     );
   }
+  const navigate = useNavigate();
   return (
     <div className={`flex-1 overflow-y-auto`}>
       <h1>Institutions</h1>
@@ -37,6 +39,9 @@ export default function Institutions() {
             <h2>{institution.name}</h2>
             <Button onClick={() => deleteInstitution(institution.id)}>
               Delete
+            </Button>
+            <Button onClick={() => navigate(`edit/${institution.id}`)}>
+              Edit
             </Button>
           </li>
         ))}

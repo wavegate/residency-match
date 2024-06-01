@@ -7,6 +7,7 @@ export const getInstitution = /* GraphQL */ `
     getInstitution(id: $id) {
       createdAt
       id
+      imageLink
       institutionCode
       name
       programs {
@@ -66,6 +67,7 @@ export const getProgram = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -121,6 +123,7 @@ export const getSpecialtyInstitution = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -192,6 +195,7 @@ export const listInstitutions = /* GraphQL */ `
       items {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt

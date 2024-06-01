@@ -20,20 +20,24 @@ export default function InstitutionCreateForm(props) {
   const initialValues = {
     name: "",
     institutionCode: "",
+    imageLink: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [institutionCode, setInstitutionCode] = React.useState(
     initialValues.institutionCode
   );
+  const [imageLink, setImageLink] = React.useState(initialValues.imageLink);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
     setInstitutionCode(initialValues.institutionCode);
+    setImageLink(initialValues.imageLink);
     setErrors({});
   };
   const validations = {
     name: [],
     institutionCode: [],
+    imageLink: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -66,6 +70,7 @@ export default function InstitutionCreateForm(props) {
           let modelFields = {
             name,
             institutionCode,
+            imageLink,
           };
           const validationResponses = await Promise.all(
             Object.keys(validations).reduce((promises, fieldName) => {
@@ -131,6 +136,7 @@ export default function InstitutionCreateForm(props) {
               const modelFields = {
                 name: value,
                 institutionCode,
+                imageLink,
               };
               const result = onChange(modelFields);
               value = result?.name ?? value;
@@ -156,6 +162,7 @@ export default function InstitutionCreateForm(props) {
               const modelFields = {
                 name,
                 institutionCode: value,
+                imageLink,
               };
               const result = onChange(modelFields);
               value = result?.institutionCode ?? value;
@@ -169,6 +176,32 @@ export default function InstitutionCreateForm(props) {
           errorMessage={errors.institutionCode?.errorMessage}
           hasError={errors.institutionCode?.hasError}
           {...getOverrideProps(overrides, "institutionCode")}
+        ></TextField>
+        <TextField
+          label="Image link"
+          isRequired={false}
+          isReadOnly={false}
+          value={imageLink}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (onChange) {
+              const modelFields = {
+                name,
+                institutionCode,
+                imageLink: value,
+              };
+              const result = onChange(modelFields);
+              value = result?.imageLink ?? value;
+            }
+            if (errors.imageLink?.hasError) {
+              runValidationTasks("imageLink", value);
+            }
+            setImageLink(value);
+          }}
+          onBlur={() => runValidationTasks("imageLink", imageLink)}
+          errorMessage={errors.imageLink?.errorMessage}
+          hasError={errors.imageLink?.hasError}
+          {...getOverrideProps(overrides, "imageLink")}
         ></TextField>
         <Flex
           justifyContent="space-between"

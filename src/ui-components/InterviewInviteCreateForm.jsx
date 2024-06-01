@@ -14,6 +14,8 @@ import { generateClient } from "aws-amplify/api";
 import { createInterviewInvite } from "./graphql/mutations";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useToast } from "../components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 const client = generateClient();
 export default function InterviewInviteCreateForm(props) {
   const queryClient = useQueryClient();
@@ -72,6 +74,7 @@ export default function InterviewInviteCreateForm(props) {
     initialValues.comlex2Score
   );
   const { user } = useAuthenticator((context) => [context.user]);
+  const navigate = useNavigate();
 
   const [programs, setPrograms] = React.useState([]);
 
@@ -148,6 +151,7 @@ export default function InterviewInviteCreateForm(props) {
     }, {});
     return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   };
+  const { toast } = useToast();
   return (
     <Grid
       as="form"
@@ -218,6 +222,11 @@ export default function InterviewInviteCreateForm(props) {
           if (clearOnSuccess) {
             resetStateValues();
           }
+          toast({
+            title: "Interview Invitation: Added",
+            description: "Brookwood Hospital ...",
+          });
+          navigate("/");
         } catch (err) {
           if (onError) {
             const messages = err.errors.map((e) => e.message).join("\n");

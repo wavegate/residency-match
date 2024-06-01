@@ -22,7 +22,10 @@ export default function InstitutionUpdateForm(props) {
   const initialValues = {
     name: "",
     institutionCode: "",
+    imageLink: "",
   };
+
+  const [imageLink, setImageLink] = React.useState(initialValues.imageLink);
   const [name, setName] = React.useState(initialValues.name);
   const [institutionCode, setInstitutionCode] = React.useState(
     initialValues.institutionCode
@@ -34,6 +37,7 @@ export default function InstitutionUpdateForm(props) {
       : initialValues;
     setName(cleanValues.name);
     setInstitutionCode(cleanValues.institutionCode);
+    setImageLink(cleanValues.imageLink);
     setErrors({});
   };
   const [institutionRecord, setInstitutionRecord] =
@@ -56,6 +60,7 @@ export default function InstitutionUpdateForm(props) {
   const validations = {
     name: [],
     institutionCode: [],
+    imageLink: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -85,6 +90,7 @@ export default function InstitutionUpdateForm(props) {
         let modelFields = {
           name: name ?? null,
           institutionCode: institutionCode ?? null,
+          imageLink: imageLink ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -122,6 +128,7 @@ export default function InstitutionUpdateForm(props) {
                 ...modelFields,
               },
             },
+            authMode: "userPool",
           });
           if (onSuccess) {
             onSuccess(modelFields);
@@ -147,6 +154,7 @@ export default function InstitutionUpdateForm(props) {
             const modelFields = {
               name: value,
               institutionCode,
+              imageLink,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -172,6 +180,7 @@ export default function InstitutionUpdateForm(props) {
             const modelFields = {
               name,
               institutionCode: value,
+              imageLink,
             };
             const result = onChange(modelFields);
             value = result?.institutionCode ?? value;
@@ -185,6 +194,32 @@ export default function InstitutionUpdateForm(props) {
         errorMessage={errors.institutionCode?.errorMessage}
         hasError={errors.institutionCode?.hasError}
         {...getOverrideProps(overrides, "institutionCode")}
+      ></TextField>
+      <TextField
+        label="Image link"
+        isRequired={false}
+        isReadOnly={false}
+        value={imageLink}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              institutionCode,
+              imageLink: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.imageLink ?? value;
+          }
+          if (errors.imageLink?.hasError) {
+            runValidationTasks("imageLink", value);
+          }
+          setImageLink(value);
+        }}
+        onBlur={() => runValidationTasks("imageLink", imageLink)}
+        errorMessage={errors.imageLink?.errorMessage}
+        hasError={errors.imageLink?.hasError}
+        {...getOverrideProps(overrides, "imageLink")}
       ></TextField>
       <Flex
         justifyContent="space-between"

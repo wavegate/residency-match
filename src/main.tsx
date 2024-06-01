@@ -16,6 +16,8 @@ import Applicants from "./routes/Applicants";
 import Profile from "./routes/Profile";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import CreateInterviewInvite from "./routes/CreateInterviewInvite";
+import EditInstitution from "./routes/EditInstitution";
 
 Amplify.configure(outputs);
 
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <InterviewInvites />,
+      },
+      {
+        path: "create-interview-invite",
+        element: <CreateInterviewInvite />,
+      },
+      {
+        path: "institutions/edit/:id",
+        element: <EditInstitution />,
       },
       {
         path: "specialties",

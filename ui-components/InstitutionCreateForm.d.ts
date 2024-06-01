@@ -18,16 +18,19 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type InstitutionCreateFormInputValues = {
     name?: string;
     institutionCode?: string;
+    imageLink?: string;
 };
 export declare type InstitutionCreateFormValidationValues = {
     name?: ValidationFunction<string>;
     institutionCode?: ValidationFunction<string>;
+    imageLink?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type InstitutionCreateFormOverridesProps = {
     InstitutionCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     institutionCode?: PrimitiveOverrideProps<TextFieldProps>;
+    imageLink?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type InstitutionCreateFormProps = React.PropsWithChildren<{
     overrides?: InstitutionCreateFormOverridesProps | undefined | null;

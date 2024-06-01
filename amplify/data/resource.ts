@@ -53,6 +53,7 @@ const schema = a.schema({
       institutionCode: a.string(),
       programs: a.hasMany("Program", "institutionId"),
       specialties: a.hasMany("SpecialtyInstitution", "institutionId"),
+      imageLink: a.string(),
     })
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),

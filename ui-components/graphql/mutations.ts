@@ -10,6 +10,7 @@ export const createInstitution = /* GraphQL */ `
     createInstitution(condition: $condition, input: $input) {
       createdAt
       id
+      imageLink
       institutionCode
       name
       programs {
@@ -75,6 +76,7 @@ export const createProgram = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -136,6 +138,7 @@ export const createSpecialtyInstitution = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -211,6 +214,7 @@ export const deleteInstitution = /* GraphQL */ `
     deleteInstitution(condition: $condition, input: $input) {
       createdAt
       id
+      imageLink
       institutionCode
       name
       programs {
@@ -276,6 +280,7 @@ export const deleteProgram = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -337,6 +342,7 @@ export const deleteSpecialtyInstitution = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -412,6 +418,7 @@ export const updateInstitution = /* GraphQL */ `
     updateInstitution(condition: $condition, input: $input) {
       createdAt
       id
+      imageLink
       institutionCode
       name
       programs {
@@ -477,6 +484,7 @@ export const updateProgram = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -538,6 +546,7 @@ export const updateSpecialtyInstitution = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt

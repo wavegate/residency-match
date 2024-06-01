@@ -8,6 +8,7 @@ export const getInstitution = /* GraphQL */ `
       createdAt
       id
       institutionCode
+      imageLink
       name
       programs {
         nextToken

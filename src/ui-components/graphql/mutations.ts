@@ -12,6 +12,7 @@ export const createInstitution = /* GraphQL */ `
       id
       institutionCode
       name
+      imageLink
       programs {
         nextToken
         __typename
@@ -422,6 +423,7 @@ export const updateInstitution = /* GraphQL */ `
       createdAt
       id
       institutionCode
+      imageLink
       name
       programs {
         nextToken

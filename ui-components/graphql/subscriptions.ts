@@ -9,6 +9,7 @@ export const onCreateInstitution = /* GraphQL */ `
     onCreateInstitution(filter: $filter) {
       createdAt
       id
+      imageLink
       institutionCode
       name
       programs {
@@ -71,6 +72,7 @@ export const onCreateProgram = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -130,6 +132,7 @@ export const onCreateSpecialtyInstitution = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -204,6 +207,7 @@ export const onDeleteInstitution = /* GraphQL */ `
     onDeleteInstitution(filter: $filter) {
       createdAt
       id
+      imageLink
       institutionCode
       name
       programs {
@@ -266,6 +270,7 @@ export const onDeleteProgram = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -325,6 +330,7 @@ export const onDeleteSpecialtyInstitution = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -399,6 +405,7 @@ export const onUpdateInstitution = /* GraphQL */ `
     onUpdateInstitution(filter: $filter) {
       createdAt
       id
+      imageLink
       institutionCode
       name
       programs {
@@ -461,6 +468,7 @@ export const onUpdateProgram = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt
@@ -520,6 +528,7 @@ export const onUpdateSpecialtyInstitution = /* GraphQL */ `
       institution {
         createdAt
         id
+        imageLink
         institutionCode
         name
         updatedAt

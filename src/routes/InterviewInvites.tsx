@@ -17,13 +17,21 @@ export default function InterviewInvites() {
     queryKey: ["interviewInvites"],
     queryFn: async () => {
       const response = await client.models.InterviewInvite.list({
-        selectionSet: ["id", "program.*", "inviteDateTime", "owner"],
+        selectionSet: [
+          "id",
+          "program.*",
+          "program.institution.*",
+          "inviteDateTime",
+          "owner",
+        ],
       });
       const responseData = response.data;
       if (!responseData) return null;
       return responseData;
     },
   });
+
+  console.log(interviewInvites);
 
   // function deleteInterviewInvite(id: string) {
   //   client.models.InterviewInvite.delete(
@@ -65,8 +73,14 @@ export default function InterviewInvites() {
               </div>
               <div className={`justify-between items-center flex`}>
                 <Avatar className={`w-[48px] h-[48px]`}>
-                  <AvatarImage src="https://media.licdn.com/dms/image/C510BAQFu83WkyweScg/company-logo_200_200/0/1631308981998?e=2147483647&v=beta&t=Lw7dzyMSVANd8avPNaLU7jg_1CKq9J5g3VKmGNlah6Y" />
-                  <AvatarFallback>BB</AvatarFallback>
+                  <AvatarImage
+                    src={
+                      interviewInvite.program.institution.imageLink ?? undefined
+                    }
+                  />
+                  <AvatarFallback>
+                    {interviewInvite.program.name}
+                  </AvatarFallback>
                 </Avatar>
                 {/* <div>followed program</div> */}
                 <div className={`flex flex-col text-right`}>
