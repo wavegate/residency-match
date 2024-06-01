@@ -9,7 +9,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`h-[120px] bg-sky-800 flex flex-col w-full p-[12px] text-zinc-300 `}
+        className={`h-[120px] bg-[#2B4C6D] flex flex-col w-full p-[12px] text-[#F9FEFF] `}
       >
         <div className={`flex justify-between items-center gap-[12px]`}>
           <div className={`flex items-center gap-[12px]`}>
@@ -39,7 +39,7 @@ export default function Header() {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </div>
-          <div>
+          <div className={`text-right`}>
             {user === undefined && <Link to="auth">Sign in</Link>}
             {user && <button onClick={() => signOut()}>Sign out</button>}
           </div>

@@ -18,7 +18,7 @@ export default function Applicants() {
   }, [user]);
 
   return (
-    <div>
+    <div className={`flex-1 overflow-y-auto`}>
       <h1>Applicants</h1>
       <ul>
         {userProfiles.map((userProfile) => (

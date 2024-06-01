@@ -9,9 +9,7 @@ function Root() {
       <Authenticator.Provider>
         <div className={`h-[100dvh] flex flex-col overflow-hidden`}>
           <Header />
-          <div className={`flex-1 overflow-y-auto`}>
-            <Outlet />
-          </div>
+          <Outlet />
           <Footer />
         </div>
       </Authenticator.Provider>

@@ -29,7 +29,7 @@ export default function Specialties() {
     );
   }
   return (
-    <div>
+    <div className={`flex-1 overflow-y-auto`}>
       <h1>Specialties</h1>
       <ul>
         {specialties.map((specialty) => (

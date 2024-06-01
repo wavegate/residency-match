@@ -29,7 +29,7 @@ export default function Programs() {
     );
   }
   return (
-    <div>
+    <div className={`flex-1 overflow-y-auto`}>
       <h1>Programs</h1>
       <ul>
         {programs.map((program) => (

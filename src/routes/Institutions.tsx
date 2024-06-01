@@ -29,7 +29,7 @@ export default function Institutions() {
     );
   }
   return (
-    <div>
+    <div className={`flex-1 overflow-y-auto`}>
       <h1>Institutions</h1>
       <ul>
         {institutions.map((institution) => (

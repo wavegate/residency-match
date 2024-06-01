@@ -22,7 +22,7 @@ export default function Profile() {
   }, [user?.userId]);
 
   return (
-    <div className={`p-[12px]`}>
+    <div className={`p-[12px] flex-1 overflow-y-auto`}>
       <h1>Profile</h1>
       {userProfile ? (
         <UserProfileUpdateForm id={userProfile.id} />

@@ -10,11 +10,14 @@ import usePermissions from "./hooks/usePermissions";
 export default function Footer() {
   const { permissions } = usePermissions();
   return (
-    <footer className={`h-[90px] bg-sky-800 flex items-center px-[12px]`}>
+    <footer className={`h-[90px] bg-[#2B4C6D] flex items-center px-[12px]`}>
       <NavigationMenu>
         <NavigationMenuList className={`flex items-center gap-[12px]`}>
           <NavigationMenuItem>
-            <Link to="/" className={`text-zinc-200 flex flex-col items-center`}>
+            <Link
+              to="/"
+              className={`text-[#F9FEFF] flex flex-col items-center`}
+            >
               <div
                 className={`rounded-full w-[48px] h-[48px] bg-sky-950 flex items-center justify-center`}
               >
