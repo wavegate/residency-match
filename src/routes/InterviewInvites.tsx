@@ -1,17 +1,13 @@
 import InterviewInviteCreateForm from "../ui-components/InterviewInviteCreateForm";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import type { Schema } from "../../amplify/data/resource";
-import { SelectionSet, generateClient } from "aws-amplify/data";
+import { generateClient } from "aws-amplify/data";
 import { Button, useAuthenticator } from "@aws-amplify/ui-react";
 import dayjs from "dayjs";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const client = generateClient<Schema>();
-const selectionSet = ["id", "program.*", "inviteDateTime"] as const;
-type InterviewInviteModel = SelectionSet<
-  Schema["InterviewInvite"]["type"],
-  typeof selectionSet
->;
+
 export default function InterviewInvites() {
   const { user } = useAuthenticator((context) => [context.user]);
 

@@ -1,13 +1,6 @@
 import { Authenticator, ThemeProvider } from "@aws-amplify/ui-react";
-import { Link, Outlet } from "react-router-dom";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from "../components/ui/navigation-menu";
-import { CircleUserRound, Home, Stethoscope } from "lucide-react";
+import { Outlet } from "react-router-dom";
 import Header from "../Header";
-import usePermissions from "../hooks/usePermissions";
 import Footer from "../Footer";
 
 function Root() {

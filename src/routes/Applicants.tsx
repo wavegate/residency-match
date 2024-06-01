@@ -1,4 +1,4 @@
-import { Button, useAuthenticator } from "@aws-amplify/ui-react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import { generateClient } from "aws-amplify/api";
 import type { Schema } from "../../amplify/data/resource";
 import { useEffect, useState } from "react";
