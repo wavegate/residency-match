@@ -154,27 +154,34 @@ export const getUserProfile = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
     getUserProfile(id: $id) {
       aoa
+      avatarImage
       classRank
       codeName
       comlex1Score
       comlex2Score
       createdAt
+      ecfmgCertified
       goldHumanism
       graduateType
       id
+      isProfile
+      location
       medicalDegree
+      monthsOfUSCE
+      needVisa
       numApplications
       numInterviews
       numPublicationsPosters
       numVolunteerExperiences
-      numWithdrawals
       numWorkExperiences
       owner
       redFlags
       sigmaSigmaPi
       step1Score
+      step2CSPathway
       step2Score
       updatedAt
+      yearOfGraduation
       __typename
     }
   }
@@ -384,27 +391,34 @@ export const listUserProfiles = /* GraphQL */ `
     listUserProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         aoa
+        avatarImage
         classRank
         codeName
         comlex1Score
         comlex2Score
         createdAt
+        ecfmgCertified
         goldHumanism
         graduateType
         id
+        isProfile
+        location
         medicalDegree
+        monthsOfUSCE
+        needVisa
         numApplications
         numInterviews
         numPublicationsPosters
         numVolunteerExperiences
-        numWithdrawals
         numWorkExperiences
         owner
         redFlags
         sigmaSigmaPi
         step1Score
+        step2CSPathway
         step2Score
         updatedAt
+        yearOfGraduation
         __typename
       }
       nextToken

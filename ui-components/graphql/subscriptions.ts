@@ -175,27 +175,34 @@ export const onCreateUserProfile = /* GraphQL */ `
   ) {
     onCreateUserProfile(filter: $filter, owner: $owner) {
       aoa
+      avatarImage
       classRank
       codeName
       comlex1Score
       comlex2Score
       createdAt
+      ecfmgCertified
       goldHumanism
       graduateType
       id
+      isProfile
+      location
       medicalDegree
+      monthsOfUSCE
+      needVisa
       numApplications
       numInterviews
       numPublicationsPosters
       numVolunteerExperiences
-      numWithdrawals
       numWorkExperiences
       owner
       redFlags
       sigmaSigmaPi
       step1Score
+      step2CSPathway
       step2Score
       updatedAt
+      yearOfGraduation
       __typename
     }
   }
@@ -373,27 +380,34 @@ export const onDeleteUserProfile = /* GraphQL */ `
   ) {
     onDeleteUserProfile(filter: $filter, owner: $owner) {
       aoa
+      avatarImage
       classRank
       codeName
       comlex1Score
       comlex2Score
       createdAt
+      ecfmgCertified
       goldHumanism
       graduateType
       id
+      isProfile
+      location
       medicalDegree
+      monthsOfUSCE
+      needVisa
       numApplications
       numInterviews
       numPublicationsPosters
       numVolunteerExperiences
-      numWithdrawals
       numWorkExperiences
       owner
       redFlags
       sigmaSigmaPi
       step1Score
+      step2CSPathway
       step2Score
       updatedAt
+      yearOfGraduation
       __typename
     }
   }
@@ -571,27 +585,34 @@ export const onUpdateUserProfile = /* GraphQL */ `
   ) {
     onUpdateUserProfile(filter: $filter, owner: $owner) {
       aoa
+      avatarImage
       classRank
       codeName
       comlex1Score
       comlex2Score
       createdAt
+      ecfmgCertified
       goldHumanism
       graduateType
       id
+      isProfile
+      location
       medicalDegree
+      monthsOfUSCE
+      needVisa
       numApplications
       numInterviews
       numPublicationsPosters
       numVolunteerExperiences
-      numWithdrawals
       numWorkExperiences
       owner
       redFlags
       sigmaSigmaPi
       step1Score
+      step2CSPathway
       step2Score
       updatedAt
+      yearOfGraduation
       __typename
     }
   }

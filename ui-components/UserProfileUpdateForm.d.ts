@@ -17,6 +17,14 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type UserProfileUpdateFormInputValues = {
+    isProfile?: boolean;
+    step2CSPathway?: string;
+    yearOfGraduation?: number;
+    monthsOfUSCE?: number;
+    ecfmgCertified?: boolean;
+    needVisa?: boolean;
+    location?: string;
+    avatarImage?: string;
     graduateType?: string;
     medicalDegree?: string;
     codeName?: string;
@@ -34,9 +42,16 @@ export declare type UserProfileUpdateFormInputValues = {
     classRank?: number;
     numApplications?: number;
     numInterviews?: number;
-    numWithdrawals?: number;
 };
 export declare type UserProfileUpdateFormValidationValues = {
+    isProfile?: ValidationFunction<boolean>;
+    step2CSPathway?: ValidationFunction<string>;
+    yearOfGraduation?: ValidationFunction<number>;
+    monthsOfUSCE?: ValidationFunction<number>;
+    ecfmgCertified?: ValidationFunction<boolean>;
+    needVisa?: ValidationFunction<boolean>;
+    location?: ValidationFunction<string>;
+    avatarImage?: ValidationFunction<string>;
     graduateType?: ValidationFunction<string>;
     medicalDegree?: ValidationFunction<string>;
     codeName?: ValidationFunction<string>;
@@ -54,11 +69,18 @@ export declare type UserProfileUpdateFormValidationValues = {
     classRank?: ValidationFunction<number>;
     numApplications?: ValidationFunction<number>;
     numInterviews?: ValidationFunction<number>;
-    numWithdrawals?: ValidationFunction<number>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UserProfileUpdateFormOverridesProps = {
     UserProfileUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    isProfile?: PrimitiveOverrideProps<SwitchFieldProps>;
+    step2CSPathway?: PrimitiveOverrideProps<SelectFieldProps>;
+    yearOfGraduation?: PrimitiveOverrideProps<TextFieldProps>;
+    monthsOfUSCE?: PrimitiveOverrideProps<TextFieldProps>;
+    ecfmgCertified?: PrimitiveOverrideProps<SwitchFieldProps>;
+    needVisa?: PrimitiveOverrideProps<SwitchFieldProps>;
+    location?: PrimitiveOverrideProps<TextFieldProps>;
+    avatarImage?: PrimitiveOverrideProps<TextFieldProps>;
     graduateType?: PrimitiveOverrideProps<SelectFieldProps>;
     medicalDegree?: PrimitiveOverrideProps<SelectFieldProps>;
     codeName?: PrimitiveOverrideProps<TextFieldProps>;
@@ -76,7 +98,6 @@ export declare type UserProfileUpdateFormOverridesProps = {
     classRank?: PrimitiveOverrideProps<TextFieldProps>;
     numApplications?: PrimitiveOverrideProps<TextFieldProps>;
     numInterviews?: PrimitiveOverrideProps<TextFieldProps>;
-    numWithdrawals?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type UserProfileUpdateFormProps = React.PropsWithChildren<{
     overrides?: UserProfileUpdateFormOverridesProps | undefined | null;

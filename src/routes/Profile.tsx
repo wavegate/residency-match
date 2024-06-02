@@ -25,9 +25,9 @@ export default function Profile() {
     <div className={`p-[12px] flex-1 overflow-y-auto`}>
       <h1>Profile</h1>
       {userProfile ? (
-        <UserProfileUpdateForm id={userProfile.id} />
+        <UserProfileUpdateForm id={userProfile.id} isProfile />
       ) : (
-        <UserProfileCreateForm />
+        <UserProfileCreateForm isProfile />
       )}
     </div>
   );

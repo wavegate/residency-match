@@ -263,6 +263,7 @@ export default function InterviewInviteCreateForm(props) {
     >
       <SelectField
         label="Program"
+        isRequired={true}
         placeholder="Please select an option"
         isDisabled={false}
         value={programId}
@@ -310,7 +311,6 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal,
               instate,
-
               additionalComments,
               graduateType,
               medicalDegree,

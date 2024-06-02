@@ -13,6 +13,7 @@ import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { getUserProfile } from "./graphql/queries";
 import { updateUserProfile } from "./graphql/mutations";
+import { useToast } from "../components/ui/use-toast";
 const client = generateClient();
 export default function UserProfileUpdateForm(props) {
   const {
@@ -24,9 +25,17 @@ export default function UserProfileUpdateForm(props) {
     onValidate,
     onChange,
     overrides,
+    isProfile,
     ...rest
   } = props;
   const initialValues = {
+    step2CSPathway: "",
+    yearOfGraduation: "",
+    monthsOfUSCE: "",
+    ecfmgCertified: false,
+    needVisa: false,
+    location: "",
+    avatarImage: "",
     graduateType: "",
     medicalDegree: "",
     codeName: "",
@@ -44,8 +53,24 @@ export default function UserProfileUpdateForm(props) {
     classRank: "",
     numApplications: "",
     numInterviews: "",
-    numWithdrawals: "",
   };
+  const [step2CSPathway, setStep2CSPathway] = React.useState(
+    initialValues.step2CSPathway
+  );
+  const [yearOfGraduation, setYearOfGraduation] = React.useState(
+    initialValues.yearOfGraduation
+  );
+  const [monthsOfUSCE, setMonthsOfUSCE] = React.useState(
+    initialValues.monthsOfUSCE
+  );
+  const [ecfmgCertified, setEcfmgCertified] = React.useState(
+    initialValues.ecfmgCertified
+  );
+  const [needVisa, setNeedVisa] = React.useState(initialValues.needVisa);
+  const [location, setLocation] = React.useState(initialValues.location);
+  const [avatarImage, setAvatarImage] = React.useState(
+    initialValues.avatarImage
+  );
   const [graduateType, setGraduateType] = React.useState(
     initialValues.graduateType
   );
@@ -85,14 +110,19 @@ export default function UserProfileUpdateForm(props) {
   const [numInterviews, setNumInterviews] = React.useState(
     initialValues.numInterviews
   );
-  const [numWithdrawals, setNumWithdrawals] = React.useState(
-    initialValues.numWithdrawals
-  );
+  const { toast } = useToast();
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = userProfileRecord
       ? { ...initialValues, ...userProfileRecord }
       : initialValues;
+    setStep2CSPathway(cleanValues.step2CSPathway);
+    setYearOfGraduation(cleanValues.yearOfGraduation);
+    setMonthsOfUSCE(cleanValues.monthsOfUSCE);
+    setEcfmgCertified(cleanValues.ecfmgCertified);
+    setNeedVisa(cleanValues.needVisa);
+    setLocation(cleanValues.location);
+    setAvatarImage(cleanValues.avatarImage);
     setGraduateType(cleanValues.graduateType);
     setMedicalDegree(cleanValues.medicalDegree);
     setCodeName(cleanValues.codeName);
@@ -110,7 +140,6 @@ export default function UserProfileUpdateForm(props) {
     setClassRank(cleanValues.classRank);
     setNumApplications(cleanValues.numApplications);
     setNumInterviews(cleanValues.numInterviews);
-    setNumWithdrawals(cleanValues.numWithdrawals);
     setErrors({});
   };
   const [userProfileRecord, setUserProfileRecord] =
@@ -131,6 +160,13 @@ export default function UserProfileUpdateForm(props) {
   }, [idProp, userProfileModelProp]);
   React.useEffect(resetStateValues, [userProfileRecord]);
   const validations = {
+    step2CSPathway: [],
+    yearOfGraduation: [],
+    monthsOfUSCE: [],
+    ecfmgCertified: [],
+    needVisa: [],
+    location: [],
+    avatarImage: [],
     graduateType: [],
     medicalDegree: [],
     codeName: [],
@@ -148,7 +184,6 @@ export default function UserProfileUpdateForm(props) {
     classRank: [],
     numApplications: [],
     numInterviews: [],
-    numWithdrawals: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -176,6 +211,13 @@ export default function UserProfileUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
+          step2CSPathway: step2CSPathway ?? null,
+          yearOfGraduation: yearOfGraduation ?? null,
+          monthsOfUSCE: monthsOfUSCE ?? null,
+          ecfmgCertified: ecfmgCertified ?? null,
+          needVisa: needVisa ?? null,
+          location: location ?? null,
+          avatarImage: avatarImage ?? null,
           graduateType: graduateType ?? null,
           medicalDegree: medicalDegree ?? null,
           codeName: codeName ?? null,
@@ -193,7 +235,6 @@ export default function UserProfileUpdateForm(props) {
           classRank: classRank ?? null,
           numApplications: numApplications ?? null,
           numInterviews: numInterviews ?? null,
-          numWithdrawals: numWithdrawals ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -228,6 +269,7 @@ export default function UserProfileUpdateForm(props) {
             variables: {
               input: {
                 id: userProfileRecord.id,
+                isProfile,
                 ...modelFields,
               },
             },
@@ -236,7 +278,11 @@ export default function UserProfileUpdateForm(props) {
           if (onSuccess) {
             onSuccess(modelFields);
           }
+          toast({
+            title: "User Profile: Updated",
+          });
         } catch (err) {
+          console.log(err);
           if (onError) {
             const messages = err.errors.map((e) => e.message).join("\n");
             onError(modelFields, messages);
@@ -247,6 +293,374 @@ export default function UserProfileUpdateForm(props) {
       {...rest}
     >
       <SelectField
+        label="Step2 cs pathway"
+        placeholder="Please select an option"
+        isDisabled={false}
+        value={step2CSPathway}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              step2CSPathway: value,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              redFlags,
+              aoa,
+              sigmaSigmaPi,
+              goldHumanism,
+              numPublicationsPosters,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              numApplications,
+              numInterviews,
+            };
+            const result = onChange(modelFields);
+            value = result?.step2CSPathway ?? value;
+          }
+          if (errors.step2CSPathway?.hasError) {
+            runValidationTasks("step2CSPathway", value);
+          }
+          setStep2CSPathway(value);
+        }}
+        onBlur={() => runValidationTasks("step2CSPathway", step2CSPathway)}
+        errorMessage={errors.step2CSPathway?.errorMessage}
+        hasError={errors.step2CSPathway?.hasError}
+        {...getOverrideProps(overrides, "step2CSPathway")}
+      >
+        <option
+          children="Pathway1"
+          value="pathway1"
+          {...getOverrideProps(overrides, "step2CSPathwayoption0")}
+        ></option>
+        <option
+          children="Pathway2"
+          value="pathway2"
+          {...getOverrideProps(overrides, "step2CSPathwayoption1")}
+        ></option>
+        <option
+          children="Pathway3"
+          value="pathway3"
+          {...getOverrideProps(overrides, "step2CSPathwayoption2")}
+        ></option>
+        <option
+          children="Pathway4"
+          value="pathway4"
+          {...getOverrideProps(overrides, "step2CSPathwayoption3")}
+        ></option>
+        <option
+          children="Pathway5"
+          value="pathway5"
+          {...getOverrideProps(overrides, "step2CSPathwayoption4")}
+        ></option>
+        <option
+          children="Pathway6"
+          value="pathway6"
+          {...getOverrideProps(overrides, "step2CSPathwayoption5")}
+        ></option>
+      </SelectField>
+      <TextField
+        label="Year of graduation"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={yearOfGraduation}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              step2CSPathway,
+              yearOfGraduation: value,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              redFlags,
+              aoa,
+              sigmaSigmaPi,
+              goldHumanism,
+              numPublicationsPosters,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              numApplications,
+              numInterviews,
+            };
+            const result = onChange(modelFields);
+            value = result?.yearOfGraduation ?? value;
+          }
+          if (errors.yearOfGraduation?.hasError) {
+            runValidationTasks("yearOfGraduation", value);
+          }
+          setYearOfGraduation(value);
+        }}
+        onBlur={() => runValidationTasks("yearOfGraduation", yearOfGraduation)}
+        errorMessage={errors.yearOfGraduation?.errorMessage}
+        hasError={errors.yearOfGraduation?.hasError}
+        {...getOverrideProps(overrides, "yearOfGraduation")}
+      ></TextField>
+      <TextField
+        label="Months of usce"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={monthsOfUSCE}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE: value,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              redFlags,
+              aoa,
+              sigmaSigmaPi,
+              goldHumanism,
+              numPublicationsPosters,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              numApplications,
+              numInterviews,
+            };
+            const result = onChange(modelFields);
+            value = result?.monthsOfUSCE ?? value;
+          }
+          if (errors.monthsOfUSCE?.hasError) {
+            runValidationTasks("monthsOfUSCE", value);
+          }
+          setMonthsOfUSCE(value);
+        }}
+        onBlur={() => runValidationTasks("monthsOfUSCE", monthsOfUSCE)}
+        errorMessage={errors.monthsOfUSCE?.errorMessage}
+        hasError={errors.monthsOfUSCE?.hasError}
+        {...getOverrideProps(overrides, "monthsOfUSCE")}
+      ></TextField>
+      <SwitchField
+        label="Ecfmg certified"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={ecfmgCertified}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified: value,
+              needVisa,
+              location,
+              avatarImage,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              redFlags,
+              aoa,
+              sigmaSigmaPi,
+              goldHumanism,
+              numPublicationsPosters,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              numApplications,
+              numInterviews,
+            };
+            const result = onChange(modelFields);
+            value = result?.ecfmgCertified ?? value;
+          }
+          if (errors.ecfmgCertified?.hasError) {
+            runValidationTasks("ecfmgCertified", value);
+          }
+          setEcfmgCertified(value);
+        }}
+        onBlur={() => runValidationTasks("ecfmgCertified", ecfmgCertified)}
+        errorMessage={errors.ecfmgCertified?.errorMessage}
+        hasError={errors.ecfmgCertified?.hasError}
+        {...getOverrideProps(overrides, "ecfmgCertified")}
+      ></SwitchField>
+      <SwitchField
+        label="Need visa"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={needVisa}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa: value,
+              location,
+              avatarImage,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              redFlags,
+              aoa,
+              sigmaSigmaPi,
+              goldHumanism,
+              numPublicationsPosters,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              numApplications,
+              numInterviews,
+            };
+            const result = onChange(modelFields);
+            value = result?.needVisa ?? value;
+          }
+          if (errors.needVisa?.hasError) {
+            runValidationTasks("needVisa", value);
+          }
+          setNeedVisa(value);
+        }}
+        onBlur={() => runValidationTasks("needVisa", needVisa)}
+        errorMessage={errors.needVisa?.errorMessage}
+        hasError={errors.needVisa?.hasError}
+        {...getOverrideProps(overrides, "needVisa")}
+      ></SwitchField>
+      <TextField
+        label="Location"
+        isRequired={false}
+        isReadOnly={false}
+        value={location}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location: value,
+              avatarImage,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              redFlags,
+              aoa,
+              sigmaSigmaPi,
+              goldHumanism,
+              numPublicationsPosters,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              numApplications,
+              numInterviews,
+            };
+            const result = onChange(modelFields);
+            value = result?.location ?? value;
+          }
+          if (errors.location?.hasError) {
+            runValidationTasks("location", value);
+          }
+          setLocation(value);
+        }}
+        onBlur={() => runValidationTasks("location", location)}
+        errorMessage={errors.location?.errorMessage}
+        hasError={errors.location?.hasError}
+        {...getOverrideProps(overrides, "location")}
+      ></TextField>
+      <TextField
+        label="Avatar image"
+        isRequired={false}
+        isReadOnly={false}
+        value={avatarImage}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage: value,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              redFlags,
+              aoa,
+              sigmaSigmaPi,
+              goldHumanism,
+              numPublicationsPosters,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              numApplications,
+              numInterviews,
+            };
+            const result = onChange(modelFields);
+            value = result?.avatarImage ?? value;
+          }
+          if (errors.avatarImage?.hasError) {
+            runValidationTasks("avatarImage", value);
+          }
+          setAvatarImage(value);
+        }}
+        onBlur={() => runValidationTasks("avatarImage", avatarImage)}
+        errorMessage={errors.avatarImage?.errorMessage}
+        hasError={errors.avatarImage?.hasError}
+        {...getOverrideProps(overrides, "avatarImage")}
+      ></TextField>
+      <SelectField
         label="Graduate type"
         placeholder="Please select an option"
         isDisabled={false}
@@ -255,6 +669,13 @@ export default function UserProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType: value,
               medicalDegree,
               codeName,
@@ -272,7 +693,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.graduateType ?? value;
@@ -307,6 +727,13 @@ export default function UserProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree: value,
               codeName,
@@ -324,7 +751,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.medicalDegree ?? value;
@@ -359,6 +785,13 @@ export default function UserProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName: value,
@@ -376,7 +809,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.codeName ?? value;
@@ -404,6 +836,13 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -421,7 +860,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.step1Score ?? value;
@@ -449,6 +887,13 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -466,7 +911,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.step2Score ?? value;
@@ -494,6 +938,13 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -511,7 +962,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.comlex1Score ?? value;
@@ -539,6 +989,13 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -556,7 +1013,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.comlex2Score ?? value;
@@ -580,6 +1036,13 @@ export default function UserProfileUpdateForm(props) {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -597,7 +1060,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.redFlags ?? value;
@@ -621,6 +1083,13 @@ export default function UserProfileUpdateForm(props) {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -638,7 +1107,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.aoa ?? value;
@@ -662,6 +1130,13 @@ export default function UserProfileUpdateForm(props) {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -679,7 +1154,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.sigmaSigmaPi ?? value;
@@ -703,6 +1177,13 @@ export default function UserProfileUpdateForm(props) {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -720,7 +1201,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.goldHumanism ?? value;
@@ -748,6 +1228,13 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -765,7 +1252,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.numPublicationsPosters ?? value;
@@ -795,6 +1281,13 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -812,7 +1305,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.numWorkExperiences ?? value;
@@ -842,6 +1334,13 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -859,7 +1358,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.numVolunteerExperiences ?? value;
@@ -889,6 +1387,13 @@ export default function UserProfileUpdateForm(props) {
             : parseFloat(e.target.value);
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -906,7 +1411,6 @@ export default function UserProfileUpdateForm(props) {
               classRank: value,
               numApplications,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.classRank ?? value;
@@ -934,6 +1438,13 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -951,7 +1462,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications: value,
               numInterviews,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.numApplications ?? value;
@@ -979,6 +1489,13 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              step2CSPathway,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              needVisa,
+              location,
+              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
@@ -996,7 +1513,6 @@ export default function UserProfileUpdateForm(props) {
               classRank,
               numApplications,
               numInterviews: value,
-              numWithdrawals,
             };
             const result = onChange(modelFields);
             value = result?.numInterviews ?? value;
@@ -1010,51 +1526,6 @@ export default function UserProfileUpdateForm(props) {
         errorMessage={errors.numInterviews?.errorMessage}
         hasError={errors.numInterviews?.hasError}
         {...getOverrideProps(overrides, "numInterviews")}
-      ></TextField>
-      <TextField
-        label="Num withdrawals"
-        isRequired={false}
-        isReadOnly={false}
-        type="number"
-        step="any"
-        value={numWithdrawals}
-        onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
-          if (onChange) {
-            const modelFields = {
-              graduateType,
-              medicalDegree,
-              codeName,
-              step1Score,
-              step2Score,
-              comlex1Score,
-              comlex2Score,
-              redFlags,
-              aoa,
-              sigmaSigmaPi,
-              goldHumanism,
-              numPublicationsPosters,
-              numWorkExperiences,
-              numVolunteerExperiences,
-              classRank,
-              numApplications,
-              numInterviews,
-              numWithdrawals: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.numWithdrawals ?? value;
-          }
-          if (errors.numWithdrawals?.hasError) {
-            runValidationTasks("numWithdrawals", value);
-          }
-          setNumWithdrawals(value);
-        }}
-        onBlur={() => runValidationTasks("numWithdrawals", numWithdrawals)}
-        errorMessage={errors.numWithdrawals?.errorMessage}
-        hasError={errors.numWithdrawals?.hasError}
-        {...getOverrideProps(overrides, "numWithdrawals")}
       ></TextField>
       <Flex
         justifyContent="space-between"

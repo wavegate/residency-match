@@ -181,27 +181,34 @@ export const createUserProfile = /* GraphQL */ `
   ) {
     createUserProfile(condition: $condition, input: $input) {
       aoa
+      avatarImage
       classRank
       codeName
       comlex1Score
       comlex2Score
       createdAt
+      ecfmgCertified
       goldHumanism
       graduateType
       id
+      isProfile
+      location
       medicalDegree
+      monthsOfUSCE
+      needVisa
       numApplications
       numInterviews
       numPublicationsPosters
       numVolunteerExperiences
-      numWithdrawals
       numWorkExperiences
       owner
       redFlags
       sigmaSigmaPi
       step1Score
+      step2CSPathway
       step2Score
       updatedAt
+      yearOfGraduation
       __typename
     }
   }
@@ -385,27 +392,34 @@ export const deleteUserProfile = /* GraphQL */ `
   ) {
     deleteUserProfile(condition: $condition, input: $input) {
       aoa
+      avatarImage
       classRank
       codeName
       comlex1Score
       comlex2Score
       createdAt
+      ecfmgCertified
       goldHumanism
       graduateType
       id
+      isProfile
+      location
       medicalDegree
+      monthsOfUSCE
+      needVisa
       numApplications
       numInterviews
       numPublicationsPosters
       numVolunteerExperiences
-      numWithdrawals
       numWorkExperiences
       owner
       redFlags
       sigmaSigmaPi
       step1Score
+      step2CSPathway
       step2Score
       updatedAt
+      yearOfGraduation
       __typename
     }
   }
@@ -589,27 +603,34 @@ export const updateUserProfile = /* GraphQL */ `
   ) {
     updateUserProfile(condition: $condition, input: $input) {
       aoa
+      avatarImage
       classRank
       codeName
       comlex1Score
       comlex2Score
       createdAt
+      ecfmgCertified
       goldHumanism
       graduateType
       id
+      isProfile
+      location
       medicalDegree
+      monthsOfUSCE
+      needVisa
       numApplications
       numInterviews
       numPublicationsPosters
       numVolunteerExperiences
-      numWithdrawals
       numWorkExperiences
       owner
       redFlags
       sigmaSigmaPi
       step1Score
+      step2CSPathway
       step2Score
       updatedAt
+      yearOfGraduation
       __typename
     }
   }

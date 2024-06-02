@@ -78,7 +78,7 @@ const schema = a.schema({
       geographicPreference: a.boolean(),
       signal: a.boolean(),
       instate: a.boolean(),
-      programId: a.id(),
+      programId: a.id().required(),
       program: a.belongsTo("Program", "programId"),
       additionalComments: a.string(),
       graduateType: a.enum(["US", "IMG"]),
@@ -97,6 +97,21 @@ const schema = a.schema({
     ]),
   UserProfile: a
     .model({
+      isProfile: a.boolean(),
+      step2CSPathway: a.enum([
+        "pathway1",
+        "pathway2",
+        "pathway3",
+        "pathway4",
+        "pathway5",
+        "pathway6",
+      ]),
+      yearOfGraduation: a.integer(),
+      monthsOfUSCE: a.integer(),
+      ecfmgCertified: a.boolean(),
+      needVisa: a.boolean(),
+      location: a.string(),
+      avatarImage: a.string(),
       graduateType: a.enum(["US", "IMG"]),
       medicalDegree: a.ref("MedicalDegree"),
       codeName: a.string(),
@@ -114,7 +129,6 @@ const schema = a.schema({
       classRank: a.float(),
       numApplications: a.integer(),
       numInterviews: a.integer(),
-      numWithdrawals: a.integer(),
     })
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
