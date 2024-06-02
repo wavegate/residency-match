@@ -39,7 +39,6 @@ export const onCreateInterviewInvite = /* GraphQL */ `
       geographicPreference
       graduateType
       id
-      impression
       instate
       inviteDateTime
       medicalDegree
@@ -59,6 +58,7 @@ export const onCreateInterviewInvite = /* GraphQL */ `
       signal
       step1Score
       step2Score
+      type
       updatedAt
       __typename
     }
@@ -237,7 +237,6 @@ export const onDeleteInterviewInvite = /* GraphQL */ `
       geographicPreference
       graduateType
       id
-      impression
       instate
       inviteDateTime
       medicalDegree
@@ -257,6 +256,7 @@ export const onDeleteInterviewInvite = /* GraphQL */ `
       signal
       step1Score
       step2Score
+      type
       updatedAt
       __typename
     }
@@ -435,7 +435,6 @@ export const onUpdateInterviewInvite = /* GraphQL */ `
       geographicPreference
       graduateType
       id
-      impression
       instate
       inviteDateTime
       medicalDegree
@@ -455,6 +454,7 @@ export const onUpdateInterviewInvite = /* GraphQL */ `
       signal
       step1Score
       step2Score
+      type
       updatedAt
       __typename
     }

@@ -28,11 +28,11 @@ export default function InterviewInviteUpdateForm(props) {
   } = props;
   const initialValues = {
     anonymous: false,
+    type: "",
     inviteDateTime: "",
     geographicPreference: false,
     signal: false,
     instate: false,
-    impression: "",
     additionalComments: "",
     graduateType: "",
     medicalDegree: "",
@@ -42,6 +42,7 @@ export default function InterviewInviteUpdateForm(props) {
     comlex2Score: "",
   };
   const [anonymous, setAnonymous] = React.useState(initialValues.anonymous);
+  const [type, setType] = React.useState(initialValues.type);
   const [inviteDateTime, setInviteDateTime] = React.useState(
     initialValues.inviteDateTime
   );
@@ -50,7 +51,6 @@ export default function InterviewInviteUpdateForm(props) {
   );
   const [signal, setSignal] = React.useState(initialValues.signal);
   const [instate, setInstate] = React.useState(initialValues.instate);
-  const [impression, setImpression] = React.useState(initialValues.impression);
   const [additionalComments, setAdditionalComments] = React.useState(
     initialValues.additionalComments
   );
@@ -74,11 +74,11 @@ export default function InterviewInviteUpdateForm(props) {
       ? { ...initialValues, ...interviewInviteRecord }
       : initialValues;
     setAnonymous(cleanValues.anonymous);
+    setType(cleanValues.type);
     setInviteDateTime(cleanValues.inviteDateTime);
     setGeographicPreference(cleanValues.geographicPreference);
     setSignal(cleanValues.signal);
     setInstate(cleanValues.instate);
-    setImpression(cleanValues.impression);
     setAdditionalComments(cleanValues.additionalComments);
     setGraduateType(cleanValues.graduateType);
     setMedicalDegree(cleanValues.medicalDegree);
@@ -108,11 +108,11 @@ export default function InterviewInviteUpdateForm(props) {
   React.useEffect(resetStateValues, [interviewInviteRecord]);
   const validations = {
     anonymous: [],
+    type: [{ type: "Required" }],
     inviteDateTime: [{ type: "Required" }],
     geographicPreference: [],
     signal: [],
     instate: [],
-    impression: [],
     additionalComments: [],
     graduateType: [],
     medicalDegree: [],
@@ -165,11 +165,11 @@ export default function InterviewInviteUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           anonymous: anonymous ?? null,
+          type,
           inviteDateTime,
           geographicPreference: geographicPreference ?? null,
           signal: signal ?? null,
           instate: instate ?? null,
-          impression: impression ?? null,
           additionalComments: additionalComments ?? null,
           graduateType: graduateType ?? null,
           medicalDegree: medicalDegree ?? null,
@@ -238,11 +238,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous: value,
+              type,
               inviteDateTime,
               geographicPreference,
               signal,
               instate,
-              impression,
               additionalComments,
               graduateType,
               medicalDegree,
@@ -265,6 +265,42 @@ export default function InterviewInviteUpdateForm(props) {
         {...getOverrideProps(overrides, "anonymous")}
       ></SwitchField>
       <TextField
+        label="Type"
+        isRequired={true}
+        isReadOnly={false}
+        value={type}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              anonymous,
+              type: value,
+              inviteDateTime,
+              geographicPreference,
+              signal,
+              instate,
+              additionalComments,
+              graduateType,
+              medicalDegree,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+            };
+            const result = onChange(modelFields);
+            value = result?.type ?? value;
+          }
+          if (errors.type?.hasError) {
+            runValidationTasks("type", value);
+          }
+          setType(value);
+        }}
+        onBlur={() => runValidationTasks("type", type)}
+        errorMessage={errors.type?.errorMessage}
+        hasError={errors.type?.hasError}
+        {...getOverrideProps(overrides, "type")}
+      ></TextField>
+      <TextField
         label="Invite date time"
         isRequired={true}
         isReadOnly={false}
@@ -276,11 +312,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
+              type,
               inviteDateTime: value,
               geographicPreference,
               signal,
               instate,
-              impression,
               additionalComments,
               graduateType,
               medicalDegree,
@@ -312,11 +348,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
+              type,
               inviteDateTime,
               geographicPreference: value,
               signal,
               instate,
-              impression,
               additionalComments,
               graduateType,
               medicalDegree,
@@ -350,11 +386,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
+              type,
               inviteDateTime,
               geographicPreference,
               signal: value,
               instate,
-              impression,
               additionalComments,
               graduateType,
               medicalDegree,
@@ -386,11 +422,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
+              type,
               inviteDateTime,
               geographicPreference,
               signal,
               instate: value,
-              impression,
               additionalComments,
               graduateType,
               medicalDegree,
@@ -413,42 +449,6 @@ export default function InterviewInviteUpdateForm(props) {
         {...getOverrideProps(overrides, "instate")}
       ></SwitchField>
       <TextField
-        label="Impression"
-        isRequired={false}
-        isReadOnly={false}
-        value={impression}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              anonymous,
-              inviteDateTime,
-              geographicPreference,
-              signal,
-              instate,
-              impression: value,
-              additionalComments,
-              graduateType,
-              medicalDegree,
-              step1Score,
-              step2Score,
-              comlex1Score,
-              comlex2Score,
-            };
-            const result = onChange(modelFields);
-            value = result?.impression ?? value;
-          }
-          if (errors.impression?.hasError) {
-            runValidationTasks("impression", value);
-          }
-          setImpression(value);
-        }}
-        onBlur={() => runValidationTasks("impression", impression)}
-        errorMessage={errors.impression?.errorMessage}
-        hasError={errors.impression?.hasError}
-        {...getOverrideProps(overrides, "impression")}
-      ></TextField>
-      <TextField
         label="Additional comments"
         isRequired={false}
         isReadOnly={false}
@@ -458,11 +458,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
+              type,
               inviteDateTime,
               geographicPreference,
               signal,
               instate,
-              impression,
               additionalComments: value,
               graduateType,
               medicalDegree,
@@ -496,11 +496,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
+              type,
               inviteDateTime,
               geographicPreference,
               signal,
               instate,
-              impression,
               additionalComments,
               graduateType: value,
               medicalDegree,
@@ -543,11 +543,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
+              type,
               inviteDateTime,
               geographicPreference,
               signal,
               instate,
-              impression,
               additionalComments,
               graduateType,
               medicalDegree: value,
@@ -594,11 +594,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
+              type,
               inviteDateTime,
               geographicPreference,
               signal,
               instate,
-              impression,
               additionalComments,
               graduateType,
               medicalDegree,
@@ -634,11 +634,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
+              type,
               inviteDateTime,
               geographicPreference,
               signal,
               instate,
-              impression,
               additionalComments,
               graduateType,
               medicalDegree,
@@ -674,11 +674,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
+              type,
               inviteDateTime,
               geographicPreference,
               signal,
               instate,
-              impression,
               additionalComments,
               graduateType,
               medicalDegree,
@@ -714,11 +714,11 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
+              type,
               inviteDateTime,
               geographicPreference,
               signal,
               instate,
-              impression,
               additionalComments,
               graduateType,
               medicalDegree,

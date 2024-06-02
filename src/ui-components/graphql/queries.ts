@@ -37,7 +37,6 @@ export const getInterviewInvite = /* GraphQL */ `
       goldHumanism
       graduateType
       id
-      impression
       instate
       inviteDateTime
       medicalDegree
@@ -223,7 +222,6 @@ export const listInterviewInvites = /* GraphQL */ `
         goldHumanism
         graduateType
         id
-        impression
         instate
         inviteDateTime
         medicalDegree
@@ -240,6 +238,49 @@ export const listInterviewInvites = /* GraphQL */ `
         signal
         step1Score
         step2Score
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listInterviewInviteByTypeAndInviteDateTime = /* GraphQL */ `
+  query ListInterviewInviteByTypeAndInviteDateTime(
+    $filter: ModelInterviewInviteFilterInput
+    $inviteDateTime: ModelStringKeyConditionInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+    $type: String!
+  ) {
+    listInterviewInviteByTypeAndInviteDateTime(
+      filter: $filter
+      inviteDateTime: $inviteDateTime
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+      type: $type
+    ) {
+      items {
+        additionalComments
+        anonymous
+        comlex1Score
+        comlex2Score
+        createdAt
+        geographicPreference
+        graduateType
+        id
+        instate
+        inviteDateTime
+        medicalDegree
+        owner
+        programId
+        signal
+        step1Score
+        step2Score
+        type
         updatedAt
         __typename
       }

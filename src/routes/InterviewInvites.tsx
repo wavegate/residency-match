@@ -9,6 +9,7 @@ import { CalendarFold } from "lucide-react";
 import { Card } from "../components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
+import buildIVstats from "../utils/buildIVstats";
 
 const client = generateClient<Schema>();
 
@@ -16,22 +17,36 @@ export default function InterviewInvites() {
   const { data: interviewInvites } = useQuery({
     queryKey: ["interviewInvites"],
     queryFn: async () => {
-      const response = await client.models.InterviewInvite.list({
-        selectionSet: [
-          "id",
-          "program.*",
-          "program.institution.*",
-          "inviteDateTime",
-          "owner",
-        ],
-      });
+      const response =
+        await client.models.InterviewInvite.listInterviewInviteByTypeAndInviteDateTime(
+          {
+            type: "InterviewInvite",
+          },
+          {
+            selectionSet: [
+              "id",
+              "program.*",
+              "program.institution.*",
+              "inviteDateTime",
+              "owner",
+              "anonymous",
+              "comlex1Score",
+              "comlex2Score",
+              "step1Score",
+              "step2Score",
+              "geographicPreference",
+              "signal",
+              "instate",
+              "graduateType",
+            ],
+            sortDirection: "DESC",
+          }
+        );
       const responseData = response.data;
       if (!responseData) return null;
       return responseData;
     },
   });
-
-  console.log(interviewInvites);
 
   // function deleteInterviewInvite(id: string) {
   //   client.models.InterviewInvite.delete(
@@ -82,6 +97,8 @@ export default function InterviewInvites() {
                     {interviewInvite.program.name}
                   </AvatarFallback>
                 </Avatar>
+                {/* <div>{interviewInvite.owner}</div> */}
+                <div>{buildIVstats(interviewInvite)}</div>
                 {/* <div>followed program</div> */}
                 <div className={`flex flex-col text-right`}>
                   <div className={``}>

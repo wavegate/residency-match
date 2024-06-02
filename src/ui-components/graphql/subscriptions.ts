@@ -41,7 +41,6 @@ export const onCreateInterviewInvite = /* GraphQL */ `
       goldHumanism
       graduateType
       id
-      impression
       instate
       inviteDateTime
       medicalDegree

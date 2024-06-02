@@ -73,13 +73,13 @@ const schema = a.schema({
   InterviewInvite: a
     .model({
       anonymous: a.boolean(),
+      type: a.string().required(),
       inviteDateTime: a.datetime().required(),
       geographicPreference: a.boolean(),
       signal: a.boolean(),
       instate: a.boolean(),
       programId: a.id(),
       program: a.belongsTo("Program", "programId"),
-      impression: a.string(),
       additionalComments: a.string(),
       graduateType: a.enum(["US", "IMG"]),
       medicalDegree: a.ref("MedicalDegree"),
@@ -88,6 +88,7 @@ const schema = a.schema({
       comlex1Score: a.integer(),
       comlex2Score: a.integer(),
     })
+    .secondaryIndexes((index) => [index("type").sortKeys(["inviteDateTime"])])
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
       allow.group("Admin"),

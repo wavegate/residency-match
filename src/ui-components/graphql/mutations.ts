@@ -40,7 +40,7 @@ export const createInterviewInvite = /* GraphQL */ `
       geographicPreference
       graduateType
       id
-      impression
+      type
       instate
       inviteDateTime
       medicalDegree
@@ -183,22 +183,6 @@ export const createUserProfile = /* GraphQL */ `
       goldHumanism
       graduateType
       id
-      interviewInvite {
-        additionalComments
-        anonymous
-        createdAt
-        geographicPreference
-        id
-        impression
-        instate
-        inviteDateTime
-        owner
-        programId
-        signal
-        updatedAt
-        __typename
-      }
-      interviewInviteId
       medicalDegree
       numApplications
       numInterviews
@@ -455,7 +439,6 @@ export const updateInterviewInvite = /* GraphQL */ `
       goldHumanism
       graduateType
       id
-      impression
       instate
       inviteDateTime
       medicalDegree

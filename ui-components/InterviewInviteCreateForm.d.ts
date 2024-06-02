@@ -17,11 +17,11 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type InterviewInviteCreateFormInputValues = {
     anonymous?: boolean;
+    type?: string;
     inviteDateTime?: string;
     geographicPreference?: boolean;
     signal?: boolean;
     instate?: boolean;
-    impression?: string;
     additionalComments?: string;
     graduateType?: string;
     medicalDegree?: string;
@@ -32,11 +32,11 @@ export declare type InterviewInviteCreateFormInputValues = {
 };
 export declare type InterviewInviteCreateFormValidationValues = {
     anonymous?: ValidationFunction<boolean>;
+    type?: ValidationFunction<string>;
     inviteDateTime?: ValidationFunction<string>;
     geographicPreference?: ValidationFunction<boolean>;
     signal?: ValidationFunction<boolean>;
     instate?: ValidationFunction<boolean>;
-    impression?: ValidationFunction<string>;
     additionalComments?: ValidationFunction<string>;
     graduateType?: ValidationFunction<string>;
     medicalDegree?: ValidationFunction<string>;
@@ -49,11 +49,11 @@ export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes
 export declare type InterviewInviteCreateFormOverridesProps = {
     InterviewInviteCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     anonymous?: PrimitiveOverrideProps<SwitchFieldProps>;
+    type?: PrimitiveOverrideProps<TextFieldProps>;
     inviteDateTime?: PrimitiveOverrideProps<TextFieldProps>;
     geographicPreference?: PrimitiveOverrideProps<SwitchFieldProps>;
     signal?: PrimitiveOverrideProps<SwitchFieldProps>;
     instate?: PrimitiveOverrideProps<SwitchFieldProps>;
-    impression?: PrimitiveOverrideProps<TextFieldProps>;
     additionalComments?: PrimitiveOverrideProps<TextFieldProps>;
     graduateType?: PrimitiveOverrideProps<SelectFieldProps>;
     medicalDegree?: PrimitiveOverrideProps<SelectFieldProps>;

@@ -16,8 +16,27 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "../components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 const client = generateClient();
 export default function InterviewInviteCreateForm(props) {
+  const { user } = useAuthenticator((context) => [context.user]);
+  const { data: userProfile } = useQuery({
+    queryKey: ["userProfile", user?.userId],
+    enabled: !!user?.userId,
+    queryFn: async () => {
+      const response = await client.models.UserProfile.list({
+        filter: {
+          owner: {
+            contains: user?.userId,
+          },
+        },
+      });
+      const responseData = response.data;
+      if (!responseData || responseData?.length === 0) return null;
+      return responseData[0];
+    },
+  });
+
   const queryClient = useQueryClient();
   const {
     clearOnSuccess = true,
@@ -35,7 +54,6 @@ export default function InterviewInviteCreateForm(props) {
     geographicPreference: false,
     signal: false,
     instate: false,
-    impression: "",
     additionalComments: "",
     graduateType: "",
     medicalDegree: "",
@@ -55,7 +73,6 @@ export default function InterviewInviteCreateForm(props) {
   );
   const [signal, setSignal] = React.useState(initialValues.signal);
   const [instate, setInstate] = React.useState(initialValues.instate);
-  const [impression, setImpression] = React.useState(initialValues.impression);
   const [additionalComments, setAdditionalComments] = React.useState(
     initialValues.additionalComments
   );
@@ -73,7 +90,7 @@ export default function InterviewInviteCreateForm(props) {
   const [comlex2Score, setComlex2Score] = React.useState(
     initialValues.comlex2Score
   );
-  const { user } = useAuthenticator((context) => [context.user]);
+
   const navigate = useNavigate();
 
   const [programs, setPrograms] = React.useState([]);
@@ -90,7 +107,6 @@ export default function InterviewInviteCreateForm(props) {
     setGeographicPreference(initialValues.geographicPreference);
     setSignal(initialValues.signal);
     setInstate(initialValues.instate);
-    setImpression(initialValues.impression);
     setAdditionalComments(initialValues.additionalComments);
     setGraduateType(initialValues.graduateType);
     setMedicalDegree(initialValues.medicalDegree);
@@ -107,7 +123,6 @@ export default function InterviewInviteCreateForm(props) {
     geographicPreference: [],
     signal: [],
     instate: [],
-    impression: [],
     additionalComments: [],
     graduateType: [],
     medicalDegree: [],
@@ -152,6 +167,15 @@ export default function InterviewInviteCreateForm(props) {
     return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   };
   const { toast } = useToast();
+
+  function importMyStats() {
+    setGraduateType(userProfile.graduateType);
+    setMedicalDegree(userProfile.medicalDegree);
+    setStep1Score(userProfile.step1Score);
+    setStep2Score(userProfile.step2Score);
+    setComlex1Score(userProfile.comlex1Score);
+    setComlex2Score(userProfile.comlex2Score);
+  }
   return (
     <Grid
       as="form"
@@ -166,7 +190,6 @@ export default function InterviewInviteCreateForm(props) {
           geographicPreference,
           signal,
           instate,
-          impression,
           additionalComments,
           graduateType,
           medicalDegree,
@@ -209,6 +232,7 @@ export default function InterviewInviteCreateForm(props) {
             variables: {
               input: {
                 ...modelFields,
+                type: "InterviewInvite",
               },
             },
             authMode: "userPool",
@@ -286,7 +310,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal,
               instate,
-              impression,
+
               additionalComments,
               graduateType,
               medicalDegree,
@@ -325,7 +349,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal,
               instate,
-              impression,
+
               additionalComments,
               graduateType,
               medicalDegree,
@@ -362,7 +386,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference: value,
               signal,
               instate,
-              impression,
+
               additionalComments,
               graduateType,
               medicalDegree,
@@ -401,7 +425,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal: value,
               instate,
-              impression,
+
               additionalComments,
               graduateType,
               medicalDegree,
@@ -438,7 +462,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal,
               instate: value,
-              impression,
+
               additionalComments,
               graduateType,
               medicalDegree,
@@ -462,43 +486,6 @@ export default function InterviewInviteCreateForm(props) {
         {...getOverrideProps(overrides, "instate")}
       ></SwitchField>
       <TextField
-        label="Impression"
-        isRequired={false}
-        isReadOnly={false}
-        value={impression}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              anonymous,
-              inviteDateTime,
-              geographicPreference,
-              signal,
-              instate,
-              impression: value,
-              additionalComments,
-              graduateType,
-              medicalDegree,
-              step1Score,
-              step2Score,
-              comlex1Score,
-              comlex2Score,
-              programId,
-            };
-            const result = onChange(modelFields);
-            value = result?.impression ?? value;
-          }
-          if (errors.impression?.hasError) {
-            runValidationTasks("impression", value);
-          }
-          setImpression(value);
-        }}
-        onBlur={() => runValidationTasks("impression", impression)}
-        errorMessage={errors.impression?.errorMessage}
-        hasError={errors.impression?.hasError}
-        {...getOverrideProps(overrides, "impression")}
-      ></TextField>
-      <TextField
         label="Additional comments"
         isRequired={false}
         isReadOnly={false}
@@ -512,7 +499,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal,
               instate,
-              impression,
+
               additionalComments: value,
               graduateType,
               medicalDegree,
@@ -537,6 +524,7 @@ export default function InterviewInviteCreateForm(props) {
         hasError={errors.additionalComments?.hasError}
         {...getOverrideProps(overrides, "additionalComments")}
       ></TextField>
+      <Button onClick={importMyStats}>Import my stats</Button>
       <SelectField
         label="Graduate type"
         placeholder="Please select an option"
@@ -551,7 +539,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal,
               instate,
-              impression,
+
               additionalComments,
               graduateType: value,
               medicalDegree,
@@ -599,7 +587,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal,
               instate,
-              impression,
+
               additionalComments,
               graduateType,
               medicalDegree: value,
@@ -651,7 +639,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal,
               instate,
-              impression,
+
               additionalComments,
               graduateType,
               medicalDegree,
@@ -692,7 +680,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal,
               instate,
-              impression,
+
               additionalComments,
               graduateType,
               medicalDegree,
@@ -733,7 +721,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal,
               instate,
-              impression,
+
               additionalComments,
               graduateType,
               medicalDegree,
@@ -774,7 +762,7 @@ export default function InterviewInviteCreateForm(props) {
               geographicPreference,
               signal,
               instate,
-              impression,
+
               additionalComments,
               graduateType,
               medicalDegree,
