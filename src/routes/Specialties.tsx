@@ -1,24 +1,30 @@
 import SpecialtyCreateForm from "../ui-components/SpecialtyCreateForm";
-import { useEffect, useState } from "react";
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-import { Button, useAuthenticator } from "@aws-amplify/ui-react";
+import { Button } from "@aws-amplify/ui-react";
 import usePermissions from "../hooks/usePermissions";
+import { useQuery } from "@tanstack/react-query";
 
 const client = generateClient<Schema>();
 export default function Specialties() {
-  const { user } = useAuthenticator((context) => [context.user]);
-  const [specialties, setSpecialties] = useState<
-    Array<Schema["Specialty"]["type"]>
-  >([]);
-
   const { permissions } = usePermissions();
-
-  useEffect(() => {
-    client.models.Specialty.observeQuery().subscribe({
-      next: (data) => setSpecialties([...data.items]),
-    });
-  }, [user]);
+  const { data: specialties } = useQuery({
+    queryKey: ["specialties"],
+    queryFn: async () => {
+      const response =
+        await client.models.Specialty.listSpecialtyBySortTypeAndAcgmeSpecialtyCode(
+          {
+            sortType: "Specialty",
+          },
+          {
+            sortDirection: "ASC",
+          }
+        );
+      const responseData = response.data;
+      if (!responseData) return null;
+      return responseData;
+    },
+  });
 
   function deleteSpecialty(id: string) {
     client.models.Specialty.delete(
@@ -32,9 +38,10 @@ export default function Specialties() {
     <div className={`flex-1 overflow-y-auto`}>
       <h1>Specialties</h1>
       <ul>
-        {specialties.map((specialty) => (
+        {specialties?.map((specialty) => (
           <li key={specialty.id}>
             <h2>{specialty.name}</h2>
+            <div>{specialty.acgmeSpecialtyCode}</div>
             <Button onClick={() => deleteSpecialty(specialty.id)}>
               Delete
             </Button>

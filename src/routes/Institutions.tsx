@@ -5,21 +5,28 @@ import { Button, useAuthenticator } from "@aws-amplify/ui-react";
 import usePermissions from "../hooks/usePermissions";
 import InstitutionCreateForm from "../ui-components/InstitutionCreateForm";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
 const client = generateClient<Schema>();
 export default function Institutions() {
-  const { user } = useAuthenticator((context) => [context.user]);
-  const [institutions, setInstitutions] = useState<
-    Array<Schema["Institution"]["type"]>
-  >([]);
-
   const { permissions } = usePermissions();
-
-  useEffect(() => {
-    client.models.Institution.observeQuery().subscribe({
-      next: (data) => setInstitutions([...data.items]),
-    });
-  }, [user]);
+  const { data: institutions } = useQuery({
+    queryKey: ["institutions"],
+    queryFn: async () => {
+      const response =
+        await client.models.Institution.listInstitutionBySortTypeAndName(
+          {
+            sortType: "Institution",
+          },
+          {
+            sortDirection: "ASC",
+          }
+        );
+      const responseData = response.data;
+      if (!responseData) return null;
+      return responseData;
+    },
+  });
 
   function deleteInstitution(id: string) {
     client.models.Institution.delete(
@@ -34,9 +41,10 @@ export default function Institutions() {
     <div className={`flex-1 overflow-y-auto`}>
       <h1>Institutions</h1>
       <ul>
-        {institutions.map((institution) => (
+        {institutions?.map((institution) => (
           <li key={institution.id}>
             <h2>{institution.name}</h2>
+            <div>{institution.institutionCode}</div>
             <Button onClick={() => deleteInstitution(institution.id)}>
               Delete
             </Button>

@@ -4,21 +4,35 @@ import { generateClient } from "aws-amplify/data";
 import { Button, useAuthenticator } from "@aws-amplify/ui-react";
 import usePermissions from "../hooks/usePermissions";
 import ProgramCreateForm from "../ui-components/ProgramCreateForm";
+import { useQuery } from "@tanstack/react-query";
 
 const client = generateClient<Schema>();
 export default function Programs() {
-  const { user } = useAuthenticator((context) => [context.user]);
-  const [programs, setPrograms] = useState<Array<Schema["Program"]["type"]>>(
-    []
-  );
+  const { data: programs } = useQuery({
+    queryKey: ["programs"],
+    queryFn: async () => {
+      const response = await client.models.Program.listProgramBySortTypeAndName(
+        {
+          sortType: "Program",
+        },
+        {
+          selectionSet: [
+            "specialty.*",
+            "institution.*",
+            "id",
+            "name",
+            "nrmpProgramCode",
+          ],
+          sortDirection: "ASC",
+        }
+      );
+      const responseData = response.data;
+      if (!responseData) return null;
+      return responseData;
+    },
+  });
 
   const { permissions } = usePermissions();
-
-  useEffect(() => {
-    client.models.Program.observeQuery().subscribe({
-      next: (data) => setPrograms([...data.items]),
-    });
-  }, [user]);
 
   function deleteProgram(id: string) {
     client.models.Program.delete(
@@ -32,9 +46,12 @@ export default function Programs() {
     <div className={`flex-1 overflow-y-auto`}>
       <h1>Programs</h1>
       <ul>
-        {programs.map((program) => (
+        {programs?.map((program) => (
           <li key={program.id}>
             <h2>{program.name}</h2>
+            <div>{program.nrmpProgramCode}</div>
+            <div>{program.specialty.name}</div>
+            <div>{program.institution.name}</div>
             <Button onClick={() => deleteProgram(program.id)}>Delete</Button>
           </li>
         ))}

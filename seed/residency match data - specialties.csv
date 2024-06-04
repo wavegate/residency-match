@@ -1,0 +1,47 @@
+acgmeSpecialtyCode,name
+040,Anesthesiology
+080,Dermatology
+110,Emergency Medicine
+120,Family Medicine
+140,Internal Medicine
+160,Neurological Surgery
+180,Neurology
+185,Child Neurology (Neurology)
+186,Neurodevelopmental Disabilities
+200,Nuclear Medicine
+220,Obstetrics and Gynecology
+260,Orthopaedic Surgery
+275,Osteopathic Neuromusculoskeletal Medicine
+280,Otolaryngology
+300,Pathology-Anatomic and Clinical
+320,Pediatrics
+340,Physical Medicine and Rehabilitation
+362,Plastic Surgery (Integrated)
+380,Preventive Medicine
+400,Psychiatry
+416,Interventional Radiology (Integrated)
+420,Radiology-Diagnostic
+430,Radiation Oncology
+440,Surgery-General
+451,Vascular Surgery
+461,Thoracic Surgery
+700,Internal Medicine/Pediatrics
+705,Internal Medicine/Emergency Medicine
+715,Internal Medicine/Psychiatry
+720,Psychiatry/Family Medicine
+725,Pediatrics/Emergency Medicine
+726,Pediatrics/Anesthesiology
+730,Pediatrics/Psychiatry/Child and Adolescent Psychiatry
+735,Pediatrics/Physical Medicine and Rehabilitation
+742,Internal Medicine/Anesthesiology
+751,Internal Medicine/Preventive Medicine
+752,Family Medicine/Preventive Medicine
+753,Family Medicine/Osteopathic Neuromusculoskeletal Medicine
+755,Psychiatry/Neurology
+765,Pediatrics/Medical Genetics
+766,Internal Medicine/Medical Genetics
+770,Diagnostic Radiology/Nuclear Medicine/Nuclear Radiology
+785,Internal Medicine/Dermatology
+795,Emergency Medicine/Family Medicine
+796,Emergency Medicine/Anesthesiology
+999,Transitional Year

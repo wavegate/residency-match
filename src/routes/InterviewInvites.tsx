@@ -18,9 +18,9 @@ export default function InterviewInvites() {
     queryKey: ["interviewInvites"],
     queryFn: async () => {
       const response =
-        await client.models.InterviewInvite.listInterviewInviteByTypeAndInviteDateTime(
+        await client.models.InterviewInvite.listInterviewInviteBySortTypeAndInviteDateTime(
           {
-            type: "InterviewInvite",
+            sortType: "InterviewInvite",
           },
           {
             selectionSet: [
@@ -36,8 +36,6 @@ export default function InterviewInvites() {
               "step2Score",
               "geographicPreference",
               "signal",
-              "instate",
-              "graduateType",
             ],
             sortDirection: "DESC",
           }
@@ -83,7 +81,8 @@ export default function InterviewInvites() {
             >
               <div>
                 <div className={`font-semibold`}>
-                  {interviewInvite.program.name}
+                  {interviewInvite.program.name} at{" "}
+                  {interviewInvite.program.institution.name}
                 </div>
               </div>
               <div className={`justify-between items-center flex`}>

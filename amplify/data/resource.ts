@@ -16,24 +16,25 @@ const schema = a.schema({
     "R", // physician program
     "F", // fellowship program
   ]),
-  Todo: a
-    .model({
-      content: a.string(),
-    })
-    .authorization((allow) => [allow.owner()]),
   Specialty: a
     .model({
+      sortType: a.string().required(),
       name: a.string(),
       acgmeSpecialtyCode: a.string(),
       institutions: a.hasMany("SpecialtyInstitution", "specialtyId"),
       programs: a.hasMany("Program", "specialtyId"),
     })
+    .secondaryIndexes((index) => [
+      index("sortType").sortKeys(["acgmeSpecialtyCode"]),
+      index("acgmeSpecialtyCode"),
+    ])
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
       allow.group("Admin"),
     ]),
   Program: a
     .model({
+      sortType: a.string().required(),
       name: a.string(),
       nrmpProgramCode: a.string(),
       type: a.ref("ProgramType"),
@@ -43,24 +44,34 @@ const schema = a.schema({
       specialty: a.belongsTo("Specialty", "specialtyId"),
       interviewInvites: a.hasMany("InterviewInvite", "programId"),
     })
+    .secondaryIndexes((index) => [
+      index("sortType").sortKeys(["name"]),
+      index("nrmpProgramCode"),
+    ])
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
       allow.group("Admin"),
     ]),
   Institution: a
     .model({
+      sortType: a.string().required(),
       name: a.string(),
       institutionCode: a.string(),
       programs: a.hasMany("Program", "institutionId"),
       specialties: a.hasMany("SpecialtyInstitution", "institutionId"),
       imageLink: a.string(),
     })
+    .secondaryIndexes((index) => [
+      index("sortType").sortKeys(["name"]),
+      index("institutionCode"),
+    ])
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
       allow.group("Admin"),
     ]),
   SpecialtyInstitution: a
     .model({
+      sortType: a.string().required(),
       specialtyId: a.id().required(),
       institutionId: a.id().required(),
       specialty: a.belongsTo("Specialty", "specialtyId"),
@@ -73,22 +84,30 @@ const schema = a.schema({
   InterviewInvite: a
     .model({
       anonymous: a.boolean(),
-      type: a.string().required(),
+      img: a.enum(["nonUSIMG", "USIMG"]),
+      sortType: a.string().required(),
       inviteDateTime: a.datetime().required(),
       geographicPreference: a.boolean(),
       signal: a.boolean(),
-      instate: a.boolean(),
+      location: a.enum(["IS", "OOS"]),
       programId: a.id().required(),
       program: a.belongsTo("Program", "programId"),
       additionalComments: a.string(),
-      graduateType: a.enum(["US", "IMG"]),
       medicalDegree: a.ref("MedicalDegree"),
-      step1Score: a.integer(),
-      step2Score: a.integer(),
-      comlex1Score: a.integer(),
-      comlex2Score: a.integer(),
+      step1Score: a.string(),
+      step2Score: a.string(),
+      comlex1Score: a.string(),
+      comlex2Score: a.string(),
+      visaRequired: a.boolean(),
+      subI: a.boolean(),
+      home: a.boolean(),
+      yearOfGraduation: a.integer(),
+      greenCard: a.boolean(),
+      away: a.boolean(),
     })
-    .secondaryIndexes((index) => [index("type").sortKeys(["inviteDateTime"])])
+    .secondaryIndexes((index) => [
+      index("sortType").sortKeys(["inviteDateTime"]),
+    ])
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
       allow.group("Admin"),
@@ -97,6 +116,7 @@ const schema = a.schema({
     ]),
   UserProfile: a
     .model({
+      sortType: a.string().required(),
       isProfile: a.boolean(),
       step2CSPathway: a.enum([
         "pathway1",

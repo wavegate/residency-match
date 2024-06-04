@@ -1,0 +1,17 @@
+{
+  "name": "data_engineering",
+  "version": "1.0.0",
+  "description": "",
+  "main": "loadSpecialties.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1633.0",
+    "csv-parser": "^3.0.0"
+  }
+}
