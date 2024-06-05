@@ -55,24 +55,8 @@ export default function InterviewInvites() {
   //   );
   // }
   return (
-    <div
-      className={`p-[12px] bg-[#96BBDE] flex-1 flex flex-col overflow-y-auto`}
-    >
-      <div className={`flex flex-col gap-[12px] overflow-y-auto flex-1`}>
-        <div className={`flex gap-[12px] items-center`}>
-          <div
-            className={`text-[#F3FAFC] bg-[#07243B] w-[50px] h-[50px] rounded-full flex items-center justify-center`}
-          >
-            <CalendarFold />
-          </div>
-          <div className={`flex-1`}>
-            <div className={`text-[20px] font-semibold`}>Interview Invites</div>
-            <div className={`text-[#263D54] text-[14px]`}>
-              {dayjs().format("MM/DD/YYYY")}
-            </div>
-          </div>
-          <div>38</div>
-        </div>
+    <div className={`p-[12px] bg-[#96BBDE] flex flex-col`}>
+      <div className={`flex flex-col gap-[12px] flex-1`}>
         <div className={`flex flex-col gap-[6px]`}>
           {interviewInvites?.map((interviewInvite) => (
             <Card

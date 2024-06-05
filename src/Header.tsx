@@ -1,48 +1,39 @@
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { Avatar, AvatarImage, AvatarFallback } from "./components/ui/avatar";
-import { Plus, Heart, Languages } from "lucide-react";
+import { Plus, Heart, Languages, Stethoscope } from "lucide-react";
 import { Link } from "react-router-dom";
 import { signOut } from "aws-amplify/auth";
+import { Button } from "./components/ui/button";
 
 export default function Header() {
   const { user } = useAuthenticator((context) => [context.user]);
   return (
     <>
       <header
-        className={`h-[120px] bg-[#2B4C6D] flex flex-col w-full p-[12px] text-[#F9FEFF] `}
+        className={`bg-[#2B4C6D] flex justify-between w-full py-3 px-3 text-[#F9FEFF] fixed top-0 z-10`}
       >
-        <div className={`flex justify-between items-center gap-[12px]`}>
-          <div className={`flex items-center gap-[12px]`}>
-            <div
-              className={`text-slate-900 rounded-full w-[32px] h-[32px] flex items-center justify-center bg-zinc-100`}
-            >
-              <Link to="create-interview-invite">
-                <Plus />
-              </Link>
-            </div>
-            <Heart />
-          </div>
-          <div>
-            <Languages />
-          </div>
+        <div className={`flex text-[16px] font-semibold gap-[6px]`}>
+          <Stethoscope />
+          <div>BrandName</div>
         </div>
-        <div className={`grid grid-cols-[1fr_88px_1fr] `}>
-          <div className={`min-w-0`}>
-            <div className={`min-w-0 truncate`}>
-              {user?.signInDetails?.loginId}
-            </div>
-            {user && <Link to="profile">Profile</Link>}
-          </div>
-          <div className={`px-[12px]`}>
-            <Avatar className={`w-[64px] h-[64px]`}>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          </div>
-          <div className={`text-right`}>
-            {user === undefined && <Link to="auth">Sign in</Link>}
-            {user && <button onClick={() => signOut()}>Sign out</button>}
-          </div>
+
+        <div className={`flex gap-[6px]`}>
+          {user === undefined && <Link to="auth">Sign in</Link>}
+          {user && (
+            <Link to="profile">
+              <Button className={`px-2 py-[2px] h-auto text-base`}>
+                Profile
+              </Button>
+            </Link>
+          )}
+          {user && (
+            <Button
+              onClick={() => signOut()}
+              className={`px-2 py-[2px] h-auto text-base bg-transparent`}
+            >
+              Sign Out
+            </Button>
+          )}
         </div>
       </header>
     </>
