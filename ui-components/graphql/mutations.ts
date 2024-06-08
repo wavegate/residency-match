@@ -2,6 +2,76 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createApplication = /* GraphQL */ `
+  mutation CreateApplication(
+    $condition: ModelApplicationConditionInput
+    $input: CreateApplicationInput!
+  ) {
+    createApplication(condition: $condition, input: $input) {
+      createdAt
+      id
+      owner
+      program {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        sortType
+        specialtyId
+        type
+        updatedAt
+        __typename
+      }
+      programId
+      status
+      updatedAt
+      userProfile {
+        aoa
+        applicationYear
+        classRank
+        codeName
+        comlex1ScorePass
+        comlex2Score
+        createdAt
+        ecfmgCertified
+        goldHumanism
+        graduateType
+        id
+        isProfile
+        location
+        medicalDegree
+        monthsOfUSCE
+        numApplications
+        numInterviews
+        numPublications
+        numRejected
+        numVolunteerExperiences
+        numWaitlisted
+        numWithdrawn
+        numWorkExperiences
+        otherDegrees
+        owner
+        redFlags
+        redFlagsExplanation
+        schoolRanking
+        sigmaSigmaPhi
+        sortType
+        step1Score
+        step1ScorePass
+        step2CSPathway
+        step2Score
+        step3Score
+        updatedAt
+        visaRequired
+        yearOfGraduation
+        __typename
+      }
+      userProfileId
+      __typename
+    }
+  }
+`;
 export const createInstitution = /* GraphQL */ `
   mutation CreateInstitution(
     $condition: ModelInstitutionConditionInput
@@ -17,6 +87,7 @@ export const createInstitution = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       specialties {
         nextToken
         __typename
@@ -34,14 +105,17 @@ export const createInterviewInvite = /* GraphQL */ `
     createInterviewInvite(condition: $condition, input: $input) {
       additionalComments
       anonymous
+      away
       comlex1Score
       comlex2Score
       createdAt
       geographicPreference
-      graduateType
+      greenCard
+      home
       id
-      instate
+      img
       inviteDateTime
+      location
       medicalDegree
       owner
       program {
@@ -50,6 +124,7 @@ export const createInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
+        sortType
         specialtyId
         type
         updatedAt
@@ -57,10 +132,13 @@ export const createInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      sortType
       step1Score
       step2Score
-      type
+      subI
       updatedAt
+      visaRequired
+      yearOfGraduation
       __typename
     }
   }
@@ -71,6 +149,10 @@ export const createProgram = /* GraphQL */ `
     $input: CreateProgramInput!
   ) {
     createProgram(condition: $condition, input: $input) {
+      applications {
+        nextToken
+        __typename
+      }
       createdAt
       id
       institution {
@@ -79,6 +161,7 @@ export const createProgram = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
@@ -89,11 +172,13 @@ export const createProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
@@ -122,6 +207,7 @@ export const createSpecialty = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       updatedAt
       __typename
     }
@@ -141,34 +227,22 @@ export const createSpecialtyInstitution = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
       institutionId
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
       specialtyId
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const createTodo = /* GraphQL */ `
-  mutation CreateTodo(
-    $condition: ModelTodoConditionInput
-    $input: CreateTodoInput!
-  ) {
-    createTodo(condition: $condition, input: $input) {
-      content
-      createdAt
-      id
-      owner
       updatedAt
       __typename
     }
@@ -181,10 +255,14 @@ export const createUserProfile = /* GraphQL */ `
   ) {
     createUserProfile(condition: $condition, input: $input) {
       aoa
-      avatarImage
+      applicationYear
+      applications {
+        nextToken
+        __typename
+      }
       classRank
       codeName
-      comlex1Score
+      comlex1ScorePass
       comlex2Score
       createdAt
       ecfmgCertified
@@ -195,20 +273,99 @@ export const createUserProfile = /* GraphQL */ `
       location
       medicalDegree
       monthsOfUSCE
-      needVisa
       numApplications
       numInterviews
-      numPublicationsPosters
+      numPublications
+      numRejected
       numVolunteerExperiences
+      numWaitlisted
+      numWithdrawn
       numWorkExperiences
+      otherDegrees
       owner
       redFlags
-      sigmaSigmaPi
+      redFlagsExplanation
+      schoolRanking
+      sigmaSigmaPhi
+      sortType
       step1Score
+      step1ScorePass
       step2CSPathway
       step2Score
+      step3Score
       updatedAt
+      visaRequired
       yearOfGraduation
+      __typename
+    }
+  }
+`;
+export const deleteApplication = /* GraphQL */ `
+  mutation DeleteApplication(
+    $condition: ModelApplicationConditionInput
+    $input: DeleteApplicationInput!
+  ) {
+    deleteApplication(condition: $condition, input: $input) {
+      createdAt
+      id
+      owner
+      program {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        sortType
+        specialtyId
+        type
+        updatedAt
+        __typename
+      }
+      programId
+      status
+      updatedAt
+      userProfile {
+        aoa
+        applicationYear
+        classRank
+        codeName
+        comlex1ScorePass
+        comlex2Score
+        createdAt
+        ecfmgCertified
+        goldHumanism
+        graduateType
+        id
+        isProfile
+        location
+        medicalDegree
+        monthsOfUSCE
+        numApplications
+        numInterviews
+        numPublications
+        numRejected
+        numVolunteerExperiences
+        numWaitlisted
+        numWithdrawn
+        numWorkExperiences
+        otherDegrees
+        owner
+        redFlags
+        redFlagsExplanation
+        schoolRanking
+        sigmaSigmaPhi
+        sortType
+        step1Score
+        step1ScorePass
+        step2CSPathway
+        step2Score
+        step3Score
+        updatedAt
+        visaRequired
+        yearOfGraduation
+        __typename
+      }
+      userProfileId
       __typename
     }
   }
@@ -228,6 +385,7 @@ export const deleteInstitution = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       specialties {
         nextToken
         __typename
@@ -245,14 +403,17 @@ export const deleteInterviewInvite = /* GraphQL */ `
     deleteInterviewInvite(condition: $condition, input: $input) {
       additionalComments
       anonymous
+      away
       comlex1Score
       comlex2Score
       createdAt
       geographicPreference
-      graduateType
+      greenCard
+      home
       id
-      instate
+      img
       inviteDateTime
+      location
       medicalDegree
       owner
       program {
@@ -261,6 +422,7 @@ export const deleteInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
+        sortType
         specialtyId
         type
         updatedAt
@@ -268,10 +430,13 @@ export const deleteInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      sortType
       step1Score
       step2Score
-      type
+      subI
       updatedAt
+      visaRequired
+      yearOfGraduation
       __typename
     }
   }
@@ -282,6 +447,10 @@ export const deleteProgram = /* GraphQL */ `
     $input: DeleteProgramInput!
   ) {
     deleteProgram(condition: $condition, input: $input) {
+      applications {
+        nextToken
+        __typename
+      }
       createdAt
       id
       institution {
@@ -290,6 +459,7 @@ export const deleteProgram = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
@@ -300,11 +470,13 @@ export const deleteProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
@@ -333,6 +505,7 @@ export const deleteSpecialty = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       updatedAt
       __typename
     }
@@ -352,34 +525,22 @@ export const deleteSpecialtyInstitution = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
       institutionId
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
       specialtyId
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteTodo = /* GraphQL */ `
-  mutation DeleteTodo(
-    $condition: ModelTodoConditionInput
-    $input: DeleteTodoInput!
-  ) {
-    deleteTodo(condition: $condition, input: $input) {
-      content
-      createdAt
-      id
-      owner
       updatedAt
       __typename
     }
@@ -392,10 +553,14 @@ export const deleteUserProfile = /* GraphQL */ `
   ) {
     deleteUserProfile(condition: $condition, input: $input) {
       aoa
-      avatarImage
+      applicationYear
+      applications {
+        nextToken
+        __typename
+      }
       classRank
       codeName
-      comlex1Score
+      comlex1ScorePass
       comlex2Score
       createdAt
       ecfmgCertified
@@ -406,20 +571,99 @@ export const deleteUserProfile = /* GraphQL */ `
       location
       medicalDegree
       monthsOfUSCE
-      needVisa
       numApplications
       numInterviews
-      numPublicationsPosters
+      numPublications
+      numRejected
       numVolunteerExperiences
+      numWaitlisted
+      numWithdrawn
       numWorkExperiences
+      otherDegrees
       owner
       redFlags
-      sigmaSigmaPi
+      redFlagsExplanation
+      schoolRanking
+      sigmaSigmaPhi
+      sortType
       step1Score
+      step1ScorePass
       step2CSPathway
       step2Score
+      step3Score
       updatedAt
+      visaRequired
       yearOfGraduation
+      __typename
+    }
+  }
+`;
+export const updateApplication = /* GraphQL */ `
+  mutation UpdateApplication(
+    $condition: ModelApplicationConditionInput
+    $input: UpdateApplicationInput!
+  ) {
+    updateApplication(condition: $condition, input: $input) {
+      createdAt
+      id
+      owner
+      program {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        sortType
+        specialtyId
+        type
+        updatedAt
+        __typename
+      }
+      programId
+      status
+      updatedAt
+      userProfile {
+        aoa
+        applicationYear
+        classRank
+        codeName
+        comlex1ScorePass
+        comlex2Score
+        createdAt
+        ecfmgCertified
+        goldHumanism
+        graduateType
+        id
+        isProfile
+        location
+        medicalDegree
+        monthsOfUSCE
+        numApplications
+        numInterviews
+        numPublications
+        numRejected
+        numVolunteerExperiences
+        numWaitlisted
+        numWithdrawn
+        numWorkExperiences
+        otherDegrees
+        owner
+        redFlags
+        redFlagsExplanation
+        schoolRanking
+        sigmaSigmaPhi
+        sortType
+        step1Score
+        step1ScorePass
+        step2CSPathway
+        step2Score
+        step3Score
+        updatedAt
+        visaRequired
+        yearOfGraduation
+        __typename
+      }
+      userProfileId
       __typename
     }
   }
@@ -439,6 +683,7 @@ export const updateInstitution = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       specialties {
         nextToken
         __typename
@@ -456,14 +701,17 @@ export const updateInterviewInvite = /* GraphQL */ `
     updateInterviewInvite(condition: $condition, input: $input) {
       additionalComments
       anonymous
+      away
       comlex1Score
       comlex2Score
       createdAt
       geographicPreference
-      graduateType
+      greenCard
+      home
       id
-      instate
+      img
       inviteDateTime
+      location
       medicalDegree
       owner
       program {
@@ -472,6 +720,7 @@ export const updateInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
+        sortType
         specialtyId
         type
         updatedAt
@@ -479,10 +728,13 @@ export const updateInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      sortType
       step1Score
       step2Score
-      type
+      subI
       updatedAt
+      visaRequired
+      yearOfGraduation
       __typename
     }
   }
@@ -493,6 +745,10 @@ export const updateProgram = /* GraphQL */ `
     $input: UpdateProgramInput!
   ) {
     updateProgram(condition: $condition, input: $input) {
+      applications {
+        nextToken
+        __typename
+      }
       createdAt
       id
       institution {
@@ -501,6 +757,7 @@ export const updateProgram = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
@@ -511,11 +768,13 @@ export const updateProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
@@ -544,6 +803,7 @@ export const updateSpecialty = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       updatedAt
       __typename
     }
@@ -563,34 +823,22 @@ export const updateSpecialtyInstitution = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
       institutionId
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
       specialtyId
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const updateTodo = /* GraphQL */ `
-  mutation UpdateTodo(
-    $condition: ModelTodoConditionInput
-    $input: UpdateTodoInput!
-  ) {
-    updateTodo(condition: $condition, input: $input) {
-      content
-      createdAt
-      id
-      owner
       updatedAt
       __typename
     }
@@ -603,10 +851,14 @@ export const updateUserProfile = /* GraphQL */ `
   ) {
     updateUserProfile(condition: $condition, input: $input) {
       aoa
-      avatarImage
+      applicationYear
+      applications {
+        nextToken
+        __typename
+      }
       classRank
       codeName
-      comlex1Score
+      comlex1ScorePass
       comlex2Score
       createdAt
       ecfmgCertified
@@ -617,19 +869,28 @@ export const updateUserProfile = /* GraphQL */ `
       location
       medicalDegree
       monthsOfUSCE
-      needVisa
       numApplications
       numInterviews
-      numPublicationsPosters
+      numPublications
+      numRejected
       numVolunteerExperiences
+      numWaitlisted
+      numWithdrawn
       numWorkExperiences
+      otherDegrees
       owner
       redFlags
-      sigmaSigmaPi
+      redFlagsExplanation
+      schoolRanking
+      sigmaSigmaPhi
+      sortType
       step1Score
+      step1ScorePass
       step2CSPathway
       step2Score
+      step3Score
       updatedAt
+      visaRequired
       yearOfGraduation
       __typename
     }

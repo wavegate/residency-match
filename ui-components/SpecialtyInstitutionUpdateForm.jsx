@@ -1,7 +1,7 @@
 /* eslint-disable */
 "use client";
 import * as React from "react";
-import { Button, Flex, Grid } from "@aws-amplify/ui-react";
+import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { getSpecialtyInstitution } from "./graphql/queries";
@@ -19,12 +19,16 @@ export default function SpecialtyInstitutionUpdateForm(props) {
     overrides,
     ...rest
   } = props;
-  const initialValues = {};
+  const initialValues = {
+    sortType: "",
+  };
+  const [sortType, setSortType] = React.useState(initialValues.sortType);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = specialtyInstitutionRecord
       ? { ...initialValues, ...specialtyInstitutionRecord }
       : initialValues;
+    setSortType(cleanValues.sortType);
     setErrors({});
   };
   const [specialtyInstitutionRecord, setSpecialtyInstitutionRecord] =
@@ -44,7 +48,9 @@ export default function SpecialtyInstitutionUpdateForm(props) {
     queryData();
   }, [idProp, specialtyInstitutionModelProp]);
   React.useEffect(resetStateValues, [specialtyInstitutionRecord]);
-  const validations = {};
+  const validations = {
+    sortType: [{ type: "Required" }],
+  };
   const runValidationTasks = async (
     fieldName,
     currentValue,
@@ -70,7 +76,9 @@ export default function SpecialtyInstitutionUpdateForm(props) {
       padding="20px"
       onSubmit={async (event) => {
         event.preventDefault();
-        let modelFields = {};
+        let modelFields = {
+          sortType,
+        };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
@@ -121,6 +129,30 @@ export default function SpecialtyInstitutionUpdateForm(props) {
       {...getOverrideProps(overrides, "SpecialtyInstitutionUpdateForm")}
       {...rest}
     >
+      <TextField
+        label="Sort type"
+        isRequired={true}
+        isReadOnly={false}
+        value={sortType}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sortType: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.sortType ?? value;
+          }
+          if (errors.sortType?.hasError) {
+            runValidationTasks("sortType", value);
+          }
+          setSortType(value);
+        }}
+        onBlur={() => runValidationTasks("sortType", sortType)}
+        errorMessage={errors.sortType?.errorMessage}
+        hasError={errors.sortType?.hasError}
+        {...getOverrideProps(overrides, "sortType")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

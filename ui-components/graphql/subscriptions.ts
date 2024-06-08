@@ -2,6 +2,76 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateApplication = /* GraphQL */ `
+  subscription OnCreateApplication(
+    $filter: ModelSubscriptionApplicationFilterInput
+    $owner: String
+  ) {
+    onCreateApplication(filter: $filter, owner: $owner) {
+      createdAt
+      id
+      owner
+      program {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        sortType
+        specialtyId
+        type
+        updatedAt
+        __typename
+      }
+      programId
+      status
+      updatedAt
+      userProfile {
+        aoa
+        applicationYear
+        classRank
+        codeName
+        comlex1ScorePass
+        comlex2Score
+        createdAt
+        ecfmgCertified
+        goldHumanism
+        graduateType
+        id
+        isProfile
+        location
+        medicalDegree
+        monthsOfUSCE
+        numApplications
+        numInterviews
+        numPublications
+        numRejected
+        numVolunteerExperiences
+        numWaitlisted
+        numWithdrawn
+        numWorkExperiences
+        otherDegrees
+        owner
+        redFlags
+        redFlagsExplanation
+        schoolRanking
+        sigmaSigmaPhi
+        sortType
+        step1Score
+        step1ScorePass
+        step2CSPathway
+        step2Score
+        step3Score
+        updatedAt
+        visaRequired
+        yearOfGraduation
+        __typename
+      }
+      userProfileId
+      __typename
+    }
+  }
+`;
 export const onCreateInstitution = /* GraphQL */ `
   subscription OnCreateInstitution(
     $filter: ModelSubscriptionInstitutionFilterInput
@@ -16,6 +86,7 @@ export const onCreateInstitution = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       specialties {
         nextToken
         __typename
@@ -33,14 +104,17 @@ export const onCreateInterviewInvite = /* GraphQL */ `
     onCreateInterviewInvite(filter: $filter, owner: $owner) {
       additionalComments
       anonymous
+      away
       comlex1Score
       comlex2Score
       createdAt
       geographicPreference
-      graduateType
+      greenCard
+      home
       id
-      instate
+      img
       inviteDateTime
+      location
       medicalDegree
       owner
       program {
@@ -49,6 +123,7 @@ export const onCreateInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
+        sortType
         specialtyId
         type
         updatedAt
@@ -56,10 +131,13 @@ export const onCreateInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      sortType
       step1Score
       step2Score
-      type
+      subI
       updatedAt
+      visaRequired
+      yearOfGraduation
       __typename
     }
   }
@@ -67,6 +145,10 @@ export const onCreateInterviewInvite = /* GraphQL */ `
 export const onCreateProgram = /* GraphQL */ `
   subscription OnCreateProgram($filter: ModelSubscriptionProgramFilterInput) {
     onCreateProgram(filter: $filter) {
+      applications {
+        nextToken
+        __typename
+      }
       createdAt
       id
       institution {
@@ -75,6 +157,7 @@ export const onCreateProgram = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
@@ -85,11 +168,13 @@ export const onCreateProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
@@ -117,6 +202,7 @@ export const onCreateSpecialty = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       updatedAt
       __typename
     }
@@ -135,34 +221,22 @@ export const onCreateSpecialtyInstitution = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
       institutionId
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
       specialtyId
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onCreateTodo = /* GraphQL */ `
-  subscription OnCreateTodo(
-    $filter: ModelSubscriptionTodoFilterInput
-    $owner: String
-  ) {
-    onCreateTodo(filter: $filter, owner: $owner) {
-      content
-      createdAt
-      id
-      owner
       updatedAt
       __typename
     }
@@ -175,10 +249,14 @@ export const onCreateUserProfile = /* GraphQL */ `
   ) {
     onCreateUserProfile(filter: $filter, owner: $owner) {
       aoa
-      avatarImage
+      applicationYear
+      applications {
+        nextToken
+        __typename
+      }
       classRank
       codeName
-      comlex1Score
+      comlex1ScorePass
       comlex2Score
       createdAt
       ecfmgCertified
@@ -189,20 +267,99 @@ export const onCreateUserProfile = /* GraphQL */ `
       location
       medicalDegree
       monthsOfUSCE
-      needVisa
       numApplications
       numInterviews
-      numPublicationsPosters
+      numPublications
+      numRejected
       numVolunteerExperiences
+      numWaitlisted
+      numWithdrawn
       numWorkExperiences
+      otherDegrees
       owner
       redFlags
-      sigmaSigmaPi
+      redFlagsExplanation
+      schoolRanking
+      sigmaSigmaPhi
+      sortType
       step1Score
+      step1ScorePass
       step2CSPathway
       step2Score
+      step3Score
       updatedAt
+      visaRequired
       yearOfGraduation
+      __typename
+    }
+  }
+`;
+export const onDeleteApplication = /* GraphQL */ `
+  subscription OnDeleteApplication(
+    $filter: ModelSubscriptionApplicationFilterInput
+    $owner: String
+  ) {
+    onDeleteApplication(filter: $filter, owner: $owner) {
+      createdAt
+      id
+      owner
+      program {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        sortType
+        specialtyId
+        type
+        updatedAt
+        __typename
+      }
+      programId
+      status
+      updatedAt
+      userProfile {
+        aoa
+        applicationYear
+        classRank
+        codeName
+        comlex1ScorePass
+        comlex2Score
+        createdAt
+        ecfmgCertified
+        goldHumanism
+        graduateType
+        id
+        isProfile
+        location
+        medicalDegree
+        monthsOfUSCE
+        numApplications
+        numInterviews
+        numPublications
+        numRejected
+        numVolunteerExperiences
+        numWaitlisted
+        numWithdrawn
+        numWorkExperiences
+        otherDegrees
+        owner
+        redFlags
+        redFlagsExplanation
+        schoolRanking
+        sigmaSigmaPhi
+        sortType
+        step1Score
+        step1ScorePass
+        step2CSPathway
+        step2Score
+        step3Score
+        updatedAt
+        visaRequired
+        yearOfGraduation
+        __typename
+      }
+      userProfileId
       __typename
     }
   }
@@ -221,6 +378,7 @@ export const onDeleteInstitution = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       specialties {
         nextToken
         __typename
@@ -238,14 +396,17 @@ export const onDeleteInterviewInvite = /* GraphQL */ `
     onDeleteInterviewInvite(filter: $filter, owner: $owner) {
       additionalComments
       anonymous
+      away
       comlex1Score
       comlex2Score
       createdAt
       geographicPreference
-      graduateType
+      greenCard
+      home
       id
-      instate
+      img
       inviteDateTime
+      location
       medicalDegree
       owner
       program {
@@ -254,6 +415,7 @@ export const onDeleteInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
+        sortType
         specialtyId
         type
         updatedAt
@@ -261,10 +423,13 @@ export const onDeleteInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      sortType
       step1Score
       step2Score
-      type
+      subI
       updatedAt
+      visaRequired
+      yearOfGraduation
       __typename
     }
   }
@@ -272,6 +437,10 @@ export const onDeleteInterviewInvite = /* GraphQL */ `
 export const onDeleteProgram = /* GraphQL */ `
   subscription OnDeleteProgram($filter: ModelSubscriptionProgramFilterInput) {
     onDeleteProgram(filter: $filter) {
+      applications {
+        nextToken
+        __typename
+      }
       createdAt
       id
       institution {
@@ -280,6 +449,7 @@ export const onDeleteProgram = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
@@ -290,11 +460,13 @@ export const onDeleteProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
@@ -322,6 +494,7 @@ export const onDeleteSpecialty = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       updatedAt
       __typename
     }
@@ -340,34 +513,22 @@ export const onDeleteSpecialtyInstitution = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
       institutionId
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
       specialtyId
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onDeleteTodo = /* GraphQL */ `
-  subscription OnDeleteTodo(
-    $filter: ModelSubscriptionTodoFilterInput
-    $owner: String
-  ) {
-    onDeleteTodo(filter: $filter, owner: $owner) {
-      content
-      createdAt
-      id
-      owner
       updatedAt
       __typename
     }
@@ -380,10 +541,14 @@ export const onDeleteUserProfile = /* GraphQL */ `
   ) {
     onDeleteUserProfile(filter: $filter, owner: $owner) {
       aoa
-      avatarImage
+      applicationYear
+      applications {
+        nextToken
+        __typename
+      }
       classRank
       codeName
-      comlex1Score
+      comlex1ScorePass
       comlex2Score
       createdAt
       ecfmgCertified
@@ -394,20 +559,99 @@ export const onDeleteUserProfile = /* GraphQL */ `
       location
       medicalDegree
       monthsOfUSCE
-      needVisa
       numApplications
       numInterviews
-      numPublicationsPosters
+      numPublications
+      numRejected
       numVolunteerExperiences
+      numWaitlisted
+      numWithdrawn
       numWorkExperiences
+      otherDegrees
       owner
       redFlags
-      sigmaSigmaPi
+      redFlagsExplanation
+      schoolRanking
+      sigmaSigmaPhi
+      sortType
       step1Score
+      step1ScorePass
       step2CSPathway
       step2Score
+      step3Score
       updatedAt
+      visaRequired
       yearOfGraduation
+      __typename
+    }
+  }
+`;
+export const onUpdateApplication = /* GraphQL */ `
+  subscription OnUpdateApplication(
+    $filter: ModelSubscriptionApplicationFilterInput
+    $owner: String
+  ) {
+    onUpdateApplication(filter: $filter, owner: $owner) {
+      createdAt
+      id
+      owner
+      program {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        sortType
+        specialtyId
+        type
+        updatedAt
+        __typename
+      }
+      programId
+      status
+      updatedAt
+      userProfile {
+        aoa
+        applicationYear
+        classRank
+        codeName
+        comlex1ScorePass
+        comlex2Score
+        createdAt
+        ecfmgCertified
+        goldHumanism
+        graduateType
+        id
+        isProfile
+        location
+        medicalDegree
+        monthsOfUSCE
+        numApplications
+        numInterviews
+        numPublications
+        numRejected
+        numVolunteerExperiences
+        numWaitlisted
+        numWithdrawn
+        numWorkExperiences
+        otherDegrees
+        owner
+        redFlags
+        redFlagsExplanation
+        schoolRanking
+        sigmaSigmaPhi
+        sortType
+        step1Score
+        step1ScorePass
+        step2CSPathway
+        step2Score
+        step3Score
+        updatedAt
+        visaRequired
+        yearOfGraduation
+        __typename
+      }
+      userProfileId
       __typename
     }
   }
@@ -426,6 +670,7 @@ export const onUpdateInstitution = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       specialties {
         nextToken
         __typename
@@ -443,14 +688,17 @@ export const onUpdateInterviewInvite = /* GraphQL */ `
     onUpdateInterviewInvite(filter: $filter, owner: $owner) {
       additionalComments
       anonymous
+      away
       comlex1Score
       comlex2Score
       createdAt
       geographicPreference
-      graduateType
+      greenCard
+      home
       id
-      instate
+      img
       inviteDateTime
+      location
       medicalDegree
       owner
       program {
@@ -459,6 +707,7 @@ export const onUpdateInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
+        sortType
         specialtyId
         type
         updatedAt
@@ -466,10 +715,13 @@ export const onUpdateInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      sortType
       step1Score
       step2Score
-      type
+      subI
       updatedAt
+      visaRequired
+      yearOfGraduation
       __typename
     }
   }
@@ -477,6 +729,10 @@ export const onUpdateInterviewInvite = /* GraphQL */ `
 export const onUpdateProgram = /* GraphQL */ `
   subscription OnUpdateProgram($filter: ModelSubscriptionProgramFilterInput) {
     onUpdateProgram(filter: $filter) {
+      applications {
+        nextToken
+        __typename
+      }
       createdAt
       id
       institution {
@@ -485,6 +741,7 @@ export const onUpdateProgram = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
@@ -495,11 +752,13 @@ export const onUpdateProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
@@ -527,6 +786,7 @@ export const onUpdateSpecialty = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       updatedAt
       __typename
     }
@@ -545,34 +805,22 @@ export const onUpdateSpecialtyInstitution = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
       institutionId
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
       specialtyId
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onUpdateTodo = /* GraphQL */ `
-  subscription OnUpdateTodo(
-    $filter: ModelSubscriptionTodoFilterInput
-    $owner: String
-  ) {
-    onUpdateTodo(filter: $filter, owner: $owner) {
-      content
-      createdAt
-      id
-      owner
       updatedAt
       __typename
     }
@@ -585,10 +833,14 @@ export const onUpdateUserProfile = /* GraphQL */ `
   ) {
     onUpdateUserProfile(filter: $filter, owner: $owner) {
       aoa
-      avatarImage
+      applicationYear
+      applications {
+        nextToken
+        __typename
+      }
       classRank
       codeName
-      comlex1Score
+      comlex1ScorePass
       comlex2Score
       createdAt
       ecfmgCertified
@@ -599,19 +851,28 @@ export const onUpdateUserProfile = /* GraphQL */ `
       location
       medicalDegree
       monthsOfUSCE
-      needVisa
       numApplications
       numInterviews
-      numPublicationsPosters
+      numPublications
+      numRejected
       numVolunteerExperiences
+      numWaitlisted
+      numWithdrawn
       numWorkExperiences
+      otherDegrees
       owner
       redFlags
-      sigmaSigmaPi
+      redFlagsExplanation
+      schoolRanking
+      sigmaSigmaPhi
+      sortType
       step1Score
+      step1ScorePass
       step2CSPathway
       step2Score
+      step3Score
       updatedAt
+      visaRequired
       yearOfGraduation
       __typename
     }

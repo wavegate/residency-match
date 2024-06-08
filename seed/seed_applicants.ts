@@ -1,6 +1,7 @@
 import { Amplify } from "aws-amplify";
 import { signIn } from "aws-amplify/auth";
-import outputs from "../amplify_outputs.json";
+// import outputs from "../amplify_outputs.json";
+import outputs from "../prod_amplify_outputs.json";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import csv from "csv-parser";
@@ -141,7 +142,7 @@ const run = async () => {
       .on("end", async () => {
         console.log("CSV file successfully processed");
         console.log(ivs.length);
-        for (let i = 300; i < ivs.length; i++) {
+        for (let i = 0; i < ivs.length; i++) {
           try {
             const createObj = {
               ...ivs[i],

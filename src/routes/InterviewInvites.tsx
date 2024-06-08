@@ -4,7 +4,7 @@ import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 // import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useQuery } from "@tanstack/react-query";
-import { Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { Button } from "../components/ui/button";
 import buildIVstats from "../utils/buildIVstats";
 import dayjs from "../utils/dayjs";
@@ -12,6 +12,7 @@ import { Checkbox } from "../components/ui/checkbox";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 
 const client = generateClient<Schema>();
 
@@ -91,6 +92,13 @@ export default function InterviewInvites() {
   // }
   return (
     <>
+      <Link to="/create-interview-invite">
+        <Button
+          className={`fixed left-1/2 -translate-x-1/2 bottom-[55px] rounded-full shadow-md`}
+        >
+          <Plus />
+        </Button>
+      </Link>
       <div className={`flex items-center gap-2 px-[12px] pt-2`}>
         <Button variant="secondary" className={`flex gap-2 h-auto py-2`}>
           <Checkbox></Checkbox>

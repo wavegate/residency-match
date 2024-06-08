@@ -17,16 +17,19 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type SpecialtyUpdateFormInputValues = {
+    sortType?: string;
     name?: string;
     acgmeSpecialtyCode?: string;
 };
 export declare type SpecialtyUpdateFormValidationValues = {
+    sortType?: ValidationFunction<string>;
     name?: ValidationFunction<string>;
     acgmeSpecialtyCode?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type SpecialtyUpdateFormOverridesProps = {
     SpecialtyUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    sortType?: PrimitiveOverrideProps<TextFieldProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     acgmeSpecialtyCode?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;

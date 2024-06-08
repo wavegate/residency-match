@@ -1,5 +1,5 @@
 import * as React from "react";
-import { GridProps } from "@aws-amplify/ui-react";
+import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { SpecialtyInstitution } from "./graphql/types";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -16,11 +16,16 @@ export declare type ValidationResponse = {
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type SpecialtyInstitutionUpdateFormInputValues = {};
-export declare type SpecialtyInstitutionUpdateFormValidationValues = {};
+export declare type SpecialtyInstitutionUpdateFormInputValues = {
+    sortType?: string;
+};
+export declare type SpecialtyInstitutionUpdateFormValidationValues = {
+    sortType?: ValidationFunction<string>;
+};
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type SpecialtyInstitutionUpdateFormOverridesProps = {
     SpecialtyInstitutionUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    sortType?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type SpecialtyInstitutionUpdateFormProps = React.PropsWithChildren<{
     overrides?: SpecialtyInstitutionUpdateFormOverridesProps | undefined | null;

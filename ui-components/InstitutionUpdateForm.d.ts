@@ -17,11 +17,13 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type InstitutionUpdateFormInputValues = {
+    sortType?: string;
     name?: string;
     institutionCode?: string;
     imageLink?: string;
 };
 export declare type InstitutionUpdateFormValidationValues = {
+    sortType?: ValidationFunction<string>;
     name?: ValidationFunction<string>;
     institutionCode?: ValidationFunction<string>;
     imageLink?: ValidationFunction<string>;
@@ -29,6 +31,7 @@ export declare type InstitutionUpdateFormValidationValues = {
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type InstitutionUpdateFormOverridesProps = {
     InstitutionUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    sortType?: PrimitiveOverrideProps<TextFieldProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     institutionCode?: PrimitiveOverrideProps<TextFieldProps>;
     imageLink?: PrimitiveOverrideProps<TextFieldProps>;

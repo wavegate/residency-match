@@ -20,10 +20,12 @@ export default function InstitutionUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
+    sortType: "",
     name: "",
     institutionCode: "",
     imageLink: "",
   };
+  const [sortType, setSortType] = React.useState(initialValues.sortType);
   const [name, setName] = React.useState(initialValues.name);
   const [institutionCode, setInstitutionCode] = React.useState(
     initialValues.institutionCode
@@ -34,6 +36,7 @@ export default function InstitutionUpdateForm(props) {
     const cleanValues = institutionRecord
       ? { ...initialValues, ...institutionRecord }
       : initialValues;
+    setSortType(cleanValues.sortType);
     setName(cleanValues.name);
     setInstitutionCode(cleanValues.institutionCode);
     setImageLink(cleanValues.imageLink);
@@ -57,6 +60,7 @@ export default function InstitutionUpdateForm(props) {
   }, [idProp, institutionModelProp]);
   React.useEffect(resetStateValues, [institutionRecord]);
   const validations = {
+    sortType: [{ type: "Required" }],
     name: [],
     institutionCode: [],
     imageLink: [],
@@ -87,6 +91,7 @@ export default function InstitutionUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
+          sortType,
           name: name ?? null,
           institutionCode: institutionCode ?? null,
           imageLink: imageLink ?? null,
@@ -142,6 +147,33 @@ export default function InstitutionUpdateForm(props) {
       {...rest}
     >
       <TextField
+        label="Sort type"
+        isRequired={true}
+        isReadOnly={false}
+        value={sortType}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sortType: value,
+              name,
+              institutionCode,
+              imageLink,
+            };
+            const result = onChange(modelFields);
+            value = result?.sortType ?? value;
+          }
+          if (errors.sortType?.hasError) {
+            runValidationTasks("sortType", value);
+          }
+          setSortType(value);
+        }}
+        onBlur={() => runValidationTasks("sortType", sortType)}
+        errorMessage={errors.sortType?.errorMessage}
+        hasError={errors.sortType?.hasError}
+        {...getOverrideProps(overrides, "sortType")}
+      ></TextField>
+      <TextField
         label="Name"
         isRequired={false}
         isReadOnly={false}
@@ -150,6 +182,7 @@ export default function InstitutionUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               name: value,
               institutionCode,
               imageLink,
@@ -176,6 +209,7 @@ export default function InstitutionUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               name,
               institutionCode: value,
               imageLink,
@@ -202,6 +236,7 @@ export default function InstitutionUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               name,
               institutionCode,
               imageLink: value,

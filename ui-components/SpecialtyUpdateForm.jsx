@@ -20,9 +20,11 @@ export default function SpecialtyUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
+    sortType: "",
     name: "",
     acgmeSpecialtyCode: "",
   };
+  const [sortType, setSortType] = React.useState(initialValues.sortType);
   const [name, setName] = React.useState(initialValues.name);
   const [acgmeSpecialtyCode, setAcgmeSpecialtyCode] = React.useState(
     initialValues.acgmeSpecialtyCode
@@ -32,6 +34,7 @@ export default function SpecialtyUpdateForm(props) {
     const cleanValues = specialtyRecord
       ? { ...initialValues, ...specialtyRecord }
       : initialValues;
+    setSortType(cleanValues.sortType);
     setName(cleanValues.name);
     setAcgmeSpecialtyCode(cleanValues.acgmeSpecialtyCode);
     setErrors({});
@@ -54,6 +57,7 @@ export default function SpecialtyUpdateForm(props) {
   }, [idProp, specialtyModelProp]);
   React.useEffect(resetStateValues, [specialtyRecord]);
   const validations = {
+    sortType: [{ type: "Required" }],
     name: [],
     acgmeSpecialtyCode: [],
   };
@@ -83,6 +87,7 @@ export default function SpecialtyUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
+          sortType,
           name: name ?? null,
           acgmeSpecialtyCode: acgmeSpecialtyCode ?? null,
         };
@@ -137,6 +142,32 @@ export default function SpecialtyUpdateForm(props) {
       {...rest}
     >
       <TextField
+        label="Sort type"
+        isRequired={true}
+        isReadOnly={false}
+        value={sortType}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sortType: value,
+              name,
+              acgmeSpecialtyCode,
+            };
+            const result = onChange(modelFields);
+            value = result?.sortType ?? value;
+          }
+          if (errors.sortType?.hasError) {
+            runValidationTasks("sortType", value);
+          }
+          setSortType(value);
+        }}
+        onBlur={() => runValidationTasks("sortType", sortType)}
+        errorMessage={errors.sortType?.errorMessage}
+        hasError={errors.sortType?.hasError}
+        {...getOverrideProps(overrides, "sortType")}
+      ></TextField>
+      <TextField
         label="Name"
         isRequired={false}
         isReadOnly={false}
@@ -145,6 +176,7 @@ export default function SpecialtyUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               name: value,
               acgmeSpecialtyCode,
             };
@@ -170,6 +202,7 @@ export default function SpecialtyUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               name,
               acgmeSpecialtyCode: value,
             };

@@ -26,10 +26,12 @@ export default function ProgramUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
+    sortType: "",
     name: "",
     nrmpProgramCode: "",
     type: "",
   };
+  const [sortType, setSortType] = React.useState(initialValues.sortType);
   const [name, setName] = React.useState(initialValues.name);
   const [nrmpProgramCode, setNrmpProgramCode] = React.useState(
     initialValues.nrmpProgramCode
@@ -40,6 +42,7 @@ export default function ProgramUpdateForm(props) {
     const cleanValues = programRecord
       ? { ...initialValues, ...programRecord }
       : initialValues;
+    setSortType(cleanValues.sortType);
     setName(cleanValues.name);
     setNrmpProgramCode(cleanValues.nrmpProgramCode);
     setType(cleanValues.type);
@@ -62,6 +65,7 @@ export default function ProgramUpdateForm(props) {
   }, [idProp, programModelProp]);
   React.useEffect(resetStateValues, [programRecord]);
   const validations = {
+    sortType: [{ type: "Required" }],
     name: [],
     nrmpProgramCode: [],
     type: [],
@@ -92,6 +96,7 @@ export default function ProgramUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
+          sortType,
           name: name ?? null,
           nrmpProgramCode: nrmpProgramCode ?? null,
           type: type ?? null,
@@ -147,6 +152,33 @@ export default function ProgramUpdateForm(props) {
       {...rest}
     >
       <TextField
+        label="Sort type"
+        isRequired={true}
+        isReadOnly={false}
+        value={sortType}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sortType: value,
+              name,
+              nrmpProgramCode,
+              type,
+            };
+            const result = onChange(modelFields);
+            value = result?.sortType ?? value;
+          }
+          if (errors.sortType?.hasError) {
+            runValidationTasks("sortType", value);
+          }
+          setSortType(value);
+        }}
+        onBlur={() => runValidationTasks("sortType", sortType)}
+        errorMessage={errors.sortType?.errorMessage}
+        hasError={errors.sortType?.hasError}
+        {...getOverrideProps(overrides, "sortType")}
+      ></TextField>
+      <TextField
         label="Name"
         isRequired={false}
         isReadOnly={false}
@@ -155,6 +187,7 @@ export default function ProgramUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               name: value,
               nrmpProgramCode,
               type,
@@ -181,6 +214,7 @@ export default function ProgramUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               name,
               nrmpProgramCode: value,
               type,
@@ -207,6 +241,7 @@ export default function ProgramUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               name,
               nrmpProgramCode,
               type: value,

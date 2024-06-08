@@ -1,5 +1,3 @@
-/* eslint-disable */
-"use client";
 import * as React from "react";
 import {
   Button,
@@ -8,12 +6,48 @@ import {
   SelectField,
   SwitchField,
   TextField,
+  useAuthenticator,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { createInterviewInvite } from "./graphql/mutations";
-const client = generateClient();
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Schema } from "../../amplify/data/resource";
+import { toast } from "../components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
+const client = generateClient<Schema>();
 export default function InterviewInviteCreateForm(props) {
+  const navigate = useNavigate();
+  const { user } = useAuthenticator((context) => [context.user]);
+  const queryClient = useQueryClient();
+  const { data: userProfile } = useQuery({
+    queryKey: ["userProfile", user?.userId],
+    enabled: !!user?.userId,
+    queryFn: async () => {
+      const response = await client.models.UserProfile.list({
+        filter: {
+          owner: {
+            contains: user?.userId,
+          },
+        },
+      });
+      const responseData = response.data;
+      if (!responseData || responseData?.length === 0) return null;
+      return responseData[0];
+    },
+  });
+
+  const { data: programs } = useQuery({
+    queryKey: ["programs"],
+    queryFn: async () => {
+      const response = await client.models.Program.listProgramBySortTypeAndName(
+        { sortType: "Program" }
+      );
+      const responseData = response.data;
+      if (!responseData) return null;
+      return responseData;
+    },
+  });
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -44,7 +78,9 @@ export default function InterviewInviteCreateForm(props) {
     yearOfGraduation: "",
     greenCard: false,
     away: false,
+    programId: "",
   };
+  const [programId, setProgramId] = React.useState(initialValues.programId);
   const [anonymous, setAnonymous] = React.useState(initialValues.anonymous);
   const [img, setImg] = React.useState(initialValues.img);
   const [sortType, setSortType] = React.useState(initialValues.sortType);
@@ -80,6 +116,7 @@ export default function InterviewInviteCreateForm(props) {
   );
   const [greenCard, setGreenCard] = React.useState(initialValues.greenCard);
   const [away, setAway] = React.useState(initialValues.away);
+
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setAnonymous(initialValues.anonymous);
@@ -101,12 +138,12 @@ export default function InterviewInviteCreateForm(props) {
     setYearOfGraduation(initialValues.yearOfGraduation);
     setGreenCard(initialValues.greenCard);
     setAway(initialValues.away);
+    setProgramId(initialValues.programId);
     setErrors({});
   };
   const validations = {
     anonymous: [],
     img: [],
-    sortType: [{ type: "Required" }],
     inviteDateTime: [{ type: "Required" }],
     geographicPreference: [],
     signal: [],
@@ -123,6 +160,7 @@ export default function InterviewInviteCreateForm(props) {
     yearOfGraduation: [],
     greenCard: [],
     away: [],
+    programId: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -158,6 +196,22 @@ export default function InterviewInviteCreateForm(props) {
     }, {});
     return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   };
+  function importMyStats() {
+    if (userProfile) {
+      setImg(userProfile.img);
+      setMedicalDegree(userProfile.medicalDegree);
+      setStep1Score(userProfile.step1Score);
+      setStep2Score(userProfile.step2Score);
+      setComlex1Score(userProfile.comlex1Score);
+      setComlex2Score(userProfile.comlex2Score);
+      setVisaRequired(userProfile.visaRequired);
+      setYearOfGraduation(userProfile.yearOfGraduation);
+      setGreenCard(userProfile.greenCard);
+      setAway(userProfile.away);
+      setErrors({});
+    }
+  }
+
   return (
     <Grid
       as="form"
@@ -186,6 +240,7 @@ export default function InterviewInviteCreateForm(props) {
           yearOfGraduation,
           greenCard,
           away,
+          programId,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -203,12 +258,15 @@ export default function InterviewInviteCreateForm(props) {
             return promises;
           }, [])
         );
+        console.log(validationResponses);
         if (validationResponses.some((r) => r.hasError)) {
+          console.log("bye");
           return;
         }
         if (onSubmit) {
           modelFields = onSubmit(modelFields);
         }
+        console.log("hi");
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
             if (typeof value === "string" && value === "") {
@@ -220,15 +278,25 @@ export default function InterviewInviteCreateForm(props) {
             variables: {
               input: {
                 ...modelFields,
+                sortType: "InterviewInvite",
               },
             },
+            authMode: "userPool",
           });
           if (onSuccess) {
             onSuccess(modelFields);
           }
+          await queryClient.invalidateQueries({
+            queryKey: ["interviewInvites"],
+          });
           if (clearOnSuccess) {
             resetStateValues();
           }
+          toast({
+            title: "Interview Invitation: Added",
+            description: "Brookwood Hospital ...",
+          });
+          navigate("/");
         } catch (err) {
           if (onError) {
             const messages = err.errors.map((e) => e.message).join("\n");
@@ -239,6 +307,42 @@ export default function InterviewInviteCreateForm(props) {
       {...getOverrideProps(overrides, "InterviewInviteCreateForm")}
       {...rest}
     >
+      <SelectField
+        label="Program"
+        isRequired={true}
+        placeholder="Please select an option"
+        isDisabled={false}
+        value={programId}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              nrmpProgramCode,
+              type,
+              programId: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.programId ?? value;
+          }
+          if (errors.programId?.hasError) {
+            runValidationTasks("programId", value);
+          }
+          setProgramId(value);
+        }}
+        onBlur={() => runValidationTasks("programId", programId)}
+        errorMessage={errors.programId?.errorMessage}
+        hasError={errors.programId?.hasError}
+        {...getOverrideProps(overrides, "programId")}
+      >
+        {programs?.map((program) => {
+          return (
+            <option key={program.id} value={program.id}>
+              {program.name}
+            </option>
+          );
+        })}
+      </SelectField>
       <SwitchField
         label="Anonymous"
         defaultChecked={false}
@@ -267,6 +371,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.anonymous ?? value;
@@ -309,6 +414,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.img ?? value;
@@ -334,48 +440,6 @@ export default function InterviewInviteCreateForm(props) {
           {...getOverrideProps(overrides, "imgoption1")}
         ></option>
       </SelectField>
-      <TextField
-        label="Sort type"
-        isRequired={true}
-        isReadOnly={false}
-        value={sortType}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              anonymous,
-              img,
-              sortType: value,
-              inviteDateTime,
-              geographicPreference,
-              signal,
-              location,
-              additionalComments,
-              medicalDegree,
-              step1Score,
-              step2Score,
-              comlex1Score,
-              comlex2Score,
-              visaRequired,
-              subI,
-              home,
-              yearOfGraduation,
-              greenCard,
-              away,
-            };
-            const result = onChange(modelFields);
-            value = result?.sortType ?? value;
-          }
-          if (errors.sortType?.hasError) {
-            runValidationTasks("sortType", value);
-          }
-          setSortType(value);
-        }}
-        onBlur={() => runValidationTasks("sortType", sortType)}
-        errorMessage={errors.sortType?.errorMessage}
-        hasError={errors.sortType?.hasError}
-        {...getOverrideProps(overrides, "sortType")}
-      ></TextField>
       <TextField
         label="Invite date time"
         isRequired={true}
@@ -406,6 +470,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.inviteDateTime ?? value;
@@ -448,6 +513,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.geographicPreference ?? value;
@@ -492,6 +558,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.signal ?? value;
@@ -534,6 +601,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.location ?? value;
@@ -587,6 +655,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.additionalComments ?? value;
@@ -603,6 +672,7 @@ export default function InterviewInviteCreateForm(props) {
         hasError={errors.additionalComments?.hasError}
         {...getOverrideProps(overrides, "additionalComments")}
       ></TextField>
+      <Button onClick={importMyStats}>Import my stats</Button>
       <SelectField
         label="Medical degree"
         placeholder="Please select an option"
@@ -631,6 +701,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.medicalDegree ?? value;
@@ -684,6 +755,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.step1Score ?? value;
@@ -726,6 +798,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.step2Score ?? value;
@@ -768,6 +841,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.comlex1Score ?? value;
@@ -810,6 +884,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.comlex2Score ?? value;
@@ -852,6 +927,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.visaRequired ?? value;
@@ -894,6 +970,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.subI ?? value;
@@ -936,6 +1013,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.home ?? value;
@@ -982,6 +1060,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation: value,
               greenCard,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.yearOfGraduation ?? value;
@@ -1024,6 +1103,7 @@ export default function InterviewInviteCreateForm(props) {
               yearOfGraduation,
               greenCard: value,
               away,
+              programId,
             };
             const result = onChange(modelFields);
             value = result?.greenCard ?? value;

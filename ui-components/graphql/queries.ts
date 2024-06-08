@@ -2,6 +2,73 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getApplication = /* GraphQL */ `
+  query GetApplication($id: ID!) {
+    getApplication(id: $id) {
+      createdAt
+      id
+      owner
+      program {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        sortType
+        specialtyId
+        type
+        updatedAt
+        __typename
+      }
+      programId
+      status
+      updatedAt
+      userProfile {
+        aoa
+        applicationYear
+        classRank
+        codeName
+        comlex1ScorePass
+        comlex2Score
+        createdAt
+        ecfmgCertified
+        goldHumanism
+        graduateType
+        id
+        isProfile
+        location
+        medicalDegree
+        monthsOfUSCE
+        numApplications
+        numInterviews
+        numPublications
+        numRejected
+        numVolunteerExperiences
+        numWaitlisted
+        numWithdrawn
+        numWorkExperiences
+        otherDegrees
+        owner
+        redFlags
+        redFlagsExplanation
+        schoolRanking
+        sigmaSigmaPhi
+        sortType
+        step1Score
+        step1ScorePass
+        step2CSPathway
+        step2Score
+        step3Score
+        updatedAt
+        visaRequired
+        yearOfGraduation
+        __typename
+      }
+      userProfileId
+      __typename
+    }
+  }
+`;
 export const getInstitution = /* GraphQL */ `
   query GetInstitution($id: ID!) {
     getInstitution(id: $id) {
@@ -14,6 +81,7 @@ export const getInstitution = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       specialties {
         nextToken
         __typename
@@ -28,14 +96,17 @@ export const getInterviewInvite = /* GraphQL */ `
     getInterviewInvite(id: $id) {
       additionalComments
       anonymous
+      away
       comlex1Score
       comlex2Score
       createdAt
       geographicPreference
-      graduateType
+      greenCard
+      home
       id
-      instate
+      img
       inviteDateTime
+      location
       medicalDegree
       owner
       program {
@@ -44,6 +115,7 @@ export const getInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
+        sortType
         specialtyId
         type
         updatedAt
@@ -51,10 +123,13 @@ export const getInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      sortType
       step1Score
       step2Score
-      type
+      subI
       updatedAt
+      visaRequired
+      yearOfGraduation
       __typename
     }
   }
@@ -62,6 +137,10 @@ export const getInterviewInvite = /* GraphQL */ `
 export const getProgram = /* GraphQL */ `
   query GetProgram($id: ID!) {
     getProgram(id: $id) {
+      applications {
+        nextToken
+        __typename
+      }
       createdAt
       id
       institution {
@@ -70,6 +149,7 @@ export const getProgram = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
@@ -80,11 +160,13 @@ export const getProgram = /* GraphQL */ `
       }
       name
       nrmpProgramCode
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
@@ -110,6 +192,7 @@ export const getSpecialty = /* GraphQL */ `
         nextToken
         __typename
       }
+      sortType
       updatedAt
       __typename
     }
@@ -126,15 +209,18 @@ export const getSpecialtyInstitution = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
       institutionId
+      sortType
       specialty {
         acgmeSpecialtyCode
         createdAt
         id
         name
+        sortType
         updatedAt
         __typename
       }
@@ -144,26 +230,18 @@ export const getSpecialtyInstitution = /* GraphQL */ `
     }
   }
 `;
-export const getTodo = /* GraphQL */ `
-  query GetTodo($id: ID!) {
-    getTodo(id: $id) {
-      content
-      createdAt
-      id
-      owner
-      updatedAt
-      __typename
-    }
-  }
-`;
 export const getUserProfile = /* GraphQL */ `
   query GetUserProfile($id: ID!) {
     getUserProfile(id: $id) {
       aoa
-      avatarImage
+      applicationYear
+      applications {
+        nextToken
+        __typename
+      }
       classRank
       codeName
-      comlex1Score
+      comlex1ScorePass
       comlex2Score
       createdAt
       ecfmgCertified
@@ -174,20 +252,113 @@ export const getUserProfile = /* GraphQL */ `
       location
       medicalDegree
       monthsOfUSCE
-      needVisa
       numApplications
       numInterviews
-      numPublicationsPosters
+      numPublications
+      numRejected
       numVolunteerExperiences
+      numWaitlisted
+      numWithdrawn
       numWorkExperiences
+      otherDegrees
       owner
       redFlags
-      sigmaSigmaPi
+      redFlagsExplanation
+      schoolRanking
+      sigmaSigmaPhi
+      sortType
       step1Score
+      step1ScorePass
       step2CSPathway
       step2Score
+      step3Score
       updatedAt
+      visaRequired
       yearOfGraduation
+      __typename
+    }
+  }
+`;
+export const listApplications = /* GraphQL */ `
+  query ListApplications(
+    $filter: ModelApplicationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listApplications(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        createdAt
+        id
+        owner
+        programId
+        status
+        updatedAt
+        userProfileId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listInstitutionByInstitutionCode = /* GraphQL */ `
+  query ListInstitutionByInstitutionCode(
+    $filter: ModelInstitutionFilterInput
+    $institutionCode: String!
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstitutionByInstitutionCode(
+      filter: $filter
+      institutionCode: $institutionCode
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        createdAt
+        id
+        imageLink
+        institutionCode
+        name
+        sortType
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listInstitutionBySortTypeAndName = /* GraphQL */ `
+  query ListInstitutionBySortTypeAndName(
+    $filter: ModelInstitutionFilterInput
+    $limit: Int
+    $name: ModelStringKeyConditionInput
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+    $sortType: String!
+  ) {
+    listInstitutionBySortTypeAndName(
+      filter: $filter
+      limit: $limit
+      name: $name
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+      sortType: $sortType
+    ) {
+      items {
+        createdAt
+        id
+        imageLink
+        institutionCode
+        name
+        sortType
+        updatedAt
+        __typename
+      }
+      nextToken
       __typename
     }
   }
@@ -205,6 +376,7 @@ export const listInstitutions = /* GraphQL */ `
         imageLink
         institutionCode
         name
+        sortType
         updatedAt
         __typename
       }
@@ -213,42 +385,97 @@ export const listInstitutions = /* GraphQL */ `
     }
   }
 `;
-export const listInterviewInviteByTypeAndInviteDateTime = /* GraphQL */ `
-  query ListInterviewInviteByTypeAndInviteDateTime(
+export const listInterviewInviteByProgramIdAndInviteDateTime = /* GraphQL */ `
+  query ListInterviewInviteByProgramIdAndInviteDateTime(
+    $filter: ModelInterviewInviteFilterInput
+    $inviteDateTime: ModelStringKeyConditionInput
+    $limit: Int
+    $nextToken: String
+    $programId: ID!
+    $sortDirection: ModelSortDirection
+  ) {
+    listInterviewInviteByProgramIdAndInviteDateTime(
+      filter: $filter
+      inviteDateTime: $inviteDateTime
+      limit: $limit
+      nextToken: $nextToken
+      programId: $programId
+      sortDirection: $sortDirection
+    ) {
+      items {
+        additionalComments
+        anonymous
+        away
+        comlex1Score
+        comlex2Score
+        createdAt
+        geographicPreference
+        greenCard
+        home
+        id
+        img
+        inviteDateTime
+        location
+        medicalDegree
+        owner
+        programId
+        signal
+        sortType
+        step1Score
+        step2Score
+        subI
+        updatedAt
+        visaRequired
+        yearOfGraduation
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listInterviewInviteBySortTypeAndInviteDateTime = /* GraphQL */ `
+  query ListInterviewInviteBySortTypeAndInviteDateTime(
     $filter: ModelInterviewInviteFilterInput
     $inviteDateTime: ModelStringKeyConditionInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
-    $type: String!
+    $sortType: String!
   ) {
-    listInterviewInviteByTypeAndInviteDateTime(
+    listInterviewInviteBySortTypeAndInviteDateTime(
       filter: $filter
       inviteDateTime: $inviteDateTime
       limit: $limit
       nextToken: $nextToken
       sortDirection: $sortDirection
-      type: $type
+      sortType: $sortType
     ) {
       items {
         additionalComments
         anonymous
+        away
         comlex1Score
         comlex2Score
         createdAt
         geographicPreference
-        graduateType
+        greenCard
+        home
         id
-        instate
+        img
         inviteDateTime
+        location
         medicalDegree
         owner
         programId
         signal
+        sortType
         step1Score
         step2Score
-        type
+        subI
         updatedAt
+        visaRequired
+        yearOfGraduation
         __typename
       }
       nextToken
@@ -270,20 +497,92 @@ export const listInterviewInvites = /* GraphQL */ `
       items {
         additionalComments
         anonymous
+        away
         comlex1Score
         comlex2Score
         createdAt
         geographicPreference
-        graduateType
+        greenCard
+        home
         id
-        instate
+        img
         inviteDateTime
+        location
         medicalDegree
         owner
         programId
         signal
+        sortType
         step1Score
         step2Score
+        subI
+        updatedAt
+        visaRequired
+        yearOfGraduation
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listProgramByNrmpProgramCode = /* GraphQL */ `
+  query ListProgramByNrmpProgramCode(
+    $filter: ModelProgramFilterInput
+    $limit: Int
+    $nextToken: String
+    $nrmpProgramCode: String!
+    $sortDirection: ModelSortDirection
+  ) {
+    listProgramByNrmpProgramCode(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      nrmpProgramCode: $nrmpProgramCode
+      sortDirection: $sortDirection
+    ) {
+      items {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        sortType
+        specialtyId
+        type
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listProgramBySortTypeAndName = /* GraphQL */ `
+  query ListProgramBySortTypeAndName(
+    $filter: ModelProgramFilterInput
+    $limit: Int
+    $name: ModelStringKeyConditionInput
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+    $sortType: String!
+  ) {
+    listProgramBySortTypeAndName(
+      filter: $filter
+      limit: $limit
+      name: $name
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+      sortType: $sortType
+    ) {
+      items {
+        createdAt
+        id
+        institutionId
+        name
+        nrmpProgramCode
+        sortType
+        specialtyId
         type
         updatedAt
         __typename
@@ -306,6 +605,7 @@ export const listPrograms = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
+        sortType
         specialtyId
         type
         updatedAt
@@ -328,6 +628,67 @@ export const listSpecialties = /* GraphQL */ `
         createdAt
         id
         name
+        sortType
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listSpecialtyByAcgmeSpecialtyCode = /* GraphQL */ `
+  query ListSpecialtyByAcgmeSpecialtyCode(
+    $acgmeSpecialtyCode: String!
+    $filter: ModelSpecialtyFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listSpecialtyByAcgmeSpecialtyCode(
+      acgmeSpecialtyCode: $acgmeSpecialtyCode
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        acgmeSpecialtyCode
+        createdAt
+        id
+        name
+        sortType
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listSpecialtyBySortTypeAndAcgmeSpecialtyCode = /* GraphQL */ `
+  query ListSpecialtyBySortTypeAndAcgmeSpecialtyCode(
+    $acgmeSpecialtyCode: ModelStringKeyConditionInput
+    $filter: ModelSpecialtyFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+    $sortType: String!
+  ) {
+    listSpecialtyBySortTypeAndAcgmeSpecialtyCode(
+      acgmeSpecialtyCode: $acgmeSpecialtyCode
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+      sortType: $sortType
+    ) {
+      items {
+        acgmeSpecialtyCode
+        createdAt
+        id
+        name
+        sortType
         updatedAt
         __typename
       }
@@ -351,6 +712,7 @@ export const listSpecialtyInstitutions = /* GraphQL */ `
         createdAt
         id
         institutionId
+        sortType
         specialtyId
         updatedAt
         __typename
@@ -360,19 +722,123 @@ export const listSpecialtyInstitutions = /* GraphQL */ `
     }
   }
 `;
-export const listTodos = /* GraphQL */ `
-  query ListTodos(
-    $filter: ModelTodoFilterInput
+export const listUserProfileByGraduateType = /* GraphQL */ `
+  query ListUserProfileByGraduateType(
+    $filter: ModelUserProfileFilterInput
+    $graduateType: UserProfileGraduateType!
     $limit: Int
     $nextToken: String
+    $sortDirection: ModelSortDirection
   ) {
-    listTodos(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listUserProfileByGraduateType(
+      filter: $filter
+      graduateType: $graduateType
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
       items {
-        content
+        aoa
+        applicationYear
+        classRank
+        codeName
+        comlex1ScorePass
+        comlex2Score
         createdAt
+        ecfmgCertified
+        goldHumanism
+        graduateType
         id
+        isProfile
+        location
+        medicalDegree
+        monthsOfUSCE
+        numApplications
+        numInterviews
+        numPublications
+        numRejected
+        numVolunteerExperiences
+        numWaitlisted
+        numWithdrawn
+        numWorkExperiences
+        otherDegrees
         owner
+        redFlags
+        redFlagsExplanation
+        schoolRanking
+        sigmaSigmaPhi
+        sortType
+        step1Score
+        step1ScorePass
+        step2CSPathway
+        step2Score
+        step3Score
         updatedAt
+        visaRequired
+        yearOfGraduation
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listUserProfileBySortTypeAndCodeName = /* GraphQL */ `
+  query ListUserProfileBySortTypeAndCodeName(
+    $codeName: ModelStringKeyConditionInput
+    $filter: ModelUserProfileFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+    $sortType: String!
+  ) {
+    listUserProfileBySortTypeAndCodeName(
+      codeName: $codeName
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+      sortType: $sortType
+    ) {
+      items {
+        aoa
+        applicationYear
+        classRank
+        codeName
+        comlex1ScorePass
+        comlex2Score
+        createdAt
+        ecfmgCertified
+        goldHumanism
+        graduateType
+        id
+        isProfile
+        location
+        medicalDegree
+        monthsOfUSCE
+        numApplications
+        numInterviews
+        numPublications
+        numRejected
+        numVolunteerExperiences
+        numWaitlisted
+        numWithdrawn
+        numWorkExperiences
+        otherDegrees
+        owner
+        redFlags
+        redFlagsExplanation
+        schoolRanking
+        sigmaSigmaPhi
+        sortType
+        step1Score
+        step1ScorePass
+        step2CSPathway
+        step2Score
+        step3Score
+        updatedAt
+        visaRequired
+        yearOfGraduation
         __typename
       }
       nextToken
@@ -389,10 +855,10 @@ export const listUserProfiles = /* GraphQL */ `
     listUserProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         aoa
-        avatarImage
+        applicationYear
         classRank
         codeName
-        comlex1Score
+        comlex1ScorePass
         comlex2Score
         createdAt
         ecfmgCertified
@@ -403,19 +869,28 @@ export const listUserProfiles = /* GraphQL */ `
         location
         medicalDegree
         monthsOfUSCE
-        needVisa
         numApplications
         numInterviews
-        numPublicationsPosters
+        numPublications
+        numRejected
         numVolunteerExperiences
+        numWaitlisted
+        numWithdrawn
         numWorkExperiences
+        otherDegrees
         owner
         redFlags
-        sigmaSigmaPi
+        redFlagsExplanation
+        schoolRanking
+        sigmaSigmaPhi
+        sortType
         step1Score
+        step1ScorePass
         step2CSPathway
         step2Score
+        step3Score
         updatedAt
+        visaRequired
         yearOfGraduation
         __typename
       }

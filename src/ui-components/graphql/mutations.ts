@@ -34,15 +34,17 @@ export const createInterviewInvite = /* GraphQL */ `
     createInterviewInvite(condition: $condition, input: $input) {
       additionalComments
       anonymous
+      away
       comlex1Score
       comlex2Score
       createdAt
       geographicPreference
-      graduateType
+      greenCard
+      home
       id
-      type
-      instate
+      img
       inviteDateTime
+      location
       medicalDegree
       owner
       program {
@@ -51,6 +53,7 @@ export const createInterviewInvite = /* GraphQL */ `
         institutionId
         name
         nrmpProgramCode
+        sortType
         specialtyId
         type
         updatedAt
@@ -58,9 +61,13 @@ export const createInterviewInvite = /* GraphQL */ `
       }
       programId
       signal
+      sortType
       step1Score
       step2Score
+      subI
       updatedAt
+      visaRequired
+      yearOfGraduation
       __typename
     }
   }

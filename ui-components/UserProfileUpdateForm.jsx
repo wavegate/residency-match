@@ -27,35 +27,48 @@ export default function UserProfileUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
+    sortType: "",
     isProfile: false,
     step2CSPathway: "",
+    schoolRanking: "",
     yearOfGraduation: "",
     monthsOfUSCE: "",
     ecfmgCertified: false,
-    needVisa: false,
+    visaRequired: false,
     location: "",
-    avatarImage: "",
     graduateType: "",
     medicalDegree: "",
     codeName: "",
+    step1ScorePass: false,
     step1Score: "",
     step2Score: "",
-    comlex1Score: "",
+    step3Score: "",
+    comlex1ScorePass: false,
     comlex2Score: "",
     redFlags: false,
+    redFlagsExplanation: "",
     aoa: false,
-    sigmaSigmaPi: false,
+    sigmaSigmaPhi: false,
     goldHumanism: false,
-    numPublicationsPosters: "",
+    numPublications: "",
     numWorkExperiences: "",
     numVolunteerExperiences: "",
     classRank: "",
+    otherDegrees: "",
     numApplications: "",
     numInterviews: "",
+    numWithdrawn: "",
+    numRejected: "",
+    numWaitlisted: "",
+    applicationYear: "",
   };
+  const [sortType, setSortType] = React.useState(initialValues.sortType);
   const [isProfile, setIsProfile] = React.useState(initialValues.isProfile);
   const [step2CSPathway, setStep2CSPathway] = React.useState(
     initialValues.step2CSPathway
+  );
+  const [schoolRanking, setSchoolRanking] = React.useState(
+    initialValues.schoolRanking
   );
   const [yearOfGraduation, setYearOfGraduation] = React.useState(
     initialValues.yearOfGraduation
@@ -66,11 +79,10 @@ export default function UserProfileUpdateForm(props) {
   const [ecfmgCertified, setEcfmgCertified] = React.useState(
     initialValues.ecfmgCertified
   );
-  const [needVisa, setNeedVisa] = React.useState(initialValues.needVisa);
-  const [location, setLocation] = React.useState(initialValues.location);
-  const [avatarImage, setAvatarImage] = React.useState(
-    initialValues.avatarImage
+  const [visaRequired, setVisaRequired] = React.useState(
+    initialValues.visaRequired
   );
+  const [location, setLocation] = React.useState(initialValues.location);
   const [graduateType, setGraduateType] = React.useState(
     initialValues.graduateType
   );
@@ -78,24 +90,31 @@ export default function UserProfileUpdateForm(props) {
     initialValues.medicalDegree
   );
   const [codeName, setCodeName] = React.useState(initialValues.codeName);
+  const [step1ScorePass, setStep1ScorePass] = React.useState(
+    initialValues.step1ScorePass
+  );
   const [step1Score, setStep1Score] = React.useState(initialValues.step1Score);
   const [step2Score, setStep2Score] = React.useState(initialValues.step2Score);
-  const [comlex1Score, setComlex1Score] = React.useState(
-    initialValues.comlex1Score
+  const [step3Score, setStep3Score] = React.useState(initialValues.step3Score);
+  const [comlex1ScorePass, setComlex1ScorePass] = React.useState(
+    initialValues.comlex1ScorePass
   );
   const [comlex2Score, setComlex2Score] = React.useState(
     initialValues.comlex2Score
   );
   const [redFlags, setRedFlags] = React.useState(initialValues.redFlags);
+  const [redFlagsExplanation, setRedFlagsExplanation] = React.useState(
+    initialValues.redFlagsExplanation
+  );
   const [aoa, setAoa] = React.useState(initialValues.aoa);
-  const [sigmaSigmaPi, setSigmaSigmaPi] = React.useState(
-    initialValues.sigmaSigmaPi
+  const [sigmaSigmaPhi, setSigmaSigmaPhi] = React.useState(
+    initialValues.sigmaSigmaPhi
   );
   const [goldHumanism, setGoldHumanism] = React.useState(
     initialValues.goldHumanism
   );
-  const [numPublicationsPosters, setNumPublicationsPosters] = React.useState(
-    initialValues.numPublicationsPosters
+  const [numPublications, setNumPublications] = React.useState(
+    initialValues.numPublications
   );
   const [numWorkExperiences, setNumWorkExperiences] = React.useState(
     initialValues.numWorkExperiences
@@ -104,42 +123,66 @@ export default function UserProfileUpdateForm(props) {
     initialValues.numVolunteerExperiences
   );
   const [classRank, setClassRank] = React.useState(initialValues.classRank);
+  const [otherDegrees, setOtherDegrees] = React.useState(
+    initialValues.otherDegrees
+  );
   const [numApplications, setNumApplications] = React.useState(
     initialValues.numApplications
   );
   const [numInterviews, setNumInterviews] = React.useState(
     initialValues.numInterviews
   );
+  const [numWithdrawn, setNumWithdrawn] = React.useState(
+    initialValues.numWithdrawn
+  );
+  const [numRejected, setNumRejected] = React.useState(
+    initialValues.numRejected
+  );
+  const [numWaitlisted, setNumWaitlisted] = React.useState(
+    initialValues.numWaitlisted
+  );
+  const [applicationYear, setApplicationYear] = React.useState(
+    initialValues.applicationYear
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = userProfileRecord
       ? { ...initialValues, ...userProfileRecord }
       : initialValues;
+    setSortType(cleanValues.sortType);
     setIsProfile(cleanValues.isProfile);
     setStep2CSPathway(cleanValues.step2CSPathway);
+    setSchoolRanking(cleanValues.schoolRanking);
     setYearOfGraduation(cleanValues.yearOfGraduation);
     setMonthsOfUSCE(cleanValues.monthsOfUSCE);
     setEcfmgCertified(cleanValues.ecfmgCertified);
-    setNeedVisa(cleanValues.needVisa);
+    setVisaRequired(cleanValues.visaRequired);
     setLocation(cleanValues.location);
-    setAvatarImage(cleanValues.avatarImage);
     setGraduateType(cleanValues.graduateType);
     setMedicalDegree(cleanValues.medicalDegree);
     setCodeName(cleanValues.codeName);
+    setStep1ScorePass(cleanValues.step1ScorePass);
     setStep1Score(cleanValues.step1Score);
     setStep2Score(cleanValues.step2Score);
-    setComlex1Score(cleanValues.comlex1Score);
+    setStep3Score(cleanValues.step3Score);
+    setComlex1ScorePass(cleanValues.comlex1ScorePass);
     setComlex2Score(cleanValues.comlex2Score);
     setRedFlags(cleanValues.redFlags);
+    setRedFlagsExplanation(cleanValues.redFlagsExplanation);
     setAoa(cleanValues.aoa);
-    setSigmaSigmaPi(cleanValues.sigmaSigmaPi);
+    setSigmaSigmaPhi(cleanValues.sigmaSigmaPhi);
     setGoldHumanism(cleanValues.goldHumanism);
-    setNumPublicationsPosters(cleanValues.numPublicationsPosters);
+    setNumPublications(cleanValues.numPublications);
     setNumWorkExperiences(cleanValues.numWorkExperiences);
     setNumVolunteerExperiences(cleanValues.numVolunteerExperiences);
     setClassRank(cleanValues.classRank);
+    setOtherDegrees(cleanValues.otherDegrees);
     setNumApplications(cleanValues.numApplications);
     setNumInterviews(cleanValues.numInterviews);
+    setNumWithdrawn(cleanValues.numWithdrawn);
+    setNumRejected(cleanValues.numRejected);
+    setNumWaitlisted(cleanValues.numWaitlisted);
+    setApplicationYear(cleanValues.applicationYear);
     setErrors({});
   };
   const [userProfileRecord, setUserProfileRecord] =
@@ -160,31 +203,40 @@ export default function UserProfileUpdateForm(props) {
   }, [idProp, userProfileModelProp]);
   React.useEffect(resetStateValues, [userProfileRecord]);
   const validations = {
+    sortType: [{ type: "Required" }],
     isProfile: [],
     step2CSPathway: [],
+    schoolRanking: [],
     yearOfGraduation: [],
     monthsOfUSCE: [],
     ecfmgCertified: [],
-    needVisa: [],
+    visaRequired: [],
     location: [],
-    avatarImage: [],
     graduateType: [],
     medicalDegree: [],
     codeName: [],
+    step1ScorePass: [],
     step1Score: [],
     step2Score: [],
-    comlex1Score: [],
+    step3Score: [],
+    comlex1ScorePass: [],
     comlex2Score: [],
     redFlags: [],
+    redFlagsExplanation: [],
     aoa: [],
-    sigmaSigmaPi: [],
+    sigmaSigmaPhi: [],
     goldHumanism: [],
-    numPublicationsPosters: [],
+    numPublications: [],
     numWorkExperiences: [],
     numVolunteerExperiences: [],
     classRank: [],
+    otherDegrees: [],
     numApplications: [],
     numInterviews: [],
+    numWithdrawn: [],
+    numRejected: [],
+    numWaitlisted: [],
+    applicationYear: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -212,31 +264,40 @@ export default function UserProfileUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
+          sortType,
           isProfile: isProfile ?? null,
           step2CSPathway: step2CSPathway ?? null,
+          schoolRanking: schoolRanking ?? null,
           yearOfGraduation: yearOfGraduation ?? null,
           monthsOfUSCE: monthsOfUSCE ?? null,
           ecfmgCertified: ecfmgCertified ?? null,
-          needVisa: needVisa ?? null,
+          visaRequired: visaRequired ?? null,
           location: location ?? null,
-          avatarImage: avatarImage ?? null,
           graduateType: graduateType ?? null,
           medicalDegree: medicalDegree ?? null,
           codeName: codeName ?? null,
+          step1ScorePass: step1ScorePass ?? null,
           step1Score: step1Score ?? null,
           step2Score: step2Score ?? null,
-          comlex1Score: comlex1Score ?? null,
+          step3Score: step3Score ?? null,
+          comlex1ScorePass: comlex1ScorePass ?? null,
           comlex2Score: comlex2Score ?? null,
           redFlags: redFlags ?? null,
+          redFlagsExplanation: redFlagsExplanation ?? null,
           aoa: aoa ?? null,
-          sigmaSigmaPi: sigmaSigmaPi ?? null,
+          sigmaSigmaPhi: sigmaSigmaPhi ?? null,
           goldHumanism: goldHumanism ?? null,
-          numPublicationsPosters: numPublicationsPosters ?? null,
+          numPublications: numPublications ?? null,
           numWorkExperiences: numWorkExperiences ?? null,
           numVolunteerExperiences: numVolunteerExperiences ?? null,
           classRank: classRank ?? null,
+          otherDegrees: otherDegrees ?? null,
           numApplications: numApplications ?? null,
           numInterviews: numInterviews ?? null,
+          numWithdrawn: numWithdrawn ?? null,
+          numRejected: numRejected ?? null,
+          numWaitlisted: numWaitlisted ?? null,
+          applicationYear: applicationYear ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -288,6 +349,63 @@ export default function UserProfileUpdateForm(props) {
       {...getOverrideProps(overrides, "UserProfileUpdateForm")}
       {...rest}
     >
+      <TextField
+        label="Sort type"
+        isRequired={true}
+        isReadOnly={false}
+        value={sortType}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sortType: value,
+              isProfile,
+              step2CSPathway,
+              schoolRanking,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              visaRequired,
+              location,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1ScorePass,
+              step1Score,
+              step2Score,
+              step3Score,
+              comlex1ScorePass,
+              comlex2Score,
+              redFlags,
+              redFlagsExplanation,
+              aoa,
+              sigmaSigmaPhi,
+              goldHumanism,
+              numPublications,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              otherDegrees,
+              numApplications,
+              numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
+            };
+            const result = onChange(modelFields);
+            value = result?.sortType ?? value;
+          }
+          if (errors.sortType?.hasError) {
+            runValidationTasks("sortType", value);
+          }
+          setSortType(value);
+        }}
+        onBlur={() => runValidationTasks("sortType", sortType)}
+        errorMessage={errors.sortType?.errorMessage}
+        hasError={errors.sortType?.hasError}
+        {...getOverrideProps(overrides, "sortType")}
+      ></TextField>
       <SwitchField
         label="Is profile"
         defaultChecked={false}
@@ -297,31 +415,40 @@ export default function UserProfileUpdateForm(props) {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile: value,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.isProfile ?? value;
@@ -345,31 +472,40 @@ export default function UserProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway: value,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.step2CSPathway ?? value;
@@ -415,6 +551,89 @@ export default function UserProfileUpdateForm(props) {
           {...getOverrideProps(overrides, "step2CSPathwayoption5")}
         ></option>
       </SelectField>
+      <SelectField
+        label="School ranking"
+        placeholder="Please select an option"
+        isDisabled={false}
+        value={schoolRanking}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sortType,
+              isProfile,
+              step2CSPathway,
+              schoolRanking: value,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              visaRequired,
+              location,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1ScorePass,
+              step1Score,
+              step2Score,
+              step3Score,
+              comlex1ScorePass,
+              comlex2Score,
+              redFlags,
+              redFlagsExplanation,
+              aoa,
+              sigmaSigmaPhi,
+              goldHumanism,
+              numPublications,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              otherDegrees,
+              numApplications,
+              numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
+            };
+            const result = onChange(modelFields);
+            value = result?.schoolRanking ?? value;
+          }
+          if (errors.schoolRanking?.hasError) {
+            runValidationTasks("schoolRanking", value);
+          }
+          setSchoolRanking(value);
+        }}
+        onBlur={() => runValidationTasks("schoolRanking", schoolRanking)}
+        errorMessage={errors.schoolRanking?.errorMessage}
+        hasError={errors.schoolRanking?.hasError}
+        {...getOverrideProps(overrides, "schoolRanking")}
+      >
+        <option
+          children="Top20"
+          value="top20"
+          {...getOverrideProps(overrides, "schoolRankingoption0")}
+        ></option>
+        <option
+          children="Top50"
+          value="top50"
+          {...getOverrideProps(overrides, "schoolRankingoption1")}
+        ></option>
+        <option
+          children="Mid"
+          value="mid"
+          {...getOverrideProps(overrides, "schoolRankingoption2")}
+        ></option>
+        <option
+          children="Low"
+          value="low"
+          {...getOverrideProps(overrides, "schoolRankingoption3")}
+        ></option>
+        <option
+          children="Unranked"
+          value="unranked"
+          {...getOverrideProps(overrides, "schoolRankingoption4")}
+        ></option>
+      </SelectField>
       <TextField
         label="Year of graduation"
         isRequired={false}
@@ -428,31 +647,40 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation: value,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.yearOfGraduation ?? value;
@@ -480,31 +708,40 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE: value,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.monthsOfUSCE ?? value;
@@ -528,31 +765,40 @@ export default function UserProfileUpdateForm(props) {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified: value,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.ecfmgCertified ?? value;
@@ -568,52 +814,61 @@ export default function UserProfileUpdateForm(props) {
         {...getOverrideProps(overrides, "ecfmgCertified")}
       ></SwitchField>
       <SwitchField
-        label="Need visa"
+        label="Visa required"
         defaultChecked={false}
         isDisabled={false}
-        isChecked={needVisa}
+        isChecked={visaRequired}
         onChange={(e) => {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa: value,
+              visaRequired: value,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
-            value = result?.needVisa ?? value;
+            value = result?.visaRequired ?? value;
           }
-          if (errors.needVisa?.hasError) {
-            runValidationTasks("needVisa", value);
+          if (errors.visaRequired?.hasError) {
+            runValidationTasks("visaRequired", value);
           }
-          setNeedVisa(value);
+          setVisaRequired(value);
         }}
-        onBlur={() => runValidationTasks("needVisa", needVisa)}
-        errorMessage={errors.needVisa?.errorMessage}
-        hasError={errors.needVisa?.hasError}
-        {...getOverrideProps(overrides, "needVisa")}
+        onBlur={() => runValidationTasks("visaRequired", visaRequired)}
+        errorMessage={errors.visaRequired?.errorMessage}
+        hasError={errors.visaRequired?.hasError}
+        {...getOverrideProps(overrides, "visaRequired")}
       ></SwitchField>
       <TextField
         label="Location"
@@ -624,31 +879,40 @@ export default function UserProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location: value,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.location ?? value;
@@ -663,54 +927,6 @@ export default function UserProfileUpdateForm(props) {
         hasError={errors.location?.hasError}
         {...getOverrideProps(overrides, "location")}
       ></TextField>
-      <TextField
-        label="Avatar image"
-        isRequired={false}
-        isReadOnly={false}
-        value={avatarImage}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              isProfile,
-              step2CSPathway,
-              yearOfGraduation,
-              monthsOfUSCE,
-              ecfmgCertified,
-              needVisa,
-              location,
-              avatarImage: value,
-              graduateType,
-              medicalDegree,
-              codeName,
-              step1Score,
-              step2Score,
-              comlex1Score,
-              comlex2Score,
-              redFlags,
-              aoa,
-              sigmaSigmaPi,
-              goldHumanism,
-              numPublicationsPosters,
-              numWorkExperiences,
-              numVolunteerExperiences,
-              classRank,
-              numApplications,
-              numInterviews,
-            };
-            const result = onChange(modelFields);
-            value = result?.avatarImage ?? value;
-          }
-          if (errors.avatarImage?.hasError) {
-            runValidationTasks("avatarImage", value);
-          }
-          setAvatarImage(value);
-        }}
-        onBlur={() => runValidationTasks("avatarImage", avatarImage)}
-        errorMessage={errors.avatarImage?.errorMessage}
-        hasError={errors.avatarImage?.hasError}
-        {...getOverrideProps(overrides, "avatarImage")}
-      ></TextField>
       <SelectField
         label="Graduate type"
         placeholder="Please select an option"
@@ -720,31 +936,40 @@ export default function UserProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType: value,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.graduateType ?? value;
@@ -779,31 +1004,40 @@ export default function UserProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree: value,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.medicalDegree ?? value;
@@ -838,31 +1072,40 @@ export default function UserProfileUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName: value,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.codeName ?? value;
@@ -877,6 +1120,63 @@ export default function UserProfileUpdateForm(props) {
         hasError={errors.codeName?.hasError}
         {...getOverrideProps(overrides, "codeName")}
       ></TextField>
+      <SwitchField
+        label="Step1 score pass"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={step1ScorePass}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              sortType,
+              isProfile,
+              step2CSPathway,
+              schoolRanking,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              visaRequired,
+              location,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1ScorePass: value,
+              step1Score,
+              step2Score,
+              step3Score,
+              comlex1ScorePass,
+              comlex2Score,
+              redFlags,
+              redFlagsExplanation,
+              aoa,
+              sigmaSigmaPhi,
+              goldHumanism,
+              numPublications,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              otherDegrees,
+              numApplications,
+              numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
+            };
+            const result = onChange(modelFields);
+            value = result?.step1ScorePass ?? value;
+          }
+          if (errors.step1ScorePass?.hasError) {
+            runValidationTasks("step1ScorePass", value);
+          }
+          setStep1ScorePass(value);
+        }}
+        onBlur={() => runValidationTasks("step1ScorePass", step1ScorePass)}
+        errorMessage={errors.step1ScorePass?.errorMessage}
+        hasError={errors.step1ScorePass?.hasError}
+        {...getOverrideProps(overrides, "step1ScorePass")}
+      ></SwitchField>
       <TextField
         label="Step1 score"
         isRequired={false}
@@ -890,31 +1190,40 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score: value,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.step1Score ?? value;
@@ -942,31 +1251,40 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score: value,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.step2Score ?? value;
@@ -982,57 +1300,123 @@ export default function UserProfileUpdateForm(props) {
         {...getOverrideProps(overrides, "step2Score")}
       ></TextField>
       <TextField
-        label="Comlex1 score"
+        label="Step3 score"
         isRequired={false}
         isReadOnly={false}
         type="number"
         step="any"
-        value={comlex1Score}
+        value={step3Score}
         onChange={(e) => {
           let value = isNaN(parseInt(e.target.value))
             ? e.target.value
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score: value,
+              step3Score: value,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
-            value = result?.comlex1Score ?? value;
+            value = result?.step3Score ?? value;
           }
-          if (errors.comlex1Score?.hasError) {
-            runValidationTasks("comlex1Score", value);
+          if (errors.step3Score?.hasError) {
+            runValidationTasks("step3Score", value);
           }
-          setComlex1Score(value);
+          setStep3Score(value);
         }}
-        onBlur={() => runValidationTasks("comlex1Score", comlex1Score)}
-        errorMessage={errors.comlex1Score?.errorMessage}
-        hasError={errors.comlex1Score?.hasError}
-        {...getOverrideProps(overrides, "comlex1Score")}
+        onBlur={() => runValidationTasks("step3Score", step3Score)}
+        errorMessage={errors.step3Score?.errorMessage}
+        hasError={errors.step3Score?.hasError}
+        {...getOverrideProps(overrides, "step3Score")}
       ></TextField>
+      <SwitchField
+        label="Comlex1 score pass"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={comlex1ScorePass}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              sortType,
+              isProfile,
+              step2CSPathway,
+              schoolRanking,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              visaRequired,
+              location,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1ScorePass,
+              step1Score,
+              step2Score,
+              step3Score,
+              comlex1ScorePass: value,
+              comlex2Score,
+              redFlags,
+              redFlagsExplanation,
+              aoa,
+              sigmaSigmaPhi,
+              goldHumanism,
+              numPublications,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              otherDegrees,
+              numApplications,
+              numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
+            };
+            const result = onChange(modelFields);
+            value = result?.comlex1ScorePass ?? value;
+          }
+          if (errors.comlex1ScorePass?.hasError) {
+            runValidationTasks("comlex1ScorePass", value);
+          }
+          setComlex1ScorePass(value);
+        }}
+        onBlur={() => runValidationTasks("comlex1ScorePass", comlex1ScorePass)}
+        errorMessage={errors.comlex1ScorePass?.errorMessage}
+        hasError={errors.comlex1ScorePass?.hasError}
+        {...getOverrideProps(overrides, "comlex1ScorePass")}
+      ></SwitchField>
       <TextField
         label="Comlex2 score"
         isRequired={false}
@@ -1046,31 +1430,40 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score: value,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.comlex2Score ?? value;
@@ -1094,31 +1487,40 @@ export default function UserProfileUpdateForm(props) {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags: value,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.redFlags ?? value;
@@ -1133,6 +1535,65 @@ export default function UserProfileUpdateForm(props) {
         hasError={errors.redFlags?.hasError}
         {...getOverrideProps(overrides, "redFlags")}
       ></SwitchField>
+      <TextField
+        label="Red flags explanation"
+        isRequired={false}
+        isReadOnly={false}
+        value={redFlagsExplanation}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sortType,
+              isProfile,
+              step2CSPathway,
+              schoolRanking,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              visaRequired,
+              location,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1ScorePass,
+              step1Score,
+              step2Score,
+              step3Score,
+              comlex1ScorePass,
+              comlex2Score,
+              redFlags,
+              redFlagsExplanation: value,
+              aoa,
+              sigmaSigmaPhi,
+              goldHumanism,
+              numPublications,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              otherDegrees,
+              numApplications,
+              numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
+            };
+            const result = onChange(modelFields);
+            value = result?.redFlagsExplanation ?? value;
+          }
+          if (errors.redFlagsExplanation?.hasError) {
+            runValidationTasks("redFlagsExplanation", value);
+          }
+          setRedFlagsExplanation(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("redFlagsExplanation", redFlagsExplanation)
+        }
+        errorMessage={errors.redFlagsExplanation?.errorMessage}
+        hasError={errors.redFlagsExplanation?.hasError}
+        {...getOverrideProps(overrides, "redFlagsExplanation")}
+      ></TextField>
       <SwitchField
         label="Aoa"
         defaultChecked={false}
@@ -1142,31 +1603,40 @@ export default function UserProfileUpdateForm(props) {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa: value,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.aoa ?? value;
@@ -1182,52 +1652,61 @@ export default function UserProfileUpdateForm(props) {
         {...getOverrideProps(overrides, "aoa")}
       ></SwitchField>
       <SwitchField
-        label="Sigma sigma pi"
+        label="Sigma sigma phi"
         defaultChecked={false}
         isDisabled={false}
-        isChecked={sigmaSigmaPi}
+        isChecked={sigmaSigmaPhi}
         onChange={(e) => {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi: value,
+              sigmaSigmaPhi: value,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
-            value = result?.sigmaSigmaPi ?? value;
+            value = result?.sigmaSigmaPhi ?? value;
           }
-          if (errors.sigmaSigmaPi?.hasError) {
-            runValidationTasks("sigmaSigmaPi", value);
+          if (errors.sigmaSigmaPhi?.hasError) {
+            runValidationTasks("sigmaSigmaPhi", value);
           }
-          setSigmaSigmaPi(value);
+          setSigmaSigmaPhi(value);
         }}
-        onBlur={() => runValidationTasks("sigmaSigmaPi", sigmaSigmaPi)}
-        errorMessage={errors.sigmaSigmaPi?.errorMessage}
-        hasError={errors.sigmaSigmaPi?.hasError}
-        {...getOverrideProps(overrides, "sigmaSigmaPi")}
+        onBlur={() => runValidationTasks("sigmaSigmaPhi", sigmaSigmaPhi)}
+        errorMessage={errors.sigmaSigmaPhi?.errorMessage}
+        hasError={errors.sigmaSigmaPhi?.hasError}
+        {...getOverrideProps(overrides, "sigmaSigmaPhi")}
       ></SwitchField>
       <SwitchField
         label="Gold humanism"
@@ -1238,31 +1717,40 @@ export default function UserProfileUpdateForm(props) {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism: value,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.goldHumanism ?? value;
@@ -1278,58 +1766,65 @@ export default function UserProfileUpdateForm(props) {
         {...getOverrideProps(overrides, "goldHumanism")}
       ></SwitchField>
       <TextField
-        label="Num publications posters"
+        label="Num publications"
         isRequired={false}
         isReadOnly={false}
         type="number"
         step="any"
-        value={numPublicationsPosters}
+        value={numPublications}
         onChange={(e) => {
           let value = isNaN(parseInt(e.target.value))
             ? e.target.value
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters: value,
+              numPublications: value,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
-            value = result?.numPublicationsPosters ?? value;
+            value = result?.numPublications ?? value;
           }
-          if (errors.numPublicationsPosters?.hasError) {
-            runValidationTasks("numPublicationsPosters", value);
+          if (errors.numPublications?.hasError) {
+            runValidationTasks("numPublications", value);
           }
-          setNumPublicationsPosters(value);
+          setNumPublications(value);
         }}
-        onBlur={() =>
-          runValidationTasks("numPublicationsPosters", numPublicationsPosters)
-        }
-        errorMessage={errors.numPublicationsPosters?.errorMessage}
-        hasError={errors.numPublicationsPosters?.hasError}
-        {...getOverrideProps(overrides, "numPublicationsPosters")}
+        onBlur={() => runValidationTasks("numPublications", numPublications)}
+        errorMessage={errors.numPublications?.errorMessage}
+        hasError={errors.numPublications?.hasError}
+        {...getOverrideProps(overrides, "numPublications")}
       ></TextField>
       <TextField
         label="Num work experiences"
@@ -1344,31 +1839,40 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences: value,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.numWorkExperiences ?? value;
@@ -1398,31 +1902,40 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences: value,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.numVolunteerExperiences ?? value;
@@ -1439,44 +1952,49 @@ export default function UserProfileUpdateForm(props) {
         hasError={errors.numVolunteerExperiences?.hasError}
         {...getOverrideProps(overrides, "numVolunteerExperiences")}
       ></TextField>
-      <TextField
+      <SelectField
         label="Class rank"
-        isRequired={false}
-        isReadOnly={false}
-        type="number"
-        step="any"
+        placeholder="Please select an option"
+        isDisabled={false}
         value={classRank}
         onChange={(e) => {
-          let value = isNaN(parseFloat(e.target.value))
-            ? e.target.value
-            : parseFloat(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank: value,
+              otherDegrees,
               numApplications,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.classRank ?? value;
@@ -1490,6 +2008,84 @@ export default function UserProfileUpdateForm(props) {
         errorMessage={errors.classRank?.errorMessage}
         hasError={errors.classRank?.hasError}
         {...getOverrideProps(overrides, "classRank")}
+      >
+        <option
+          children="Top10"
+          value="top10"
+          {...getOverrideProps(overrides, "classRankoption0")}
+        ></option>
+        <option
+          children="Top25"
+          value="top25"
+          {...getOverrideProps(overrides, "classRankoption1")}
+        ></option>
+        <option
+          children="Top50"
+          value="top50"
+          {...getOverrideProps(overrides, "classRankoption2")}
+        ></option>
+        <option
+          children="Bottom50"
+          value="bottom50"
+          {...getOverrideProps(overrides, "classRankoption3")}
+        ></option>
+      </SelectField>
+      <TextField
+        label="Other degrees"
+        isRequired={false}
+        isReadOnly={false}
+        value={otherDegrees}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sortType,
+              isProfile,
+              step2CSPathway,
+              schoolRanking,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              visaRequired,
+              location,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1ScorePass,
+              step1Score,
+              step2Score,
+              step3Score,
+              comlex1ScorePass,
+              comlex2Score,
+              redFlags,
+              redFlagsExplanation,
+              aoa,
+              sigmaSigmaPhi,
+              goldHumanism,
+              numPublications,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              otherDegrees: value,
+              numApplications,
+              numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
+            };
+            const result = onChange(modelFields);
+            value = result?.otherDegrees ?? value;
+          }
+          if (errors.otherDegrees?.hasError) {
+            runValidationTasks("otherDegrees", value);
+          }
+          setOtherDegrees(value);
+        }}
+        onBlur={() => runValidationTasks("otherDegrees", otherDegrees)}
+        errorMessage={errors.otherDegrees?.errorMessage}
+        hasError={errors.otherDegrees?.hasError}
+        {...getOverrideProps(overrides, "otherDegrees")}
       ></TextField>
       <TextField
         label="Num applications"
@@ -1504,31 +2100,40 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications: value,
               numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.numApplications ?? value;
@@ -1556,31 +2161,40 @@ export default function UserProfileUpdateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
+              sortType,
               isProfile,
               step2CSPathway,
+              schoolRanking,
               yearOfGraduation,
               monthsOfUSCE,
               ecfmgCertified,
-              needVisa,
+              visaRequired,
               location,
-              avatarImage,
               graduateType,
               medicalDegree,
               codeName,
+              step1ScorePass,
               step1Score,
               step2Score,
-              comlex1Score,
+              step3Score,
+              comlex1ScorePass,
               comlex2Score,
               redFlags,
+              redFlagsExplanation,
               aoa,
-              sigmaSigmaPi,
+              sigmaSigmaPhi,
               goldHumanism,
-              numPublicationsPosters,
+              numPublications,
               numWorkExperiences,
               numVolunteerExperiences,
               classRank,
+              otherDegrees,
               numApplications,
               numInterviews: value,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
             };
             const result = onChange(modelFields);
             value = result?.numInterviews ?? value;
@@ -1594,6 +2208,250 @@ export default function UserProfileUpdateForm(props) {
         errorMessage={errors.numInterviews?.errorMessage}
         hasError={errors.numInterviews?.hasError}
         {...getOverrideProps(overrides, "numInterviews")}
+      ></TextField>
+      <TextField
+        label="Num withdrawn"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={numWithdrawn}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              sortType,
+              isProfile,
+              step2CSPathway,
+              schoolRanking,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              visaRequired,
+              location,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1ScorePass,
+              step1Score,
+              step2Score,
+              step3Score,
+              comlex1ScorePass,
+              comlex2Score,
+              redFlags,
+              redFlagsExplanation,
+              aoa,
+              sigmaSigmaPhi,
+              goldHumanism,
+              numPublications,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              otherDegrees,
+              numApplications,
+              numInterviews,
+              numWithdrawn: value,
+              numRejected,
+              numWaitlisted,
+              applicationYear,
+            };
+            const result = onChange(modelFields);
+            value = result?.numWithdrawn ?? value;
+          }
+          if (errors.numWithdrawn?.hasError) {
+            runValidationTasks("numWithdrawn", value);
+          }
+          setNumWithdrawn(value);
+        }}
+        onBlur={() => runValidationTasks("numWithdrawn", numWithdrawn)}
+        errorMessage={errors.numWithdrawn?.errorMessage}
+        hasError={errors.numWithdrawn?.hasError}
+        {...getOverrideProps(overrides, "numWithdrawn")}
+      ></TextField>
+      <TextField
+        label="Num rejected"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={numRejected}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              sortType,
+              isProfile,
+              step2CSPathway,
+              schoolRanking,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              visaRequired,
+              location,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1ScorePass,
+              step1Score,
+              step2Score,
+              step3Score,
+              comlex1ScorePass,
+              comlex2Score,
+              redFlags,
+              redFlagsExplanation,
+              aoa,
+              sigmaSigmaPhi,
+              goldHumanism,
+              numPublications,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              otherDegrees,
+              numApplications,
+              numInterviews,
+              numWithdrawn,
+              numRejected: value,
+              numWaitlisted,
+              applicationYear,
+            };
+            const result = onChange(modelFields);
+            value = result?.numRejected ?? value;
+          }
+          if (errors.numRejected?.hasError) {
+            runValidationTasks("numRejected", value);
+          }
+          setNumRejected(value);
+        }}
+        onBlur={() => runValidationTasks("numRejected", numRejected)}
+        errorMessage={errors.numRejected?.errorMessage}
+        hasError={errors.numRejected?.hasError}
+        {...getOverrideProps(overrides, "numRejected")}
+      ></TextField>
+      <TextField
+        label="Num waitlisted"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={numWaitlisted}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              sortType,
+              isProfile,
+              step2CSPathway,
+              schoolRanking,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              visaRequired,
+              location,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1ScorePass,
+              step1Score,
+              step2Score,
+              step3Score,
+              comlex1ScorePass,
+              comlex2Score,
+              redFlags,
+              redFlagsExplanation,
+              aoa,
+              sigmaSigmaPhi,
+              goldHumanism,
+              numPublications,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              otherDegrees,
+              numApplications,
+              numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted: value,
+              applicationYear,
+            };
+            const result = onChange(modelFields);
+            value = result?.numWaitlisted ?? value;
+          }
+          if (errors.numWaitlisted?.hasError) {
+            runValidationTasks("numWaitlisted", value);
+          }
+          setNumWaitlisted(value);
+        }}
+        onBlur={() => runValidationTasks("numWaitlisted", numWaitlisted)}
+        errorMessage={errors.numWaitlisted?.errorMessage}
+        hasError={errors.numWaitlisted?.hasError}
+        {...getOverrideProps(overrides, "numWaitlisted")}
+      ></TextField>
+      <TextField
+        label="Application year"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={applicationYear}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              sortType,
+              isProfile,
+              step2CSPathway,
+              schoolRanking,
+              yearOfGraduation,
+              monthsOfUSCE,
+              ecfmgCertified,
+              visaRequired,
+              location,
+              graduateType,
+              medicalDegree,
+              codeName,
+              step1ScorePass,
+              step1Score,
+              step2Score,
+              step3Score,
+              comlex1ScorePass,
+              comlex2Score,
+              redFlags,
+              redFlagsExplanation,
+              aoa,
+              sigmaSigmaPhi,
+              goldHumanism,
+              numPublications,
+              numWorkExperiences,
+              numVolunteerExperiences,
+              classRank,
+              otherDegrees,
+              numApplications,
+              numInterviews,
+              numWithdrawn,
+              numRejected,
+              numWaitlisted,
+              applicationYear: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.applicationYear ?? value;
+          }
+          if (errors.applicationYear?.hasError) {
+            runValidationTasks("applicationYear", value);
+          }
+          setApplicationYear(value);
+        }}
+        onBlur={() => runValidationTasks("applicationYear", applicationYear)}
+        errorMessage={errors.applicationYear?.errorMessage}
+        hasError={errors.applicationYear?.hasError}
+        {...getOverrideProps(overrides, "applicationYear")}
       ></TextField>
       <Flex
         justifyContent="space-between"

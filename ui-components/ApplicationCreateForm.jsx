@@ -1,12 +1,12 @@
 /* eslint-disable */
 "use client";
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import { Button, Flex, Grid, SelectField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
-import { createSpecialty } from "./graphql/mutations";
+import { createApplication } from "./graphql/mutations";
 const client = generateClient();
-export default function SpecialtyCreateForm(props) {
+export default function ApplicationCreateForm(props) {
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -18,26 +18,16 @@ export default function SpecialtyCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    sortType: "",
-    name: "",
-    acgmeSpecialtyCode: "",
+    status: "",
   };
-  const [sortType, setSortType] = React.useState(initialValues.sortType);
-  const [name, setName] = React.useState(initialValues.name);
-  const [acgmeSpecialtyCode, setAcgmeSpecialtyCode] = React.useState(
-    initialValues.acgmeSpecialtyCode
-  );
+  const [status, setStatus] = React.useState(initialValues.status);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setSortType(initialValues.sortType);
-    setName(initialValues.name);
-    setAcgmeSpecialtyCode(initialValues.acgmeSpecialtyCode);
+    setStatus(initialValues.status);
     setErrors({});
   };
   const validations = {
-    sortType: [{ type: "Required" }],
-    name: [],
-    acgmeSpecialtyCode: [],
+    status: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -65,9 +55,7 @@ export default function SpecialtyCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          sortType,
-          name,
-          acgmeSpecialtyCode,
+          status,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -98,7 +86,7 @@ export default function SpecialtyCreateForm(props) {
             }
           });
           await client.graphql({
-            query: createSpecialty.replaceAll("__typename", ""),
+            query: createApplication.replaceAll("__typename", ""),
             variables: {
               input: {
                 ...modelFields,
@@ -118,89 +106,69 @@ export default function SpecialtyCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "SpecialtyCreateForm")}
+      {...getOverrideProps(overrides, "ApplicationCreateForm")}
       {...rest}
     >
-      <TextField
-        label="Sort type"
-        isRequired={true}
-        isReadOnly={false}
-        value={sortType}
+      <SelectField
+        label="Status"
+        placeholder="Please select an option"
+        isDisabled={false}
+        value={status}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              sortType: value,
-              name,
-              acgmeSpecialtyCode,
+              status: value,
             };
             const result = onChange(modelFields);
-            value = result?.sortType ?? value;
+            value = result?.status ?? value;
           }
-          if (errors.sortType?.hasError) {
-            runValidationTasks("sortType", value);
+          if (errors.status?.hasError) {
+            runValidationTasks("status", value);
           }
-          setSortType(value);
+          setStatus(value);
         }}
-        onBlur={() => runValidationTasks("sortType", sortType)}
-        errorMessage={errors.sortType?.errorMessage}
-        hasError={errors.sortType?.hasError}
-        {...getOverrideProps(overrides, "sortType")}
-      ></TextField>
-      <TextField
-        label="Name"
-        isRequired={false}
-        isReadOnly={false}
-        value={name}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              sortType,
-              name: value,
-              acgmeSpecialtyCode,
-            };
-            const result = onChange(modelFields);
-            value = result?.name ?? value;
-          }
-          if (errors.name?.hasError) {
-            runValidationTasks("name", value);
-          }
-          setName(value);
-        }}
-        onBlur={() => runValidationTasks("name", name)}
-        errorMessage={errors.name?.errorMessage}
-        hasError={errors.name?.hasError}
-        {...getOverrideProps(overrides, "name")}
-      ></TextField>
-      <TextField
-        label="Acgme specialty code"
-        isRequired={false}
-        isReadOnly={false}
-        value={acgmeSpecialtyCode}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              sortType,
-              name,
-              acgmeSpecialtyCode: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.acgmeSpecialtyCode ?? value;
-          }
-          if (errors.acgmeSpecialtyCode?.hasError) {
-            runValidationTasks("acgmeSpecialtyCode", value);
-          }
-          setAcgmeSpecialtyCode(value);
-        }}
-        onBlur={() =>
-          runValidationTasks("acgmeSpecialtyCode", acgmeSpecialtyCode)
-        }
-        errorMessage={errors.acgmeSpecialtyCode?.errorMessage}
-        hasError={errors.acgmeSpecialtyCode?.hasError}
-        {...getOverrideProps(overrides, "acgmeSpecialtyCode")}
-      ></TextField>
+        onBlur={() => runValidationTasks("status", status)}
+        errorMessage={errors.status?.errorMessage}
+        hasError={errors.status?.hasError}
+        {...getOverrideProps(overrides, "status")}
+      >
+        <option
+          children="Applied"
+          value="applied"
+          {...getOverrideProps(overrides, "statusoption0")}
+        ></option>
+        <option
+          children="Interview invited"
+          value="interviewInvited"
+          {...getOverrideProps(overrides, "statusoption1")}
+        ></option>
+        <option
+          children="Interviewed"
+          value="interviewed"
+          {...getOverrideProps(overrides, "statusoption2")}
+        ></option>
+        <option
+          children="Withdrawn"
+          value="withdrawn"
+          {...getOverrideProps(overrides, "statusoption3")}
+        ></option>
+        <option
+          children="Rejected"
+          value="rejected"
+          {...getOverrideProps(overrides, "statusoption4")}
+        ></option>
+        <option
+          children="Waitlisted"
+          value="waitlisted"
+          {...getOverrideProps(overrides, "statusoption5")}
+        ></option>
+        <option
+          children="Matched"
+          value="matched"
+          {...getOverrideProps(overrides, "statusoption6")}
+        ></option>
+      </SelectField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

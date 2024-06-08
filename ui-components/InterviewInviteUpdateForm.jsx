@@ -28,21 +28,28 @@ export default function InterviewInviteUpdateForm(props) {
   } = props;
   const initialValues = {
     anonymous: false,
-    type: "",
+    img: "",
+    sortType: "",
     inviteDateTime: "",
     geographicPreference: false,
     signal: false,
-    instate: false,
+    location: "",
     additionalComments: "",
-    graduateType: "",
     medicalDegree: "",
     step1Score: "",
     step2Score: "",
     comlex1Score: "",
     comlex2Score: "",
+    visaRequired: false,
+    subI: false,
+    home: false,
+    yearOfGraduation: "",
+    greenCard: false,
+    away: false,
   };
   const [anonymous, setAnonymous] = React.useState(initialValues.anonymous);
-  const [type, setType] = React.useState(initialValues.type);
+  const [img, setImg] = React.useState(initialValues.img);
+  const [sortType, setSortType] = React.useState(initialValues.sortType);
   const [inviteDateTime, setInviteDateTime] = React.useState(
     initialValues.inviteDateTime
   );
@@ -50,12 +57,9 @@ export default function InterviewInviteUpdateForm(props) {
     initialValues.geographicPreference
   );
   const [signal, setSignal] = React.useState(initialValues.signal);
-  const [instate, setInstate] = React.useState(initialValues.instate);
+  const [location, setLocation] = React.useState(initialValues.location);
   const [additionalComments, setAdditionalComments] = React.useState(
     initialValues.additionalComments
-  );
-  const [graduateType, setGraduateType] = React.useState(
-    initialValues.graduateType
   );
   const [medicalDegree, setMedicalDegree] = React.useState(
     initialValues.medicalDegree
@@ -68,24 +72,40 @@ export default function InterviewInviteUpdateForm(props) {
   const [comlex2Score, setComlex2Score] = React.useState(
     initialValues.comlex2Score
   );
+  const [visaRequired, setVisaRequired] = React.useState(
+    initialValues.visaRequired
+  );
+  const [subI, setSubI] = React.useState(initialValues.subI);
+  const [home, setHome] = React.useState(initialValues.home);
+  const [yearOfGraduation, setYearOfGraduation] = React.useState(
+    initialValues.yearOfGraduation
+  );
+  const [greenCard, setGreenCard] = React.useState(initialValues.greenCard);
+  const [away, setAway] = React.useState(initialValues.away);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = interviewInviteRecord
       ? { ...initialValues, ...interviewInviteRecord }
       : initialValues;
     setAnonymous(cleanValues.anonymous);
-    setType(cleanValues.type);
+    setImg(cleanValues.img);
+    setSortType(cleanValues.sortType);
     setInviteDateTime(cleanValues.inviteDateTime);
     setGeographicPreference(cleanValues.geographicPreference);
     setSignal(cleanValues.signal);
-    setInstate(cleanValues.instate);
+    setLocation(cleanValues.location);
     setAdditionalComments(cleanValues.additionalComments);
-    setGraduateType(cleanValues.graduateType);
     setMedicalDegree(cleanValues.medicalDegree);
     setStep1Score(cleanValues.step1Score);
     setStep2Score(cleanValues.step2Score);
     setComlex1Score(cleanValues.comlex1Score);
     setComlex2Score(cleanValues.comlex2Score);
+    setVisaRequired(cleanValues.visaRequired);
+    setSubI(cleanValues.subI);
+    setHome(cleanValues.home);
+    setYearOfGraduation(cleanValues.yearOfGraduation);
+    setGreenCard(cleanValues.greenCard);
+    setAway(cleanValues.away);
     setErrors({});
   };
   const [interviewInviteRecord, setInterviewInviteRecord] = React.useState(
@@ -108,18 +128,24 @@ export default function InterviewInviteUpdateForm(props) {
   React.useEffect(resetStateValues, [interviewInviteRecord]);
   const validations = {
     anonymous: [],
-    type: [{ type: "Required" }],
+    img: [],
+    sortType: [{ type: "Required" }],
     inviteDateTime: [{ type: "Required" }],
     geographicPreference: [],
     signal: [],
-    instate: [],
+    location: [],
     additionalComments: [],
-    graduateType: [],
     medicalDegree: [],
     step1Score: [],
     step2Score: [],
     comlex1Score: [],
     comlex2Score: [],
+    visaRequired: [],
+    subI: [],
+    home: [],
+    yearOfGraduation: [],
+    greenCard: [],
+    away: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -165,18 +191,24 @@ export default function InterviewInviteUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           anonymous: anonymous ?? null,
-          type,
+          img: img ?? null,
+          sortType,
           inviteDateTime,
           geographicPreference: geographicPreference ?? null,
           signal: signal ?? null,
-          instate: instate ?? null,
+          location: location ?? null,
           additionalComments: additionalComments ?? null,
-          graduateType: graduateType ?? null,
           medicalDegree: medicalDegree ?? null,
           step1Score: step1Score ?? null,
           step2Score: step2Score ?? null,
           comlex1Score: comlex1Score ?? null,
           comlex2Score: comlex2Score ?? null,
+          visaRequired: visaRequired ?? null,
+          subI: subI ?? null,
+          home: home ?? null,
+          yearOfGraduation: yearOfGraduation ?? null,
+          greenCard: greenCard ?? null,
+          away: away ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -238,18 +270,24 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous: value,
-              type,
+              img,
+              sortType,
               inviteDateTime,
               geographicPreference,
               signal,
-              instate,
+              location,
               additionalComments,
-              graduateType,
               medicalDegree,
               step1Score,
               step2Score,
               comlex1Score,
               comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
             value = result?.anonymous ?? value;
@@ -264,41 +302,100 @@ export default function InterviewInviteUpdateForm(props) {
         hasError={errors.anonymous?.hasError}
         {...getOverrideProps(overrides, "anonymous")}
       ></SwitchField>
-      <TextField
-        label="Type"
-        isRequired={true}
-        isReadOnly={false}
-        value={type}
+      <SelectField
+        label="Img"
+        placeholder="Please select an option"
+        isDisabled={false}
+        value={img}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               anonymous,
-              type: value,
+              img: value,
+              sortType,
               inviteDateTime,
               geographicPreference,
               signal,
-              instate,
+              location,
               additionalComments,
-              graduateType,
               medicalDegree,
               step1Score,
               step2Score,
               comlex1Score,
               comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
-            value = result?.type ?? value;
+            value = result?.img ?? value;
           }
-          if (errors.type?.hasError) {
-            runValidationTasks("type", value);
+          if (errors.img?.hasError) {
+            runValidationTasks("img", value);
           }
-          setType(value);
+          setImg(value);
         }}
-        onBlur={() => runValidationTasks("type", type)}
-        errorMessage={errors.type?.errorMessage}
-        hasError={errors.type?.hasError}
-        {...getOverrideProps(overrides, "type")}
+        onBlur={() => runValidationTasks("img", img)}
+        errorMessage={errors.img?.errorMessage}
+        hasError={errors.img?.hasError}
+        {...getOverrideProps(overrides, "img")}
+      >
+        <option
+          children="Non usimg"
+          value="nonUSIMG"
+          {...getOverrideProps(overrides, "imgoption0")}
+        ></option>
+        <option
+          children="Usimg"
+          value="USIMG"
+          {...getOverrideProps(overrides, "imgoption1")}
+        ></option>
+      </SelectField>
+      <TextField
+        label="Sort type"
+        isRequired={true}
+        isReadOnly={false}
+        value={sortType}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              anonymous,
+              img,
+              sortType: value,
+              inviteDateTime,
+              geographicPreference,
+              signal,
+              location,
+              additionalComments,
+              medicalDegree,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
+            };
+            const result = onChange(modelFields);
+            value = result?.sortType ?? value;
+          }
+          if (errors.sortType?.hasError) {
+            runValidationTasks("sortType", value);
+          }
+          setSortType(value);
+        }}
+        onBlur={() => runValidationTasks("sortType", sortType)}
+        errorMessage={errors.sortType?.errorMessage}
+        hasError={errors.sortType?.hasError}
+        {...getOverrideProps(overrides, "sortType")}
       ></TextField>
       <TextField
         label="Invite date time"
@@ -312,18 +409,24 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
-              type,
+              img,
+              sortType,
               inviteDateTime: value,
               geographicPreference,
               signal,
-              instate,
+              location,
               additionalComments,
-              graduateType,
               medicalDegree,
               step1Score,
               step2Score,
               comlex1Score,
               comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
             value = result?.inviteDateTime ?? value;
@@ -348,18 +451,24 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
-              type,
+              img,
+              sortType,
               inviteDateTime,
               geographicPreference: value,
               signal,
-              instate,
+              location,
               additionalComments,
-              graduateType,
               medicalDegree,
               step1Score,
               step2Score,
               comlex1Score,
               comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
             value = result?.geographicPreference ?? value;
@@ -386,18 +495,24 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
-              type,
+              img,
+              sortType,
               inviteDateTime,
               geographicPreference,
               signal: value,
-              instate,
+              location,
               additionalComments,
-              graduateType,
               medicalDegree,
               step1Score,
               step2Score,
               comlex1Score,
               comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
             value = result?.signal ?? value;
@@ -412,42 +527,59 @@ export default function InterviewInviteUpdateForm(props) {
         hasError={errors.signal?.hasError}
         {...getOverrideProps(overrides, "signal")}
       ></SwitchField>
-      <SwitchField
-        label="Instate"
-        defaultChecked={false}
+      <SelectField
+        label="Location"
+        placeholder="Please select an option"
         isDisabled={false}
-        isChecked={instate}
+        value={location}
         onChange={(e) => {
-          let value = e.target.checked;
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               anonymous,
-              type,
+              img,
+              sortType,
               inviteDateTime,
               geographicPreference,
               signal,
-              instate: value,
+              location: value,
               additionalComments,
-              graduateType,
               medicalDegree,
               step1Score,
               step2Score,
               comlex1Score,
               comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
-            value = result?.instate ?? value;
+            value = result?.location ?? value;
           }
-          if (errors.instate?.hasError) {
-            runValidationTasks("instate", value);
+          if (errors.location?.hasError) {
+            runValidationTasks("location", value);
           }
-          setInstate(value);
+          setLocation(value);
         }}
-        onBlur={() => runValidationTasks("instate", instate)}
-        errorMessage={errors.instate?.errorMessage}
-        hasError={errors.instate?.hasError}
-        {...getOverrideProps(overrides, "instate")}
-      ></SwitchField>
+        onBlur={() => runValidationTasks("location", location)}
+        errorMessage={errors.location?.errorMessage}
+        hasError={errors.location?.hasError}
+        {...getOverrideProps(overrides, "location")}
+      >
+        <option
+          children="Is"
+          value="IS"
+          {...getOverrideProps(overrides, "locationoption0")}
+        ></option>
+        <option
+          children="Oos"
+          value="OOS"
+          {...getOverrideProps(overrides, "locationoption1")}
+        ></option>
+      </SelectField>
       <TextField
         label="Additional comments"
         isRequired={false}
@@ -458,18 +590,24 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
-              type,
+              img,
+              sortType,
               inviteDateTime,
               geographicPreference,
               signal,
-              instate,
+              location,
               additionalComments: value,
-              graduateType,
               medicalDegree,
               step1Score,
               step2Score,
               comlex1Score,
               comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
             value = result?.additionalComments ?? value;
@@ -487,53 +625,6 @@ export default function InterviewInviteUpdateForm(props) {
         {...getOverrideProps(overrides, "additionalComments")}
       ></TextField>
       <SelectField
-        label="Graduate type"
-        placeholder="Please select an option"
-        isDisabled={false}
-        value={graduateType}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              anonymous,
-              type,
-              inviteDateTime,
-              geographicPreference,
-              signal,
-              instate,
-              additionalComments,
-              graduateType: value,
-              medicalDegree,
-              step1Score,
-              step2Score,
-              comlex1Score,
-              comlex2Score,
-            };
-            const result = onChange(modelFields);
-            value = result?.graduateType ?? value;
-          }
-          if (errors.graduateType?.hasError) {
-            runValidationTasks("graduateType", value);
-          }
-          setGraduateType(value);
-        }}
-        onBlur={() => runValidationTasks("graduateType", graduateType)}
-        errorMessage={errors.graduateType?.errorMessage}
-        hasError={errors.graduateType?.hasError}
-        {...getOverrideProps(overrides, "graduateType")}
-      >
-        <option
-          children="Us"
-          value="US"
-          {...getOverrideProps(overrides, "graduateTypeoption0")}
-        ></option>
-        <option
-          children="Img"
-          value="IMG"
-          {...getOverrideProps(overrides, "graduateTypeoption1")}
-        ></option>
-      </SelectField>
-      <SelectField
         label="Medical degree"
         placeholder="Please select an option"
         isDisabled={false}
@@ -543,18 +634,24 @@ export default function InterviewInviteUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               anonymous,
-              type,
+              img,
+              sortType,
               inviteDateTime,
               geographicPreference,
               signal,
-              instate,
+              location,
               additionalComments,
-              graduateType,
               medicalDegree: value,
               step1Score,
               step2Score,
               comlex1Score,
               comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
             value = result?.medicalDegree ?? value;
@@ -584,28 +681,30 @@ export default function InterviewInviteUpdateForm(props) {
         label="Step1 score"
         isRequired={false}
         isReadOnly={false}
-        type="number"
-        step="any"
         value={step1Score}
         onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               anonymous,
-              type,
+              img,
+              sortType,
               inviteDateTime,
               geographicPreference,
               signal,
-              instate,
+              location,
               additionalComments,
-              graduateType,
               medicalDegree,
               step1Score: value,
               step2Score,
               comlex1Score,
               comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
             value = result?.step1Score ?? value;
@@ -624,28 +723,30 @@ export default function InterviewInviteUpdateForm(props) {
         label="Step2 score"
         isRequired={false}
         isReadOnly={false}
-        type="number"
-        step="any"
         value={step2Score}
         onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               anonymous,
-              type,
+              img,
+              sortType,
               inviteDateTime,
               geographicPreference,
               signal,
-              instate,
+              location,
               additionalComments,
-              graduateType,
               medicalDegree,
               step1Score,
               step2Score: value,
               comlex1Score,
               comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
             value = result?.step2Score ?? value;
@@ -664,28 +765,30 @@ export default function InterviewInviteUpdateForm(props) {
         label="Comlex1 score"
         isRequired={false}
         isReadOnly={false}
-        type="number"
-        step="any"
         value={comlex1Score}
         onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               anonymous,
-              type,
+              img,
+              sortType,
               inviteDateTime,
               geographicPreference,
               signal,
-              instate,
+              location,
               additionalComments,
-              graduateType,
               medicalDegree,
               step1Score,
               step2Score,
               comlex1Score: value,
               comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
             value = result?.comlex1Score ?? value;
@@ -704,28 +807,30 @@ export default function InterviewInviteUpdateForm(props) {
         label="Comlex2 score"
         isRequired={false}
         isReadOnly={false}
-        type="number"
-        step="any"
         value={comlex2Score}
         onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               anonymous,
-              type,
+              img,
+              sortType,
               inviteDateTime,
               geographicPreference,
               signal,
-              instate,
+              location,
               additionalComments,
-              graduateType,
               medicalDegree,
               step1Score,
               step2Score,
               comlex1Score,
               comlex2Score: value,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
             };
             const result = onChange(modelFields);
             value = result?.comlex2Score ?? value;
@@ -740,6 +845,262 @@ export default function InterviewInviteUpdateForm(props) {
         hasError={errors.comlex2Score?.hasError}
         {...getOverrideProps(overrides, "comlex2Score")}
       ></TextField>
+      <SwitchField
+        label="Visa required"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={visaRequired}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              anonymous,
+              img,
+              sortType,
+              inviteDateTime,
+              geographicPreference,
+              signal,
+              location,
+              additionalComments,
+              medicalDegree,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              visaRequired: value,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
+            };
+            const result = onChange(modelFields);
+            value = result?.visaRequired ?? value;
+          }
+          if (errors.visaRequired?.hasError) {
+            runValidationTasks("visaRequired", value);
+          }
+          setVisaRequired(value);
+        }}
+        onBlur={() => runValidationTasks("visaRequired", visaRequired)}
+        errorMessage={errors.visaRequired?.errorMessage}
+        hasError={errors.visaRequired?.hasError}
+        {...getOverrideProps(overrides, "visaRequired")}
+      ></SwitchField>
+      <SwitchField
+        label="Sub i"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={subI}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              anonymous,
+              img,
+              sortType,
+              inviteDateTime,
+              geographicPreference,
+              signal,
+              location,
+              additionalComments,
+              medicalDegree,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              visaRequired,
+              subI: value,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away,
+            };
+            const result = onChange(modelFields);
+            value = result?.subI ?? value;
+          }
+          if (errors.subI?.hasError) {
+            runValidationTasks("subI", value);
+          }
+          setSubI(value);
+        }}
+        onBlur={() => runValidationTasks("subI", subI)}
+        errorMessage={errors.subI?.errorMessage}
+        hasError={errors.subI?.hasError}
+        {...getOverrideProps(overrides, "subI")}
+      ></SwitchField>
+      <SwitchField
+        label="Home"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={home}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              anonymous,
+              img,
+              sortType,
+              inviteDateTime,
+              geographicPreference,
+              signal,
+              location,
+              additionalComments,
+              medicalDegree,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              visaRequired,
+              subI,
+              home: value,
+              yearOfGraduation,
+              greenCard,
+              away,
+            };
+            const result = onChange(modelFields);
+            value = result?.home ?? value;
+          }
+          if (errors.home?.hasError) {
+            runValidationTasks("home", value);
+          }
+          setHome(value);
+        }}
+        onBlur={() => runValidationTasks("home", home)}
+        errorMessage={errors.home?.errorMessage}
+        hasError={errors.home?.hasError}
+        {...getOverrideProps(overrides, "home")}
+      ></SwitchField>
+      <TextField
+        label="Year of graduation"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={yearOfGraduation}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              anonymous,
+              img,
+              sortType,
+              inviteDateTime,
+              geographicPreference,
+              signal,
+              location,
+              additionalComments,
+              medicalDegree,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation: value,
+              greenCard,
+              away,
+            };
+            const result = onChange(modelFields);
+            value = result?.yearOfGraduation ?? value;
+          }
+          if (errors.yearOfGraduation?.hasError) {
+            runValidationTasks("yearOfGraduation", value);
+          }
+          setYearOfGraduation(value);
+        }}
+        onBlur={() => runValidationTasks("yearOfGraduation", yearOfGraduation)}
+        errorMessage={errors.yearOfGraduation?.errorMessage}
+        hasError={errors.yearOfGraduation?.hasError}
+        {...getOverrideProps(overrides, "yearOfGraduation")}
+      ></TextField>
+      <SwitchField
+        label="Green card"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={greenCard}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              anonymous,
+              img,
+              sortType,
+              inviteDateTime,
+              geographicPreference,
+              signal,
+              location,
+              additionalComments,
+              medicalDegree,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard: value,
+              away,
+            };
+            const result = onChange(modelFields);
+            value = result?.greenCard ?? value;
+          }
+          if (errors.greenCard?.hasError) {
+            runValidationTasks("greenCard", value);
+          }
+          setGreenCard(value);
+        }}
+        onBlur={() => runValidationTasks("greenCard", greenCard)}
+        errorMessage={errors.greenCard?.errorMessage}
+        hasError={errors.greenCard?.hasError}
+        {...getOverrideProps(overrides, "greenCard")}
+      ></SwitchField>
+      <SwitchField
+        label="Away"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={away}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              anonymous,
+              img,
+              sortType,
+              inviteDateTime,
+              geographicPreference,
+              signal,
+              location,
+              additionalComments,
+              medicalDegree,
+              step1Score,
+              step2Score,
+              comlex1Score,
+              comlex2Score,
+              visaRequired,
+              subI,
+              home,
+              yearOfGraduation,
+              greenCard,
+              away: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.away ?? value;
+          }
+          if (errors.away?.hasError) {
+            runValidationTasks("away", value);
+          }
+          setAway(value);
+        }}
+        onBlur={() => runValidationTasks("away", away)}
+        errorMessage={errors.away?.errorMessage}
+        hasError={errors.away?.hasError}
+        {...getOverrideProps(overrides, "away")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
