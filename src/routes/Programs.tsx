@@ -107,7 +107,6 @@ export default function Programs() {
                 <div className={`font-semibold text-[14px]`}>
                   {program.name} at {program.institution.name}
                 </div>
-                {console.log(program?.interviewInvites)}
               </div>
             </div>
           ))}

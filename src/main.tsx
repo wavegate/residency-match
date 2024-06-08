@@ -19,6 +19,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import CreateInterviewInvite from "./routes/CreateInterviewInvite";
 import EditInstitution from "./routes/EditInstitution";
 import Dashboard from "./routes/Dashboard";
+import { TooltipProvider } from "./components/ui/tooltip";
 
 Amplify.configure(outputs);
 
@@ -77,8 +78,10 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <TooltipProvider>
+        <RouterProvider router={router} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      </TooltipProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );
