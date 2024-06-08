@@ -1,13 +1,38 @@
 import { useEffect, useState } from "react";
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-import { Button, useAuthenticator } from "@aws-amplify/ui-react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 import usePermissions from "../hooks/usePermissions";
 import ProgramCreateForm from "../ui-components/ProgramCreateForm";
 import { useQuery } from "@tanstack/react-query";
+import { Button } from "../components/ui/button";
+import { Checkbox } from "../components/ui/checkbox";
+import { Label } from "../components/ui/label";
+import { Search } from "lucide-react";
+import { Input } from "../components/ui/input";
+import { useDebounce } from "@uidotdev/usehooks";
 
 const client = generateClient<Schema>();
 export default function Programs() {
+  // const [search, setSearch] = useState("");
+  // const debouncedSearch = useDebounce(search, 500);
+  // const { data: institutions } = useQuery({
+  //   queryKey: ["institutionsSearch", debouncedSearch],
+  //   queryFn: async () => {
+  //     const response = await client.models.Institution.list({
+  //       filter: {
+  //         name: {
+  //           contains: debouncedSearch,
+  //         },
+  //       },
+  //     });
+  //     const responseData = response.data;
+  //     if (!responseData) return null;
+  //     return responseData;
+  //   },
+  // });
+
+  // console.log(institutions);
   const { data: programs } = useQuery({
     queryKey: ["programs"],
     queryFn: async () => {
@@ -16,12 +41,22 @@ export default function Programs() {
           sortType: "Program",
         },
         {
+          // filter: {
+          //   or: institutions?.map((institution) => {
+          //     return {
+          //       institutionId: {
+          //         eq: institution.id,
+          //       },
+          //     };
+          //   }),
+          // },
           selectionSet: [
             "specialty.*",
             "institution.*",
             "id",
             "name",
             "nrmpProgramCode",
+            "interviewInvites.*",
           ],
           sortDirection: "ASC",
         }
@@ -42,21 +77,42 @@ export default function Programs() {
       }
     );
   }
+
+  // const handleSearchChange = (e) => {
+  //   setSearch(e.target.value);
+  // };
+
   return (
-    <div className={`flex-1 overflow-y-auto`}>
-      <h1>Programs</h1>
-      <ul>
-        {programs?.map((program) => (
-          <li key={program.id}>
-            <h2>{program.name}</h2>
-            <div>{program.nrmpProgramCode}</div>
-            <div>{program.specialty.name}</div>
-            <div>{program.institution.name}</div>
-            <Button onClick={() => deleteProgram(program.id)}>Delete</Button>
-          </li>
-        ))}
-      </ul>
-      {permissions.includes("Admin") && <ProgramCreateForm />}
-    </div>
+    <>
+      <div className={`flex items-center gap-2 px-[12px] pt-2`}>
+        <Button variant="secondary" className={`flex gap-2 h-auto py-2`}>
+          <Checkbox></Checkbox>Followed
+        </Button>
+        <Label>
+          <Search strokeWidth={1} />
+        </Label>
+        <Input
+          placeholder="Search by program name"
+          // value={search}
+          // onChange={handleSearchChange}
+        ></Input>
+      </div>
+      <div className={`flex flex-col gap-[12px] flex-1`}>
+        <div className={`flex flex-col px-[12px]`}>
+          {programs?.map((program) => (
+            <div key={program.id} className={`flex flex-col gap-[6px]`}>
+              <div
+                className={`border-b-[1px] py-[12px] border-gray-300 border-solid`}
+              >
+                <div className={`font-semibold text-[14px]`}>
+                  {program.name} at {program.institution.name}
+                </div>
+                {console.log(program?.interviewInvites)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }

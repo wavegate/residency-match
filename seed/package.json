@@ -6,7 +6,8 @@
     "seed": "ts-node seed_institutions.ts",
     "seed-specialties": "ts-node seed_specialties.ts",
     "seed-programs": "ts-node seed_programs.ts",
-    "seed-ivs": "ts-node seed_ivs.ts"
+    "seed-ivs": "ts-node seed_ivs.ts",
+    "seed-applicants": "ts-node seed_applicants.ts"
   },
   "devDependencies": {
     "@types/node": "^14.0.0",

@@ -1,10 +1,13 @@
 function buildIVstats(interviewInvite) {
-  const stuffArray = [];
-  if (interviewInvite.instate) {
-    stuffArray.push(interviewInvite.instate ? "IS" : "OOS");
+  const stuffArray = ["ccfrankee"];
+  if (interviewInvite.location) {
+    stuffArray.push(interviewInvite.location ? "IS" : "OOS");
   }
-  if (interviewInvite.graduateType) {
-    stuffArray.push(interviewInvite.graduateType);
+  if (interviewInvite.medicalDegree) {
+    stuffArray.push(interviewInvite.medicalDegree);
+  }
+  if (interviewInvite.img) {
+    stuffArray.push(interviewInvite.img);
   }
   if (interviewInvite.step1Score) {
     stuffArray.push(interviewInvite.step1Score);
@@ -24,7 +27,19 @@ function buildIVstats(interviewInvite) {
   if (interviewInvite.signal) {
     stuffArray.push(interviewInvite.signal ? "+sig" : "-sig");
   }
-  return stuffArray.join("; ");
+  if (interviewInvite.visaRequired) {
+    stuffArray.push(interviewInvite.visaRequired ? "+visa" : "-visa");
+  }
+  if (interviewInvite.subI) {
+    stuffArray.push(interviewInvite.subI ? "+subI" : "-subI");
+  }
+  if (interviewInvite.home) {
+    stuffArray.push(interviewInvite.home ? "+home" : "-home");
+  }
+  if (interviewInvite.away) {
+    stuffArray.push(interviewInvite.away ? "+away" : "-away");
+  }
+  return stuffArray.join(" · ");
 }
 
 export default buildIVstats;

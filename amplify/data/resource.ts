@@ -108,6 +108,7 @@ const schema = a.schema({
     })
     .secondaryIndexes((index) => [
       index("sortType").sortKeys(["inviteDateTime"]),
+      index("programId").sortKeys(["inviteDateTime"]),
     ])
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
@@ -155,7 +156,6 @@ const schema = a.schema({
       ecfmgCertified: a.boolean(),
       visaRequired: a.boolean(),
       location: a.string(),
-      avatarImage: a.string(),
       graduateType: a.enum(["US", "IMG"]),
       medicalDegree: a.ref("MedicalDegree"),
       codeName: a.string(),
@@ -166,9 +166,9 @@ const schema = a.schema({
       comlex1ScorePass: a.boolean(),
       comlex2Score: a.integer(),
       redFlags: a.boolean(),
-      redFlagExplanation: a.string(),
+      redFlagsExplanation: a.string(),
       aoa: a.boolean(),
-      sigmaSigmaPi: a.boolean(),
+      sigmaSigmaPhi: a.boolean(),
       goldHumanism: a.boolean(),
       numPublications: a.integer(),
       numWorkExperiences: a.integer(),
@@ -180,7 +180,12 @@ const schema = a.schema({
       numWithdrawn: a.integer(),
       numRejected: a.integer(),
       numWaitlisted: a.integer(),
+      applicationYear: a.integer(),
     })
+    .secondaryIndexes((index) => [
+      index("sortType").sortKeys(["codeName"]),
+      index("graduateType"),
+    ])
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
       allow.group("Admin"),
