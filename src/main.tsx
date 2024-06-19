@@ -20,6 +20,7 @@ import CreateInterviewInvite from "./routes/CreateInterviewInvite";
 import EditInstitution from "./routes/EditInstitution";
 import Dashboard from "./routes/Dashboard";
 import { TooltipProvider } from "./components/ui/tooltip";
+import CreateProfile from "./routes/CreateProfile";
 
 Amplify.configure(outputs);
 
@@ -64,8 +65,12 @@ const router = createBrowserRouter([
         element: <Applicants />,
       },
       {
-        path: "profile",
+        path: "profile/:id",
         element: <Profile />,
+      },
+      {
+        path: "create-profile",
+        element: <CreateProfile />,
       },
       {
         path: "auth",

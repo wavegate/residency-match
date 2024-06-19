@@ -36,6 +36,7 @@ export const getApplication = /* GraphQL */ `
         graduateType
         id
         isProfile
+        isProfileString
         location
         medicalDegree
         monthsOfUSCE
@@ -49,6 +50,7 @@ export const getApplication = /* GraphQL */ `
         numWorkExperiences
         otherDegrees
         owner
+        ownerAccount
         redFlags
         redFlagsExplanation
         schoolRanking
@@ -249,6 +251,7 @@ export const getUserProfile = /* GraphQL */ `
       graduateType
       id
       isProfile
+      isProfileString
       location
       medicalDegree
       monthsOfUSCE
@@ -262,6 +265,7 @@ export const getUserProfile = /* GraphQL */ `
       numWorkExperiences
       otherDegrees
       owner
+      ownerAccount
       redFlags
       redFlagsExplanation
       schoolRanking
@@ -750,6 +754,7 @@ export const listUserProfileByGraduateType = /* GraphQL */ `
         graduateType
         id
         isProfile
+        isProfileString
         location
         medicalDegree
         monthsOfUSCE
@@ -763,6 +768,72 @@ export const listUserProfileByGraduateType = /* GraphQL */ `
         numWorkExperiences
         otherDegrees
         owner
+        ownerAccount
+        redFlags
+        redFlagsExplanation
+        schoolRanking
+        sigmaSigmaPhi
+        sortType
+        step1Score
+        step1ScorePass
+        step2CSPathway
+        step2Score
+        step3Score
+        updatedAt
+        visaRequired
+        yearOfGraduation
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const listUserProfileByOwnerAccountAndIsProfileString = /* GraphQL */ `
+  query ListUserProfileByOwnerAccountAndIsProfileString(
+    $filter: ModelUserProfileFilterInput
+    $isProfileString: ModelStringKeyConditionInput
+    $limit: Int
+    $nextToken: String
+    $ownerAccount: String!
+    $sortDirection: ModelSortDirection
+  ) {
+    listUserProfileByOwnerAccountAndIsProfileString(
+      filter: $filter
+      isProfileString: $isProfileString
+      limit: $limit
+      nextToken: $nextToken
+      ownerAccount: $ownerAccount
+      sortDirection: $sortDirection
+    ) {
+      items {
+        aoa
+        applicationYear
+        classRank
+        codeName
+        comlex1ScorePass
+        comlex2Score
+        createdAt
+        ecfmgCertified
+        goldHumanism
+        graduateType
+        id
+        isProfile
+        isProfileString
+        location
+        medicalDegree
+        monthsOfUSCE
+        numApplications
+        numInterviews
+        numPublications
+        numRejected
+        numVolunteerExperiences
+        numWaitlisted
+        numWithdrawn
+        numWorkExperiences
+        otherDegrees
+        owner
+        ownerAccount
         redFlags
         redFlagsExplanation
         schoolRanking
@@ -813,6 +884,7 @@ export const listUserProfileBySortTypeAndCodeName = /* GraphQL */ `
         graduateType
         id
         isProfile
+        isProfileString
         location
         medicalDegree
         monthsOfUSCE
@@ -826,6 +898,7 @@ export const listUserProfileBySortTypeAndCodeName = /* GraphQL */ `
         numWorkExperiences
         otherDegrees
         owner
+        ownerAccount
         redFlags
         redFlagsExplanation
         schoolRanking
@@ -866,6 +939,7 @@ export const listUserProfiles = /* GraphQL */ `
         graduateType
         id
         isProfile
+        isProfileString
         location
         medicalDegree
         monthsOfUSCE
@@ -879,6 +953,7 @@ export const listUserProfiles = /* GraphQL */ `
         numWorkExperiences
         otherDegrees
         owner
+        ownerAccount
         redFlags
         redFlagsExplanation
         schoolRanking

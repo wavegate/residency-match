@@ -2,7 +2,7 @@ import { generateClient } from "aws-amplify/api";
 import type { Schema } from "../../amplify/data/resource";
 import { useQuery } from "@tanstack/react-query";
 import usePermissions from "../hooks/usePermissions";
-import UserProfileCreateForm from "../ui-components/UserProfileCreateForm";
+import UserProfileCreateForm from "../ui-components/UserProfileCreateForm-old";
 import {
   Table,
   TableBody,
@@ -23,6 +23,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "../components/ui/tooltip";
+import { Link } from "react-router-dom";
 
 const client = generateClient<Schema>();
 
@@ -142,7 +143,20 @@ export default function Applicants() {
           <TableRow>
             <TableHead className={`sticky-col first-col`}>Code Name</TableHead>
             {userProfiles?.map((profile) => {
-              return <TableCell>{profile.codeName ?? "anonymous"}</TableCell>;
+              return (
+                <TableCell>
+                  {profile.isProfile ? (
+                    <Link
+                      to={`/profile/${profile.owner}`}
+                      className={`font-semibold`}
+                    >
+                      {profile.codeName ?? "anonymous"}
+                    </Link>
+                  ) : (
+                    <div>{profile.codeName ?? "anonymous"}</div>
+                  )}
+                </TableCell>
+              );
             })}
           </TableRow>
         </TableHeader>

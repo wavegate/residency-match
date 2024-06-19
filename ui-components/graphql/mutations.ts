@@ -39,6 +39,7 @@ export const createApplication = /* GraphQL */ `
         graduateType
         id
         isProfile
+        isProfileString
         location
         medicalDegree
         monthsOfUSCE
@@ -52,6 +53,7 @@ export const createApplication = /* GraphQL */ `
         numWorkExperiences
         otherDegrees
         owner
+        ownerAccount
         redFlags
         redFlagsExplanation
         schoolRanking
@@ -270,6 +272,7 @@ export const createUserProfile = /* GraphQL */ `
       graduateType
       id
       isProfile
+      isProfileString
       location
       medicalDegree
       monthsOfUSCE
@@ -283,6 +286,7 @@ export const createUserProfile = /* GraphQL */ `
       numWorkExperiences
       otherDegrees
       owner
+      ownerAccount
       redFlags
       redFlagsExplanation
       schoolRanking
@@ -337,6 +341,7 @@ export const deleteApplication = /* GraphQL */ `
         graduateType
         id
         isProfile
+        isProfileString
         location
         medicalDegree
         monthsOfUSCE
@@ -350,6 +355,7 @@ export const deleteApplication = /* GraphQL */ `
         numWorkExperiences
         otherDegrees
         owner
+        ownerAccount
         redFlags
         redFlagsExplanation
         schoolRanking
@@ -568,6 +574,7 @@ export const deleteUserProfile = /* GraphQL */ `
       graduateType
       id
       isProfile
+      isProfileString
       location
       medicalDegree
       monthsOfUSCE
@@ -581,6 +588,7 @@ export const deleteUserProfile = /* GraphQL */ `
       numWorkExperiences
       otherDegrees
       owner
+      ownerAccount
       redFlags
       redFlagsExplanation
       schoolRanking
@@ -635,6 +643,7 @@ export const updateApplication = /* GraphQL */ `
         graduateType
         id
         isProfile
+        isProfileString
         location
         medicalDegree
         monthsOfUSCE
@@ -648,6 +657,7 @@ export const updateApplication = /* GraphQL */ `
         numWorkExperiences
         otherDegrees
         owner
+        ownerAccount
         redFlags
         redFlagsExplanation
         schoolRanking
@@ -866,6 +876,7 @@ export const updateUserProfile = /* GraphQL */ `
       graduateType
       id
       isProfile
+      isProfileString
       location
       medicalDegree
       monthsOfUSCE
@@ -879,6 +890,7 @@ export const updateUserProfile = /* GraphQL */ `
       numWorkExperiences
       otherDegrees
       owner
+      ownerAccount
       redFlags
       redFlagsExplanation
       schoolRanking

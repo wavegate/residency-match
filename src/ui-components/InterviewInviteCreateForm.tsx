@@ -266,7 +266,6 @@ export default function InterviewInviteCreateForm(props) {
         if (onSubmit) {
           modelFields = onSubmit(modelFields);
         }
-        console.log("hi");
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
             if (typeof value === "string" && value === "") {

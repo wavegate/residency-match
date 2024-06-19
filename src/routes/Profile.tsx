@@ -1,103 +1,245 @@
 import { generateClient } from "aws-amplify/api";
-import UserProfileCreateForm from "../ui-components/UserProfileCreateForm";
+import UserProfileCreateForm from "../ui-components/UserProfileCreateForm-old";
 import { Schema } from "../../amplify/data/resource";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import usePermissions from "../hooks/usePermissions";
 import UserProfileUpdateForm from "../ui-components/UserProfileUpdateForm";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "../components/ui/button";
+import { Link, useParams } from "react-router-dom";
+import { Card } from "../components/ui/card";
+import DataValue from "../components/DataValue";
+import { Loader } from "lucide-react";
 
 const client = generateClient<Schema>();
 
 export default function Profile() {
-  const [userProfile, setUserProfile] =
-    useState<Schema["UserProfile"]["type"]>();
+  const params = useParams();
 
-  const { user } = usePermissions();
+  const { data: userProfile, isLoading: loading } = useQuery({
+    queryKey: ["userProfile", params.id],
+    queryFn: async () => {
+      const response =
+        await client.models.UserProfile.listUserProfileByOwnerAccountAndIsProfileString(
+          {
+            ownerAccount: params.id,
+          },
+          {
+            sortDirection: "DESC",
+          }
+        );
+      const responseData = response.data;
+      if (!responseData || responseData.length === 0) return null;
+      return responseData[0];
+    },
+    enabled: !!params.id,
+  });
 
-  useEffect(() => {
-    client.models.UserProfile.observeQuery({
-      filter: { owner: { contains: user?.userId } },
-    }).subscribe({
-      next: (data) => setUserProfile([...data.items]?.[0]),
-    });
-  }, [user?.userId]);
+  const schoolRanking = useMemo(() => {
+    if (userProfile?.schoolRanking) {
+      const map = {
+        low: "Low Tier",
+        mid: "Mid Tier",
+        unranked: "Unranked",
+        top20: "Top 20",
+        top50: "Top 50",
+      };
+      return map[userProfile.schoolRanking];
+    }
+  }, [userProfile?.schoolRanking]);
+
+  const classRank = useMemo(() => {
+    if (userProfile?.classRank) {
+      const map = {
+        bottom50: "Bottom 50%",
+        top10: "Top 10%",
+        top25: "Top 25%",
+      };
+      return map[userProfile.classRank];
+    }
+  }, [userProfile?.classRank]);
+
+  const pathway = useMemo(() => {
+    if (userProfile?.step2CSPathway) {
+      const map = {
+        pathway1: "Pathway 1",
+        pathway2: "Pathway 2",
+        pathway3: "Pathway 3",
+        pathway4: "Pathway 4",
+        pathway5: "Pathway 5",
+        pathway6: "Pathway 6",
+      };
+      return map[userProfile.step2CSPathway];
+    }
+  }, [userProfile?.step2CSPathway]);
 
   return (
     <div className={`p-[12px] flex-1 overflow-y-auto`}>
-      <div>
-        <div className={`flex gap-[12px] items-center`}>
-          <Avatar className={`w-[64px] h-[64px]`}>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div>
-            <div>ccfrankee</div>
+      <Link
+        to="/create-profile"
+        className={`fixed left-1/2 -translate-x-1/2 bottom-[55px]`}
+      >
+        <Button>Edit</Button>
+      </Link>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className={`flex flex-col gap-[12px]`}>
+          <div className={`flex flex-col items-center`}>
+            <div className={`text-[18px] font-semibold`}>
+              {userProfile?.codeName}
+            </div>
+
             <div className={`flex gap-[6px]`}>
-              <div>MD PhD</div>
-              <div>AOA</div>
-              <div>Gold Humanism</div>
+              <div>{userProfile?.graduateType}</div>
+              <div>{userProfile?.medicalDegree}</div>
+              <div>{userProfile?.otherDegrees}</div>
+            </div>
+            <div className={`flex gap-[6px]`}>
+              <div>
+                {userProfile?.sigmaSigmaPhi && (
+                  <img
+                    className={`w-[48px] h-[48px]`}
+                    src="https://images.squarespace-cdn.com/content/v1/581e35fbb3db2b4ee65ad6ed/1511404475444-Z54RR7NYXEGKQUE64OLL/SSPLOGOCLEAR.png"
+                  />
+                )}
+              </div>
+              <div>
+                {userProfile?.aoa && (
+                  <img
+                    className={`w-[48px] h-[48px]`}
+                    src="https://images.squarespace-cdn.com/content/v1/5695c7491115e0e4e303f4fc/1453441679984-1YK6E2N7EBU4D9EGDFMS/aoa-shield.jpg"
+                  />
+                )}
+              </div>
+              <div>
+                {userProfile?.goldHumanism && (
+                  <img
+                    className={`w-[48px] h-[48px]`}
+                    src="https://hsc.unm.edu/medicine/education/md/_media/logos/ghhs-logo-alternate-2.png"
+                  />
+                )}
+              </div>
             </div>
           </div>
+
+          <Card className={`grid grid-cols-2 p-2 gap-[12px]`}>
+            <DataValue
+              label={"Step 1"}
+              value={
+                userProfile?.step1ScorePass
+                  ? "Pass"
+                  : userProfile?.step1Score
+                  ? userProfile.step1Score
+                  : "-"
+              }
+            />
+            <DataValue
+              label={"Step 2"}
+              value={userProfile?.step2Score || "-"}
+            />
+            <DataValue
+              label={"COMLEX 1"}
+              value={userProfile?.comlex1ScorePass ? "Pass" : "-"}
+            />
+            <DataValue
+              label={"COMLEX 2"}
+              value={userProfile?.comlex2Score || "-"}
+            />
+            <DataValue
+              label={"Step 3"}
+              value={userProfile?.step3Score || "-"}
+            />
+            <DataValue label={"Step 2 CS Pathway"} value={pathway || "-"} />
+          </Card>
+          <Card className={`grid grid-cols-2 p-2 gap-[12px]`}>
+            <DataValue
+              label={"YOG"}
+              value={userProfile?.yearOfGraduation || "-"}
+            />
+            <DataValue
+              label={"ECFMG Status"}
+              value={
+                userProfile?.ecfmgCertified === true
+                  ? "Yes"
+                  : userProfile?.ecfmgCertified === false
+                  ? "No"
+                  : "-"
+              }
+            />
+            <DataValue
+              label={"Visa Required"}
+              value={
+                userProfile?.visaRequired === true
+                  ? "Yes"
+                  : userProfile?.visaRequired === false
+                  ? "No"
+                  : "-"
+              }
+            />
+          </Card>
+          <Card className={`grid grid-cols-2 p-2 gap-[12px]`}>
+            <DataValue label={"School Rank"} value={schoolRanking || "-"} />
+            <DataValue label={"Class Rank"} value={classRank || "-"} />
+          </Card>
+          <Card className={`grid grid-cols-2 p-2 gap-[12px]`}>
+            <DataValue
+              label={"Publications"}
+              value={userProfile?.numPublications || "-"}
+            />
+            <DataValue
+              label={"Work"}
+              value={userProfile?.numWorkExperiences || "-"}
+            />
+            <DataValue
+              label={"Volunteering"}
+              value={userProfile?.numVolunteerExperiences || "-"}
+            />
+          </Card>
+          <Card className={`grid grid-cols-2 p-2 gap-[12px]`}>
+            <DataValue
+              label={"Red Flags?"}
+              value={
+                userProfile?.redFlags === true
+                  ? "Yes"
+                  : userProfile?.redFlags === false
+                  ? "No"
+                  : "-"
+              }
+            />
+            <DataValue
+              label={"Explanation"}
+              value={
+                userProfile?.redFlagsExplanation
+                  ? userProfile.redFlagsExplanation
+                  : "-"
+              }
+            />
+          </Card>
+          <Card className={`grid grid-cols-2 p-2 gap-[12px]`}>
+            <DataValue
+              label={"# Applications"}
+              value={userProfile?.numApplications || "-"}
+            />
+            <DataValue
+              label={"# Interviews"}
+              value={userProfile?.numInterviews || "-"}
+            />
+            <DataValue
+              label={"# Withdrawn"}
+              value={userProfile?.numWithdrawn || "-"}
+            />
+            <DataValue
+              label={"# Rejected"}
+              value={userProfile?.numRejected || "-"}
+            />
+            <DataValue
+              label={"# Waitlisted"}
+              value={userProfile?.numWaitlisted || "-"}
+            />
+          </Card>
         </div>
-        <div className={`grid grid-cols-4`}>
-          <div>Step 1</div>
-          <div>Step 2</div>
-          <div>Comlex 1</div>
-          <div>Comlex 2</div>
-          <div>Pass</div>
-          <div>260</div>
-          <div>-</div>
-          <div>-</div>
-          <div>Step 3</div>
-          <div>Step 2 CS/Pathway</div>
-          <div></div>
-          <div></div>
-          <div>-</div>
-          <div>-</div>
-        </div>
-        <div className={`grid grid-cols-3`}>
-          <div>YOG</div>
-          <div>ECFMG Status</div>
-          <div>Visa required</div>
-          <div>2024</div>
-          <div>Certified</div>
-          <div>No</div>
-        </div>
-        <div className={`grid grid-cols-2`}>
-          <div>School Rank</div>
-          <div>Class Rank</div>
-          <div>Top 10%</div>
-          <div>Top 50%</div>
-        </div>
-        <div className={`grid grid-cols-3`}>
-          <div>Publications</div>
-          <div>Work</div>
-          <div>Volunteering</div>
-          <div>2</div>
-          <div>3</div>
-          <div>5</div>
-        </div>
-        <div>Red flags! LOA</div>
-        <div>
-          <div># Applications</div>
-          <div># Interviews</div>
-          <div># Withdrawn</div>
-          <div># Rejected</div>
-          <div># Waitlisted</div>
-        </div>
-        <div>Rank List</div>
-        <ol>
-          <li>UCSF - Applied</li>
-          <li>Columbia - Invited for interview</li>
-        </ol>
-        <div></div>
-        <div></div>
-      </div>
-      <h1>Profile</h1>
-      {userProfile ? (
-        <UserProfileUpdateForm id={userProfile.id} isProfile />
-      ) : (
-        <UserProfileCreateForm isProfile />
       )}
     </div>
   );

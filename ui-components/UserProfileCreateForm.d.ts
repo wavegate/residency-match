@@ -50,6 +50,8 @@ export declare type UserProfileCreateFormInputValues = {
     numRejected?: number;
     numWaitlisted?: number;
     applicationYear?: number;
+    ownerAccount?: string;
+    isProfileString?: string;
 };
 export declare type UserProfileCreateFormValidationValues = {
     sortType?: ValidationFunction<string>;
@@ -86,6 +88,8 @@ export declare type UserProfileCreateFormValidationValues = {
     numRejected?: ValidationFunction<number>;
     numWaitlisted?: ValidationFunction<number>;
     applicationYear?: ValidationFunction<number>;
+    ownerAccount?: ValidationFunction<string>;
+    isProfileString?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UserProfileCreateFormOverridesProps = {
@@ -124,6 +128,8 @@ export declare type UserProfileCreateFormOverridesProps = {
     numRejected?: PrimitiveOverrideProps<TextFieldProps>;
     numWaitlisted?: PrimitiveOverrideProps<TextFieldProps>;
     applicationYear?: PrimitiveOverrideProps<TextFieldProps>;
+    ownerAccount?: PrimitiveOverrideProps<TextFieldProps>;
+    isProfileString?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type UserProfileCreateFormProps = React.PropsWithChildren<{
     overrides?: UserProfileCreateFormOverridesProps | undefined | null;

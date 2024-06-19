@@ -51,6 +51,8 @@ export declare type UserProfileUpdateFormInputValues = {
     numRejected?: number;
     numWaitlisted?: number;
     applicationYear?: number;
+    ownerAccount?: string;
+    isProfileString?: string;
 };
 export declare type UserProfileUpdateFormValidationValues = {
     sortType?: ValidationFunction<string>;
@@ -87,6 +89,8 @@ export declare type UserProfileUpdateFormValidationValues = {
     numRejected?: ValidationFunction<number>;
     numWaitlisted?: ValidationFunction<number>;
     applicationYear?: ValidationFunction<number>;
+    ownerAccount?: ValidationFunction<string>;
+    isProfileString?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UserProfileUpdateFormOverridesProps = {
@@ -125,6 +129,8 @@ export declare type UserProfileUpdateFormOverridesProps = {
     numRejected?: PrimitiveOverrideProps<TextFieldProps>;
     numWaitlisted?: PrimitiveOverrideProps<TextFieldProps>;
     applicationYear?: PrimitiveOverrideProps<TextFieldProps>;
+    ownerAccount?: PrimitiveOverrideProps<TextFieldProps>;
+    isProfileString?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type UserProfileUpdateFormProps = React.PropsWithChildren<{
     overrides?: UserProfileUpdateFormOverridesProps | undefined | null;

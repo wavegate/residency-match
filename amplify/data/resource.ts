@@ -181,15 +181,18 @@ const schema = a.schema({
       numRejected: a.integer(),
       numWaitlisted: a.integer(),
       applicationYear: a.integer(),
+      ownerAccount: a.string(),
+      isProfileString: a.string(),
     })
     .secondaryIndexes((index) => [
       index("sortType").sortKeys(["codeName"]),
       index("graduateType"),
+      index("ownerAccount").sortKeys(["isProfileString"]),
     ])
     .authorization((allow) => [
+      allow.owner(),
       allow.publicApiKey().to(["read"]),
       allow.group("Admin"),
-      allow.owner(),
     ]),
 });
 

@@ -1,11 +1,12 @@
 import { Amplify } from "aws-amplify";
 import { signIn } from "aws-amplify/auth";
-// import outputs from "../amplify_outputs.json";
-import outputs from "../prod_amplify_outputs.json";
+import outputs from "../amplify_outputs.json";
+// import outputs from "../prod_amplify_outputs.json";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import csv from "csv-parser";
 import fs from "fs";
+import { fetchUserAttributes } from "aws-amplify/auth";
 
 Amplify.configure(outputs);
 
@@ -60,6 +61,8 @@ const run = async () => {
       password: "testPass82@",
     });
 
+    const info = await fetchUserAttributes();
+    const userId = info.sub;
     const ivs = [];
 
     // Read the CSV file
@@ -133,8 +136,11 @@ const run = async () => {
         myObj.sortType = "UserProfile";
 
         myObj.isProfile = false;
+        myObj.isProfileString = "FALSE";
 
         myObj.applicationYear = 2023;
+
+        myObj.ownerAccount = userId;
 
         // console.log(myObj);
         ivs.push(myObj);

@@ -12,6 +12,7 @@ import {
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { generateClient } from "aws-amplify/api";
 import { createUserProfile } from "./graphql/mutations";
+import { fetchUserAttributes } from "aws-amplify/auth";
 const client = generateClient();
 export default function UserProfileCreateForm(props) {
   const {
@@ -22,6 +23,7 @@ export default function UserProfileCreateForm(props) {
     onValidate,
     onChange,
     overrides,
+    isProfile,
     ...rest
   } = props;
   const initialValues = {
@@ -59,11 +61,8 @@ export default function UserProfileCreateForm(props) {
     numRejected: "",
     numWaitlisted: "",
     applicationYear: "",
-    ownerAccount: "",
-    isProfileString: "",
   };
   const [sortType, setSortType] = React.useState(initialValues.sortType);
-  const [isProfile, setIsProfile] = React.useState(initialValues.isProfile);
   const [step2CSPathway, setStep2CSPathway] = React.useState(
     initialValues.step2CSPathway
   );
@@ -144,12 +143,6 @@ export default function UserProfileCreateForm(props) {
   const [applicationYear, setApplicationYear] = React.useState(
     initialValues.applicationYear
   );
-  const [ownerAccount, setOwnerAccount] = React.useState(
-    initialValues.ownerAccount
-  );
-  const [isProfileString, setIsProfileString] = React.useState(
-    initialValues.isProfileString
-  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setSortType(initialValues.sortType);
@@ -186,13 +179,9 @@ export default function UserProfileCreateForm(props) {
     setNumRejected(initialValues.numRejected);
     setNumWaitlisted(initialValues.numWaitlisted);
     setApplicationYear(initialValues.applicationYear);
-    setOwnerAccount(initialValues.ownerAccount);
-    setIsProfileString(initialValues.isProfileString);
     setErrors({});
   };
   const validations = {
-    sortType: [{ type: "Required" }],
-    isProfile: [],
     step2CSPathway: [],
     schoolRanking: [],
     yearOfGraduation: [],
@@ -225,8 +214,6 @@ export default function UserProfileCreateForm(props) {
     numRejected: [],
     numWaitlisted: [],
     applicationYear: [],
-    ownerAccount: [],
-    isProfileString: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -288,8 +275,6 @@ export default function UserProfileCreateForm(props) {
           numRejected,
           numWaitlisted,
           applicationYear,
-          ownerAccount,
-          isProfileString,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -324,8 +309,13 @@ export default function UserProfileCreateForm(props) {
             variables: {
               input: {
                 ...modelFields,
+                sortType: "UserProfile",
+                isProfileString: "TRUE",
+                isProfile,
+                ownerAccount: (await fetchUserAttributes()).sub,
               },
             },
+            authMode: "userPool",
           });
           if (onSuccess) {
             onSuccess(modelFields);
@@ -343,124 +333,6 @@ export default function UserProfileCreateForm(props) {
       {...getOverrideProps(overrides, "UserProfileCreateForm")}
       {...rest}
     >
-      <TextField
-        label="Sort type"
-        isRequired={true}
-        isReadOnly={false}
-        value={sortType}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              sortType: value,
-              isProfile,
-              step2CSPathway,
-              schoolRanking,
-              yearOfGraduation,
-              monthsOfUSCE,
-              ecfmgCertified,
-              visaRequired,
-              location,
-              graduateType,
-              medicalDegree,
-              codeName,
-              step1ScorePass,
-              step1Score,
-              step2Score,
-              step3Score,
-              comlex1ScorePass,
-              comlex2Score,
-              redFlags,
-              redFlagsExplanation,
-              aoa,
-              sigmaSigmaPhi,
-              goldHumanism,
-              numPublications,
-              numWorkExperiences,
-              numVolunteerExperiences,
-              classRank,
-              otherDegrees,
-              numApplications,
-              numInterviews,
-              numWithdrawn,
-              numRejected,
-              numWaitlisted,
-              applicationYear,
-              ownerAccount,
-              isProfileString,
-            };
-            const result = onChange(modelFields);
-            value = result?.sortType ?? value;
-          }
-          if (errors.sortType?.hasError) {
-            runValidationTasks("sortType", value);
-          }
-          setSortType(value);
-        }}
-        onBlur={() => runValidationTasks("sortType", sortType)}
-        errorMessage={errors.sortType?.errorMessage}
-        hasError={errors.sortType?.hasError}
-        {...getOverrideProps(overrides, "sortType")}
-      ></TextField>
-      <SwitchField
-        label="Is profile"
-        defaultChecked={false}
-        isDisabled={false}
-        isChecked={isProfile}
-        onChange={(e) => {
-          let value = e.target.checked;
-          if (onChange) {
-            const modelFields = {
-              sortType,
-              isProfile: value,
-              step2CSPathway,
-              schoolRanking,
-              yearOfGraduation,
-              monthsOfUSCE,
-              ecfmgCertified,
-              visaRequired,
-              location,
-              graduateType,
-              medicalDegree,
-              codeName,
-              step1ScorePass,
-              step1Score,
-              step2Score,
-              step3Score,
-              comlex1ScorePass,
-              comlex2Score,
-              redFlags,
-              redFlagsExplanation,
-              aoa,
-              sigmaSigmaPhi,
-              goldHumanism,
-              numPublications,
-              numWorkExperiences,
-              numVolunteerExperiences,
-              classRank,
-              otherDegrees,
-              numApplications,
-              numInterviews,
-              numWithdrawn,
-              numRejected,
-              numWaitlisted,
-              applicationYear,
-              ownerAccount,
-              isProfileString,
-            };
-            const result = onChange(modelFields);
-            value = result?.isProfile ?? value;
-          }
-          if (errors.isProfile?.hasError) {
-            runValidationTasks("isProfile", value);
-          }
-          setIsProfile(value);
-        }}
-        onBlur={() => runValidationTasks("isProfile", isProfile)}
-        errorMessage={errors.isProfile?.errorMessage}
-        hasError={errors.isProfile?.hasError}
-        {...getOverrideProps(overrides, "isProfile")}
-      ></SwitchField>
       <SelectField
         label="Step2 cs pathway"
         placeholder="Please select an option"
@@ -504,8 +376,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.step2CSPathway ?? value;
@@ -594,8 +464,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.schoolRanking ?? value;
@@ -683,8 +551,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.yearOfGraduation ?? value;
@@ -746,8 +612,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.monthsOfUSCE ?? value;
@@ -805,8 +669,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.ecfmgCertified ?? value;
@@ -864,8 +726,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.visaRequired ?? value;
@@ -923,8 +783,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.location ?? value;
@@ -982,8 +840,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.graduateType ?? value;
@@ -1052,8 +908,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.medicalDegree ?? value;
@@ -1122,8 +976,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.codeName ?? value;
@@ -1181,8 +1033,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.step1ScorePass ?? value;
@@ -1244,8 +1094,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.step1Score ?? value;
@@ -1307,8 +1155,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.step2Score ?? value;
@@ -1370,8 +1216,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.step3Score ?? value;
@@ -1429,8 +1273,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.comlex1ScorePass ?? value;
@@ -1492,8 +1334,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.comlex2Score ?? value;
@@ -1551,8 +1391,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.redFlags ?? value;
@@ -1610,8 +1448,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.redFlagsExplanation ?? value;
@@ -1671,8 +1507,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.aoa ?? value;
@@ -1730,8 +1564,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.sigmaSigmaPhi ?? value;
@@ -1789,8 +1621,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.goldHumanism ?? value;
@@ -1852,8 +1682,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.numPublications ?? value;
@@ -1915,8 +1743,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.numWorkExperiences ?? value;
@@ -1980,8 +1806,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.numVolunteerExperiences ?? value;
@@ -2041,8 +1865,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.classRank ?? value;
@@ -2121,8 +1943,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.otherDegrees ?? value;
@@ -2184,8 +2004,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.numApplications ?? value;
@@ -2247,8 +2065,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.numInterviews ?? value;
@@ -2310,8 +2126,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.numWithdrawn ?? value;
@@ -2373,8 +2187,6 @@ export default function UserProfileCreateForm(props) {
               numRejected: value,
               numWaitlisted,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.numRejected ?? value;
@@ -2436,8 +2248,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted: value,
               applicationYear,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.numWaitlisted ?? value;
@@ -2499,8 +2309,6 @@ export default function UserProfileCreateForm(props) {
               numRejected,
               numWaitlisted,
               applicationYear: value,
-              ownerAccount,
-              isProfileString,
             };
             const result = onChange(modelFields);
             value = result?.applicationYear ?? value;
@@ -2514,124 +2322,6 @@ export default function UserProfileCreateForm(props) {
         errorMessage={errors.applicationYear?.errorMessage}
         hasError={errors.applicationYear?.hasError}
         {...getOverrideProps(overrides, "applicationYear")}
-      ></TextField>
-      <TextField
-        label="Owner account"
-        isRequired={false}
-        isReadOnly={false}
-        value={ownerAccount}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              sortType,
-              isProfile,
-              step2CSPathway,
-              schoolRanking,
-              yearOfGraduation,
-              monthsOfUSCE,
-              ecfmgCertified,
-              visaRequired,
-              location,
-              graduateType,
-              medicalDegree,
-              codeName,
-              step1ScorePass,
-              step1Score,
-              step2Score,
-              step3Score,
-              comlex1ScorePass,
-              comlex2Score,
-              redFlags,
-              redFlagsExplanation,
-              aoa,
-              sigmaSigmaPhi,
-              goldHumanism,
-              numPublications,
-              numWorkExperiences,
-              numVolunteerExperiences,
-              classRank,
-              otherDegrees,
-              numApplications,
-              numInterviews,
-              numWithdrawn,
-              numRejected,
-              numWaitlisted,
-              applicationYear,
-              ownerAccount: value,
-              isProfileString,
-            };
-            const result = onChange(modelFields);
-            value = result?.ownerAccount ?? value;
-          }
-          if (errors.ownerAccount?.hasError) {
-            runValidationTasks("ownerAccount", value);
-          }
-          setOwnerAccount(value);
-        }}
-        onBlur={() => runValidationTasks("ownerAccount", ownerAccount)}
-        errorMessage={errors.ownerAccount?.errorMessage}
-        hasError={errors.ownerAccount?.hasError}
-        {...getOverrideProps(overrides, "ownerAccount")}
-      ></TextField>
-      <TextField
-        label="Is profile string"
-        isRequired={false}
-        isReadOnly={false}
-        value={isProfileString}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              sortType,
-              isProfile,
-              step2CSPathway,
-              schoolRanking,
-              yearOfGraduation,
-              monthsOfUSCE,
-              ecfmgCertified,
-              visaRequired,
-              location,
-              graduateType,
-              medicalDegree,
-              codeName,
-              step1ScorePass,
-              step1Score,
-              step2Score,
-              step3Score,
-              comlex1ScorePass,
-              comlex2Score,
-              redFlags,
-              redFlagsExplanation,
-              aoa,
-              sigmaSigmaPhi,
-              goldHumanism,
-              numPublications,
-              numWorkExperiences,
-              numVolunteerExperiences,
-              classRank,
-              otherDegrees,
-              numApplications,
-              numInterviews,
-              numWithdrawn,
-              numRejected,
-              numWaitlisted,
-              applicationYear,
-              ownerAccount,
-              isProfileString: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.isProfileString ?? value;
-          }
-          if (errors.isProfileString?.hasError) {
-            runValidationTasks("isProfileString", value);
-          }
-          setIsProfileString(value);
-        }}
-        onBlur={() => runValidationTasks("isProfileString", isProfileString)}
-        errorMessage={errors.isProfileString?.errorMessage}
-        hasError={errors.isProfileString?.hasError}
-        {...getOverrideProps(overrides, "isProfileString")}
       ></TextField>
       <Flex
         justifyContent="space-between"

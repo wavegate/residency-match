@@ -182,10 +182,14 @@ export const createUserProfile = /* GraphQL */ `
   ) {
     createUserProfile(condition: $condition, input: $input) {
       aoa
-      avatarImage
+      applicationYear
+      applications {
+        nextToken
+        __typename
+      }
       classRank
       codeName
-      comlex1Score
+      comlex1ScorePass
       comlex2Score
       createdAt
       ecfmgCertified
@@ -193,22 +197,33 @@ export const createUserProfile = /* GraphQL */ `
       graduateType
       id
       isProfile
+      isProfileString
       location
       medicalDegree
       monthsOfUSCE
-      needVisa
       numApplications
       numInterviews
-      numPublicationsPosters
+      numPublications
+      numRejected
       numVolunteerExperiences
+      numWaitlisted
+      numWithdrawn
       numWorkExperiences
+      otherDegrees
       owner
+      ownerAccount
       redFlags
-      sigmaSigmaPi
+      redFlagsExplanation
+      schoolRanking
+      sigmaSigmaPhi
+      sortType
       step1Score
+      step1ScorePass
       step2CSPathway
       step2Score
+      step3Score
       updatedAt
+      visaRequired
       yearOfGraduation
       __typename
     }
