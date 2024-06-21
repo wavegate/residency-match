@@ -75,7 +75,7 @@ export default function Profile() {
   }, [userProfile?.step2CSPathway]);
 
   return (
-    <div className={`p-[12px] flex-1 overflow-y-auto`}>
+    <div className={`p-[12px] relative`}>
       <Link
         to="/create-profile"
         className={`fixed left-1/2 -translate-x-1/2 bottom-[55px]`}
@@ -83,7 +83,9 @@ export default function Profile() {
         <Button>Edit</Button>
       </Link>
       {loading ? (
-        <Loader />
+        <div className={`left-1/2 -translate-x-1/2 absolute top-8`}>
+          <Loader className={`animate-spin`} />
+        </div>
       ) : (
         <div className={`flex flex-col gap-[12px]`}>
           <div className={`flex flex-col items-center`}>

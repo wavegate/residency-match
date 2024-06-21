@@ -21,6 +21,7 @@ import EditInstitution from "./routes/EditInstitution";
 import Dashboard from "./routes/Dashboard";
 import { TooltipProvider } from "./components/ui/tooltip";
 import CreateProfile from "./routes/CreateProfile";
+import Program from "./routes/Program";
 
 Amplify.configure(outputs);
 
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: "programs",
         element: <Programs />,
+      },
+      {
+        path: "program/:id",
+        element: <Program />,
       },
       {
         path: "applicants",

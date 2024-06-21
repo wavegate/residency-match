@@ -1,7 +1,7 @@
 import { Amplify } from "aws-amplify";
 import { signIn } from "aws-amplify/auth";
-// import outputs from "../amplify_outputs.json";
-import outputs from "../prod_amplify_outputs.json";
+import outputs from "../amplify_outputs.json";
+// import outputs from "../prod_amplify_outputs.json";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import csv from "csv-parser";

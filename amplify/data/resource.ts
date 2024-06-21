@@ -34,6 +34,7 @@ const schema = a.schema({
     ]),
   Program: a
     .model({
+      userProfiles: a.hasMany("UserProfileProgram", "programId"),
       sortType: a.string().required(),
       name: a.string(),
       nrmpProgramCode: a.string(),
@@ -44,9 +45,11 @@ const schema = a.schema({
       specialty: a.belongsTo("Specialty", "specialtyId"),
       interviewInvites: a.hasMany("InterviewInvite", "programId"),
       applications: a.hasMany("Application", "programId"),
+      institutionName: a.string(),
+      institutionNameLowerCase: a.string(),
     })
     .secondaryIndexes((index) => [
-      index("sortType").sortKeys(["name"]),
+      index("sortType").sortKeys(["institutionNameLowerCase"]),
       index("nrmpProgramCode"),
     ])
     .authorization((allow) => [
@@ -105,10 +108,16 @@ const schema = a.schema({
       yearOfGraduation: a.integer(),
       greenCard: a.boolean(),
       away: a.boolean(),
+      institutionName: a.string(),
+      institutionNameLowerCase: a.string(),
     })
     .secondaryIndexes((index) => [
+      // index("sortType").sortKeys([
+      //   "institutionNameLowerCase",
+      //   "inviteDateTime",
+      // ]),
       index("sortType").sortKeys(["inviteDateTime"]),
-      index("programId").sortKeys(["inviteDateTime"]),
+      index("programId"),
     ])
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),
@@ -116,6 +125,16 @@ const schema = a.schema({
       allow.group("Moderator"),
       allow.owner(),
     ]),
+  customQuery: a
+    .query()
+    .returns(a.ref("InterviewInvite").array())
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(
+      a.handler.custom({
+        entry: "./searchInterviewInvites.js",
+        dataSource: a.ref("InterviewInvite"),
+      })
+    ),
   Application: a
     .model({
       programId: a.id().required(),
@@ -139,6 +158,7 @@ const schema = a.schema({
     ]),
   UserProfile: a
     .model({
+      programs: a.hasMany("UserProfileProgram", "userProfileId"),
       applications: a.hasMany("Application", "userProfileId"),
       sortType: a.string().required(),
       isProfile: a.boolean(),
@@ -194,6 +214,25 @@ const schema = a.schema({
       allow.publicApiKey().to(["read"]),
       allow.group("Admin"),
     ]),
+  UserProfileProgram: a
+    .model({
+      userProfileId: a.id().required(),
+      programId: a.id().required(),
+      program: a.belongsTo("Program", "programId"),
+      userProfile: a.belongsTo("UserProfile", "userProfileId"),
+    })
+    .secondaryIndexes((index) => [index("userProfileId")])
+    .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+  // searchUserProfiles: a
+  //   .query()
+  //   .returns(a.ref("UserProfile").array())
+  //   .authorization((allow) => [allow.publicApiKey()])
+  //   .handler(
+  //     a.handler.custom({
+  //       entry: "./searchUserProfileResolver.js",
+  //       dataSource: "osDataSource",
+  //     })
+  //   ),
 });
 
 export type Schema = ClientSchema<typeof schema>;

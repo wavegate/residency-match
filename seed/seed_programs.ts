@@ -1,7 +1,7 @@
 import { Amplify } from "aws-amplify";
 import { signIn } from "aws-amplify/auth";
-// import outputs from "../amplify_outputs.json";
-import outputs from "../prod_amplify_outputs.json";
+import outputs from "../amplify_outputs.json";
+// import outputs from "../prod_amplify_outputs.json";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import csv from "csv-parser";
@@ -84,6 +84,7 @@ const run = async () => {
         for (let i = 0; i < programs.length; i++) {
           try {
             let institutionId;
+            let institutionName;
             const institutionResult =
               await client.models.Institution.listInstitutionByInstitutionCode(
                 {
@@ -95,6 +96,7 @@ const run = async () => {
               );
             if (institutionResult?.data?.length > 0) {
               institutionId = institutionResult.data[0].id;
+              institutionName = institutionResult.data[0].name;
             } else {
               fs.appendFileSync(
                 "missing_institutions.txt",
@@ -128,6 +130,8 @@ const run = async () => {
                 nrmpProgramCode: programs[i].code,
                 type: programs[i].type,
                 institutionId,
+                institutionName,
+                institutionNameLowerCase: institutionName.toLowerCase(),
                 specialtyId,
               });
             }
@@ -135,7 +139,7 @@ const run = async () => {
             console.log(e);
           }
           console.log(`Program ${i} created`);
-          await delay(500);
+          await delay(200);
         }
         console.log("All institutions processed");
       });
