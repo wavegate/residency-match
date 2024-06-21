@@ -202,7 +202,7 @@ export default function InterviewInvites() {
         ></Input>
       </div>
       <div className={`relative`}>
-        {loading ? (
+        {(followed ? followedInterviewInvitesLoading : loading) ? (
           <div className={`left-1/2 -translate-x-1/2 absolute top-8`}>
             <Loader className={`animate-spin`} />
           </div>

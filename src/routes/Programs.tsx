@@ -1,22 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import usePermissions from "../hooks/usePermissions";
 import ProgramCreateForm from "../ui-components/ProgramCreateForm";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "../components/ui/button";
 import { Checkbox } from "../components/ui/checkbox";
 import { Label } from "../components/ui/label";
-import { Loader, Search } from "lucide-react";
+import { Check, Loader, Search } from "lucide-react";
 import { Input } from "../components/ui/input";
-import { useDebounce } from "@uidotdev/usehooks";
+import { useDebounce, useMeasure } from "@uidotdev/usehooks";
 import { Link } from "react-router-dom";
+import { toast } from "../components/ui/use-toast";
 
 const client = generateClient<Schema>();
+
 export default function Programs() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 1000);
+  const queryClient = useQueryClient();
 
   const { data: programs, isLoading: loading } = useQuery({
     queryKey: ["programsSearch", debouncedSearch],
@@ -98,6 +101,74 @@ export default function Programs() {
     setSearch(e.target.value);
   };
 
+  const { userProfile } = usePermissions();
+
+  const { data: followedPrograms, isLoading: followedProgramsLoading } =
+    useQuery({
+      queryKey: ["followedPrograms"],
+      queryFn: async () => {
+        const response =
+          await client.models.UserProfileProgram.listUserProfileProgramByUserProfileId(
+            {
+              userProfileId: userProfile?.id,
+            },
+            { authMode: "userPool" }
+          );
+
+        const responseData = response.data;
+        if (!responseData) return null;
+        return responseData;
+      },
+      enabled: !!userProfile?.id,
+    });
+
+  const programIds = useMemo(() => {
+    return followedPrograms?.map((item) => item.programId);
+  }, [followedPrograms]);
+
+  const followProgram = async (id: string) => {
+    await client.models.UserProfileProgram.create(
+      {
+        programId: id,
+        userProfileId: userProfile?.id,
+      },
+      {
+        authMode: "userPool",
+      }
+    );
+  };
+
+  const unfollowProgram = async (id: string) => {
+    const relId =
+      await client.models.UserProfileProgram.listUserProfileProgramByUserProfileId(
+        {
+          userProfileId: userProfile?.id,
+        },
+        {
+          filter: {
+            programId: {
+              eq: id,
+            },
+          },
+          authMode: "userPool",
+        }
+      );
+
+    if (relId?.data?.[0]?.id) {
+      await client.models.UserProfileProgram.delete(
+        {
+          id: relId?.data?.[0]?.id,
+        },
+        {
+          authMode: "userPool",
+        }
+      );
+      queryClient.invalidateQueries({
+        queryKey: ["followedPrograms"],
+      });
+    }
+  };
+
   return (
     <>
       <div className={`flex items-center gap-2 px-[12px] pt-2`}>
@@ -119,23 +190,51 @@ export default function Programs() {
             <Loader className={`animate-spin`} />
           </div>
         ) : (
-          <div className={`flex flex-col gap-[12px] flex-1`}>
-            <div className={`flex flex-col px-[12px]`}>
-              {programs?.map((program) => (
-                <Link
-                  to={`/program/${program.id}`}
-                  key={program.id}
-                  className={`flex flex-col gap-[6px]`}
-                >
+          <div>
+            <div className={`flex flex-col gap-[12px] flex-1`}>
+              <div className={`flex flex-col px-[12px]`}>
+                {programs?.map((program) => (
+                  // <Link
+                  //   to={`/program/${program.id}`}
+                  //   key={program.id}
+                  //   className={`flex flex-col gap-[6px]`}
+                  // >
                   <div
                     className={`border-b-[1px] py-[12px] border-gray-300 border-solid`}
+                    key={program.id}
                   >
                     <div className={`font-semibold text-[14px]`}>
                       {program.name} at {program.institution.name}
                     </div>
+                    {programIds?.includes(program.id) ? (
+                      <Button
+                        className={`text-[11px] p-1 py-0 h-auto`}
+                        onClick={() => unfollowProgram(program.id)}
+                      >
+                        <Check size={14} className={`pr-1`} />
+                        Following
+                      </Button>
+                    ) : (
+                      <Button
+                        className={`text-[11px] p-1 py-0 h-auto`}
+                        variant={"secondary"}
+                        onClick={async () => {
+                          await followProgram(program.id);
+                          queryClient.invalidateQueries({
+                            queryKey: ["followedPrograms"],
+                          });
+                          // queryClient.invalidateQueries({
+                          //   queryKey: ["interviewInvites", "followed"],
+                          // });
+                        }}
+                      >
+                        Follow
+                      </Button>
+                    )}
                   </div>
-                </Link>
-              ))}
+                  // </Link>
+                ))}
+              </div>
             </div>
           </div>
         )}

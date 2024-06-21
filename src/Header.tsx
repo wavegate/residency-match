@@ -13,7 +13,7 @@ export default function Header() {
       >
         <Link to={`/`} className={`flex text-[16px] font-semibold gap-[6px]`}>
           <Stethoscope />
-          <div>BrandName</div>
+          <div>AppName</div>
         </Link>
 
         <div className={`flex gap-[6px]`}>

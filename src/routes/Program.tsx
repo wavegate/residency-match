@@ -35,9 +35,6 @@ export default function Program() {
         authMode: "userPool",
       }
     );
-    toast({
-      title: "Program followed!",
-    });
   };
 
   return (
