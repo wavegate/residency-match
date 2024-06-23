@@ -93,7 +93,7 @@ const run = async () => {
       .on("data", async (row) => {
         const programCode = row["Program Code"];
         const inviteDateTime = row["Date"];
-        const location = row["Location"];
+        const locationState = row["Location"];
         const img = row["IMG"];
         const medicalDegree = row["Degree Type"];
         const geographicPreference = row["Geo"];
@@ -106,7 +106,7 @@ const run = async () => {
           step1ScorePass = true;
           step1Score = undefined;
         }
-        let comlex1Score = row["Comlex1"];
+        const comlex1Score = row["Comlex1"];
         if (comlex1Score === "P") {
           comlex1ScorePass = true;
         }
@@ -123,7 +123,7 @@ const run = async () => {
           const myObj = processObject({
             inviteDateTime,
             geographicPreference,
-            location,
+            locationState,
             img,
             programCode,
             signal,
@@ -177,7 +177,7 @@ const run = async () => {
               inviteDateTime: ivs[i].inviteDateTime,
               geographicPreference: ivs[i].geographicPreference,
               signal: ivs[i].signal,
-              location: ivs[i].location,
+              locationState: ivs[i].locationState,
               programId,
               medicalDegree: ivs[i].medicalDegree,
               step1ScorePass: ivs[i].step1ScorePass,

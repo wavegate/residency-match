@@ -35,6 +35,8 @@ import usePermissions from "../hooks/usePermissions";
 import { useEffect } from "react";
 import { useToast } from "../components/ui/use-toast";
 import { Loader } from "lucide-react";
+import { numericNull } from "../utils/zodHelpers";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   username: z.string().optional(),
@@ -42,30 +44,30 @@ const formSchema = z.object({
   medicalDegree: z.string().optional(),
   img: z.string().optional(),
   step1ScorePass: z.string().optional(),
-  step1Score: z.number().optional(),
-  step2Score: z.number().optional(),
+  step1Score: numericNull,
+  step2Score: numericNull,
   step2CSPathway: z.string().optional(),
   comlex1ScorePass: z.string().optional(),
-  comlex2Score: z.number().optional(),
+  comlex2Score: numericNull,
   redFlags: z.string().optional(),
   redFlagsExplanation: z.string().optional(),
-  numPublications: z.number().optional(),
-  numWorkExperiences: z.number().optional(),
-  numVolunteerExperiences: z.number().optional(),
+  numPublications: numericNull,
+  numWorkExperiences: numericNull,
+  numVolunteerExperiences: numericNull,
   schoolRanking: z.string().optional(),
   classRank: z.string().optional(),
   otherDegrees: z.string().optional(),
-  numApplications: z.number().optional(),
-  numInterviews: z.number().optional(),
-  numWithdrawn: z.number().optional(),
-  numRejected: z.number().optional(),
-  numWaitlisted: z.number().optional(),
+  numApplications: numericNull,
+  numInterviews: numericNull,
+  numWithdrawn: numericNull,
+  numRejected: numericNull,
+  numWaitlisted: numericNull,
   applicationYear: z.string().optional(),
-  step3Score: z.number().optional(),
+  step3Score: numericNull,
   ecfmgCertified: z.string().optional(),
-  yearOfGraduation: z.number().optional(),
+  yearOfGraduation: numericNull,
   visaRequired: z.string().optional(),
-  monthsOfUSCE: z.number().optional(),
+  monthsOfUSCE: numericNull,
   aoa: z.string().optional(),
   sigmaSigmaPhi: z.string().optional(),
   goldHumanism: z.string().optional(),
@@ -77,8 +79,8 @@ const client = generateClient<Schema>();
 export default function EditProfileForm() {
   const params = useParams();
   const { userProfile, loading } = usePermissions();
-
-  console.log(userProfile);
+  const queryClient = useQueryClient();
+  //   console.log(userProfile);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -136,6 +138,9 @@ export default function EditProfileForm() {
         authMode: "userPool",
       }
     );
+    queryClient.invalidateQueries({
+      queryKey: ["userProfile", userProfile.id],
+    });
     toast({
       title: "Profile updated!",
     });
@@ -315,13 +320,6 @@ export default function EditProfileForm() {
                           </SelectContent>
                         </Select>
                       </FormControl>
-                      <FormDescription>
-                        US IMG: If you are an International Medical Graduate but
-                        have completed some medical education or training in the
-                        United States. Non-US IMG: If you have completed all
-                        your medical education and training outside the United
-                        States.
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -332,7 +330,9 @@ export default function EditProfileForm() {
                 name="otherDegrees"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Do you have other graduate degrees?</FormLabel>
+                    <FormLabel>
+                      List any other graduate degrees you have here:
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="eg. MBA, PhD" {...field} />
                     </FormControl>

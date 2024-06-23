@@ -36,22 +36,25 @@ export default function Applicants() {
     queryKey: ["userProfiles", debouncedSearch],
     queryFn: async () => {
       const response =
-        await client.models.UserProfile.listUserProfileBySortTypeAndCodeName({
+        await client.models.UserProfile.listUserProfileBySortTypeAndUsername({
           sortType: "UserProfile",
-          codeName: {
+          username: {
             beginsWith: debouncedSearch ? debouncedSearch : undefined,
           },
         });
+      console.log(response);
       const responseData = response.data;
       if (!responseData) return null;
       return responseData;
     },
   });
 
+  console.log(userProfiles);
+
   const { permissions } = usePermissions();
 
   const headers = [
-    "Code Name",
+    "Username",
     "School Ranking",
     "Type",
     "Step 1 Score",
@@ -146,7 +149,7 @@ export default function Applicants() {
           <Search strokeWidth={1} />
         </Label>
         <Input
-          placeholder="Search by code name"
+          placeholder="Search by username"
           onChange={(e) => setSearch(e.target.value)}
           value={search}
         ></Input>
@@ -161,7 +164,7 @@ export default function Applicants() {
             <TableHeader>
               <TableRow>
                 <TableHead className={`sticky-col first-col`}>
-                  Code Name
+                  Username
                 </TableHead>
                 {userProfiles?.map((profile) => {
                   return (
@@ -171,10 +174,10 @@ export default function Applicants() {
                           to={`/profile/${profile.owner}`}
                           className={`font-semibold`}
                         >
-                          {profile.codeName ?? "anonymous"}
+                          {profile.username ?? "anonymous"}
                         </Link>
                       ) : (
-                        <div>{profile.codeName ?? "anonymous"}</div>
+                        <div>{profile.username ?? "anonymous"}</div>
                       )}
                     </TableCell>
                   );
@@ -339,7 +342,15 @@ export default function Applicants() {
               <TableRow>
                 <TableHead className={`sticky-col first-col`}>AOA</TableHead>
                 {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.aoa ?? "-"}</TableCell>;
+                  return (
+                    <TableCell>
+                      {profile.aoa === true
+                        ? "Yes"
+                        : profile.aoa === false
+                        ? "No"
+                        : "-"}
+                    </TableCell>
+                  );
                 })}
               </TableRow>
               <TableRow>
@@ -347,7 +358,16 @@ export default function Applicants() {
                   Sigma Sigma Phi
                 </TableHead>
                 {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.sigmaSigmaPhi ?? "-"}</TableCell>;
+                  return (
+                    <TableCell>
+                      {" "}
+                      {profile.sigmaSigmaPhi === true
+                        ? "Yes"
+                        : profile.sigmaSigmaPhi === false
+                        ? "No"
+                        : "-"}
+                    </TableCell>
+                  );
                 })}
               </TableRow>
               <TableRow>
@@ -355,7 +375,16 @@ export default function Applicants() {
                   Gold Humanism
                 </TableHead>
                 {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.goldHumanism ?? "-"}</TableCell>;
+                  return (
+                    <TableCell>
+                      {" "}
+                      {profile.goldHumanism === true
+                        ? "Yes"
+                        : profile.goldHumanism === false
+                        ? "No"
+                        : "-"}
+                    </TableCell>
+                  );
                 })}
               </TableRow>
               <TableRow>

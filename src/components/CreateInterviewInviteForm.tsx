@@ -34,29 +34,32 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "./ui/collapsible";
-import { Card } from "./ui/card";
+import { numericNull } from "../utils/zodHelpers";
+import { useNavigate } from "react-router-dom";
+import usePermissions from "../hooks/usePermissions";
 
 const formSchema = z.object({
-  anonymous: z.boolean(),
+  anonymous: z.boolean().optional(),
   programId: z.string({ message: "Program is required." }).min(1),
   inviteDateTime: z.date({ required_error: "An invitation date is required." }),
-  signal: z.boolean(),
-  geographicPreference: z.boolean(),
-  location: z.string(),
-  additionalComments: z.string(),
-  step1ScorePass: z.boolean(),
-  step1Score: z.number(),
-  step2Score: z.number(),
-  comlex1ScorePass: z.boolean(),
-  comlex2Score: z.number(),
-  visaRequired: z.boolean(),
-  subI: z.boolean(),
-  home: z.boolean(),
-  yearOfGraduation: z.number(),
-  greenCard: z.boolean(),
-  away: z.boolean(),
-  graduateType: z.string(),
-  img: z.string(),
+  signal: z.boolean().optional(),
+  geographicPreference: z.boolean().optional(),
+  locationState: z.string().optional(),
+  additionalComments: z.string().optional(),
+  step1ScorePass: z.boolean().optional(),
+  step1Score: numericNull,
+  step2Score: numericNull,
+  comlex1ScorePass: z.boolean().optional(),
+  comlex2Score: numericNull,
+  visaRequired: z.boolean().optional(),
+  subI: z.boolean().optional(),
+  home: z.boolean().optional(),
+  yearOfGraduation: numericNull,
+  greenCard: z.boolean().optional(),
+  away: z.boolean().optional(),
+  graduateType: z.string().optional(),
+  img: z.string().optional(),
+  medicalDegree: z.string().optional(),
 });
 
 const client = generateClient<Schema>();
@@ -64,14 +67,9 @@ const client = generateClient<Schema>();
 export default function CreateInterviewInviteForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      anonymous: false,
-      programId: "",
-      inviteDateTime: new Date(),
-      location: "",
-      additionalComments: "",
-    },
   });
+
+  console.log(form.formState.errors);
 
   const { data: programs } = useQuery({
     queryKey: ["programs"],
@@ -87,7 +85,11 @@ export default function CreateInterviewInviteForm() {
     },
   });
 
+  const { userProfile } = usePermissions();
+
   const { toast } = useToast();
+
+  const navigate = useNavigate();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
@@ -111,29 +113,28 @@ export default function CreateInterviewInviteForm() {
     toast({
       title: "Interview Invitation Shared!",
     });
+    navigate("/invites");
   }
+
+  const handleImportProfile = () => {
+    if (userProfile) {
+      const newProfile = { ...userProfile };
+      for (const [key, value] of Object.entries(newProfile)) {
+        if (newProfile[key] === null) {
+          newProfile[key] = undefined;
+        }
+      }
+      const formValues = form.getValues();
+      Object.assign(formValues, newProfile);
+      console.log(formValues);
+
+      form.reset(formValues);
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="anonymous"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Anonymous?</FormLabel>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormDescription>
-                Whether the invite will be associated with your username.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="programId"
@@ -141,10 +142,7 @@ export default function CreateInterviewInviteForm() {
             <FormItem>
               <FormLabel>Program</FormLabel>
               <FormControl>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a program" />
@@ -173,7 +171,7 @@ export default function CreateInterviewInviteForm() {
           name="inviteDateTime"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Invitation Date and Time</FormLabel>
+              <FormLabel>Invitation Date</FormLabel>
               <FormControl>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -203,7 +201,29 @@ export default function CreateInterviewInviteForm() {
                 </Popover>
               </FormControl>
               <FormDescription>
-                When were you invited? (Not the date of the interview!)
+                The date when you received the interview invite, not the date of
+                the interview.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="anonymous"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Make this invitation anonymous?</FormLabel>
+              <FormControl>
+                <Switch
+                  className={`block`}
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormDescription>
+                If anonymous, your username will not be shown and the invite
+                will not be linked to your profile.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -213,28 +233,34 @@ export default function CreateInterviewInviteForm() {
           <CollapsibleTrigger>
             <div className={`flex items-center`}>
               <div className={`font-semibold`}>Add Additional Information</div>
-              <Button variant="ghost" size="sm" className="w-9 p-0">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-9 p-0"
+                type="button"
+              >
                 <ChevronsUpDown className="h-4 w-4" />
                 <span className="sr-only">Toggle</span>
               </Button>
             </div>
           </CollapsibleTrigger>
-          <CollapsibleContent>
+          <CollapsibleContent className="space-y-4">
+            <Button type="button" onClick={() => handleImportProfile()}>
+              Import My Profile
+            </Button>
             <FormField
               control={form.control}
               name="signal"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Signal?</FormLabel>
+                  <FormLabel>Did you signal to the program?</FormLabel>
                   <FormControl>
                     <Switch
+                      className={`block`}
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Did you signal to the program?
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -244,45 +270,18 @@ export default function CreateInterviewInviteForm() {
               name="geographicPreference"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Geographic preference?</FormLabel>
+                  <FormLabel>
+                    Are you in a geographically preferred location?
+                  </FormLabel>
                   <FormControl>
                     <Switch
+                      className={`block`}
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
                   <FormDescription>
-                    Are you in a geographically preferred location? (need to
-                    double check this meaning)
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>In state or out of state?</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select an option." />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value={"IS"}>In state</SelectItem>
-                        <SelectItem value={"IS"}>Out of state</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormDescription>
-                    Are you in state or out of state?
+                    (need to double check this meaning)
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -293,15 +292,12 @@ export default function CreateInterviewInviteForm() {
               name="graduateType"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>US applicant vs IMG</FormLabel>
+                  <FormLabel>Are you a US medical graduate or IMG?</FormLabel>
                   <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select an option." />
+                          <SelectValue />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -310,8 +306,218 @@ export default function CreateInterviewInviteForm() {
                       </SelectContent>
                     </Select>
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {form.watch("graduateType") === "US" && (
+              <FormField
+                control={form.control}
+                name="medicalDegree"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Are you an MD or DO applicant?</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"MD"}>MD</SelectItem>
+                          <SelectItem value={"DO"}>DO</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            {form.watch("graduateType") === "US" && (
+              <FormField
+                control={form.control}
+                name="locationState"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Are you in or out of state for this program?
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select an option." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"IS"}>In state</SelectItem>
+                          <SelectItem value={"OOS"}>Out of state</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            {form.watch("graduateType") === "US" && (
+              <FormField
+                control={form.control}
+                name="home"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Is this your home program?</FormLabel>
+                    <FormControl>
+                      <Switch
+                        className={`block`}
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+
+            <FormField
+              control={form.control}
+              name="away"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Did you complete an away here?</FormLabel>
+                  <FormControl>
+                    <Switch
+                      className={`block`}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="subI"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Did you complete a sub-I here?</FormLabel>
+                  <FormControl>
+                    <Switch
+                      className={`block`}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {form.watch("graduateType") === "IMG" && (
+              <FormField
+                control={form.control}
+                name="img"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Are you a US IMG or non-US IMG?</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"USIMG"}>US IMG</SelectItem>
+                          <SelectItem value={"nonUSIMG"}>Non-US IMG</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            {form.watch("graduateType") === "IMG" && (
+              <FormField
+                control={form.control}
+                name="visaRequired"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Do you require Visa sponsorship?</FormLabel>
+                    <FormControl>
+                      <Switch
+                        className={`block`}
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            {form.watch("graduateType") === "IMG" && (
+              <FormField
+                control={form.control}
+                name="greenCard"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Do you have a Green Card?</FormLabel>
+                    <FormControl>
+                      <Switch
+                        className={`block`}
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            <FormField
+              control={form.control}
+              name="step1ScorePass"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Have you passed Step 1?</FormLabel>
+                  <FormControl>
+                    <Switch
+                      className={`block`}
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="step1Score"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Step 1 Score</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
                   <FormDescription>
-                    Are you in state or out of state?
+                    Ignore this field if you took Step 1 after the transition to
+                    Pass/Fail.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -319,33 +525,60 @@ export default function CreateInterviewInviteForm() {
             />
             <FormField
               control={form.control}
-              name="img"
+              name="step2Score"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>US IMG or non-US IMG?</FormLabel>
+                  <FormLabel>Step 2 CK Score</FormLabel>
                   <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select an option." />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value={"nonUSIMG"}>nonUSIMG</SelectItem>
-                        <SelectItem value={"USIMG"}>USIMG</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Input type="number" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    Are you in state or out of state?
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            {form.watch("medicalDegree") === "DO" && (
+              <FormField
+                control={form.control}
+                name="comlex1ScorePass"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Have you passed COMLEX 1?</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"Yes"}>Yes</SelectItem>
+                          <SelectItem value={"No"}>No</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            {form.watch("medicalDegree") === "DO" && (
+              <FormField
+                control={form.control}
+                name="comlex2Score"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>COMLEX 2 Score</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
           </CollapsibleContent>
         </Collapsible>
 

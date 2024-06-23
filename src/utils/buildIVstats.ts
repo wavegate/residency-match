@@ -1,5 +1,5 @@
 function buildIVstats(interviewInvite) {
-  const stuffArray = ["ccfrankee"];
+  const stuffArray = ["username"];
   if (interviewInvite.location) {
     stuffArray.push(interviewInvite.location ? "IS" : "OOS");
   }

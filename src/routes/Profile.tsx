@@ -74,7 +74,7 @@ export default function Profile() {
         <div className={`flex flex-col gap-[12px]`}>
           <div className={`flex flex-col items-center`}>
             <div className={`text-[18px] font-semibold`}>
-              {userProfile?.codeName || "randomly-generated-username"}
+              {userProfile?.username}
             </div>
 
             <div className={`flex gap-[6px]`}>

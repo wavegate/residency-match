@@ -112,7 +112,9 @@ export default function Programs() {
             {
               userProfileId: userProfile?.id,
             },
-            { authMode: "userPool" }
+            {
+              authMode: "userPool",
+            }
           );
 
         const responseData = response.data;
@@ -121,6 +123,32 @@ export default function Programs() {
       },
       enabled: !!userProfile?.id,
     });
+
+  const {
+    data: followedProgramDetails,
+    isLoading: followedProgramDetailsLoading,
+  } = useQuery({
+    queryKey: ["followedPrograms", JSON.stringify(followedPrograms)],
+    queryFn: async () => {
+      if (!followedPrograms) return;
+      const promises = followedPrograms.map((x) => {
+        return client.models.Program.get(
+          {
+            id: x.programId,
+          },
+          {
+            selectionSet: ["id", "name", "institution.*"],
+          }
+        );
+      });
+      const responses = await Promise.all(promises);
+      const responsesData = responses.map((x) => x.data);
+
+      if (!responsesData) return null;
+      return responsesData;
+    },
+    enabled: !!followedPrograms,
+  });
 
   const programIds = useMemo(() => {
     return followedPrograms?.map((item) => item.programId);
@@ -192,7 +220,7 @@ export default function Programs() {
         ></Input>
       </div>
       <div className={`relative`}>
-        {loading ? (
+        {(followed ? followedProgramsLoading : loading) ? (
           <div className={`left-1/2 -translate-x-1/2 absolute top-8`}>
             <Loader className={`animate-spin`} />
           </div>
@@ -200,47 +228,46 @@ export default function Programs() {
           <div>
             <div className={`flex flex-col gap-[12px] flex-1`}>
               <div className={`flex flex-col px-[12px]`}>
-                {programs?.map((program) => (
-                  // <Link
-                  //   to={`/program/${program.id}`}
-                  //   key={program.id}
-                  //   className={`flex flex-col gap-[6px]`}
-                  // >
-                  <div
-                    className={`border-b-[1px] py-[12px] border-gray-300 border-solid`}
-                    key={program.id}
-                  >
-                    <div className={`font-semibold text-[14px]`}>
-                      {program.name} at {program.institution.name}
+                {(followed ? followedProgramDetails : programs)?.map(
+                  (program) => (
+                    // <Link
+                    //   to={`/program/${program.id}`}
+                    //   key={program.id}
+                    //   className={`flex flex-col gap-[6px]`}
+                    // >
+                    <div
+                      className={`border-b-[1px] py-[12px] border-gray-300 border-solid`}
+                      key={program.id}
+                    >
+                      <div className={`font-semibold text-[14px]`}>
+                        {program.name} at {program.institution.name}
+                      </div>
+                      {programIds?.includes(program.id) ? (
+                        <Button
+                          className={`text-[11px] p-1 py-0 h-auto`}
+                          onClick={() => unfollowProgram(program.id)}
+                        >
+                          <Check size={14} className={`pr-1`} />
+                          Following
+                        </Button>
+                      ) : (
+                        <Button
+                          className={`text-[11px] p-1 py-0 h-auto`}
+                          variant={"secondary"}
+                          onClick={async () => {
+                            await followProgram(program.id);
+                            queryClient.invalidateQueries({
+                              queryKey: ["followedPrograms"],
+                            });
+                          }}
+                        >
+                          Follow
+                        </Button>
+                      )}
                     </div>
-                    {programIds?.includes(program.id) ? (
-                      <Button
-                        className={`text-[11px] p-1 py-0 h-auto`}
-                        onClick={() => unfollowProgram(program.id)}
-                      >
-                        <Check size={14} className={`pr-1`} />
-                        Following
-                      </Button>
-                    ) : (
-                      <Button
-                        className={`text-[11px] p-1 py-0 h-auto`}
-                        variant={"secondary"}
-                        onClick={async () => {
-                          await followProgram(program.id);
-                          queryClient.invalidateQueries({
-                            queryKey: ["followedPrograms"],
-                          });
-                          // queryClient.invalidateQueries({
-                          //   queryKey: ["interviewInvites", "followed"],
-                          // });
-                        }}
-                      >
-                        Follow
-                      </Button>
-                    )}
-                  </div>
-                  // </Link>
-                ))}
+                    // </Link>
+                  )
+                )}
               </div>
             </div>
           </div>

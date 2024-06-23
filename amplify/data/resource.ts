@@ -97,7 +97,7 @@ const schema = a
         inviteDateTime: a.datetime().required(),
         geographicPreference: a.boolean(),
         signal: a.boolean(),
-        location: a.enum(["IS", "OOS"]),
+        locationState: a.enum(["IS", "OOS"]),
         programId: a.id().required(),
         program: a.belongsTo("Program", "programId"),
         additionalComments: a.string(),

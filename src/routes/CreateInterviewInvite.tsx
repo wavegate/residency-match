@@ -12,7 +12,7 @@ import InterviewInviteCreateForm from "../ui-components/InterviewInviteCreateFor
 
 export default function CreateInterviewInvite() {
   return (
-    <div className={`p-[12px]`}>
+    <div className={`p-[12px] flex flex-col gap-[12px]`}>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>

@@ -42,7 +42,7 @@ export default function InterviewInvites() {
               "program.*",
               "program.institution.*",
               "inviteDateTime",
-              "location",
+              "locationState",
               "medicalDegree",
               "owner",
               "anonymous",
@@ -107,7 +107,7 @@ export default function InterviewInvites() {
               "program.*",
               "program.institution.*",
               "inviteDateTime",
-              "location",
+              "locationState",
               "medicalDegree",
               "owner",
               "anonymous",
@@ -131,8 +131,13 @@ export default function InterviewInvites() {
 
       const results = await Promise.all(promises);
       const responseData = results.flatMap((item) => item.data);
-      if (!responseData) return null;
-      return responseData;
+      const responseDataSorted = responseData.sort(
+        (x, y) =>
+          new Date(y.inviteDateTime).getTime() -
+          new Date(x.inviteDateTime).getTime()
+      );
+      if (!responseDataSorted) return null;
+      return responseDataSorted;
     },
     enabled: !!followedPrograms,
   });
