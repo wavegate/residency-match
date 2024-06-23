@@ -4,6 +4,7 @@ import { Amplify } from "aws-amplify";
 import { generateClient } from "aws-amplify/data";
 import { env } from "$amplify/env/post-confirmation";
 import { createUserProfile } from "./graphql/mutations";
+import { faker } from "@faker-js/faker";
 
 Amplify.configure(
   {
@@ -47,6 +48,7 @@ export const handler: PostConfirmationTriggerHandler = async (event) => {
         ownerAccount: `${event.request.userAttributes.sub}`,
         isProfile: true,
         isProfileString: "TRUE",
+        username: faker.internet.userName(),
       },
     },
   });

@@ -37,7 +37,6 @@ export const createApplication = /* GraphQL */ `mutation CreateApplication(
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -45,6 +44,7 @@ export const createApplication = /* GraphQL */ `mutation CreateApplication(
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -72,6 +72,7 @@ export const createApplication = /* GraphQL */ `mutation CreateApplication(
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -118,11 +119,13 @@ export const createInterviewInvite = /* GraphQL */ `mutation CreateInterviewInvi
   createInterviewInvite(condition: $condition, input: $input) {
     additionalComments
     anonymous
+    applicationYear
     away
-    comlex1Score
+    comlex1ScorePass
     comlex2Score
     createdAt
     geographicPreference
+    graduateType
     greenCard
     home
     id
@@ -151,6 +154,7 @@ export const createInterviewInvite = /* GraphQL */ `mutation CreateInterviewInvi
     signal
     sortType
     step1Score
+    step1ScorePass
     step2Score
     subI
     updatedAt
@@ -292,7 +296,6 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
       __typename
     }
     classRank
-    codeName
     comlex1ScorePass
     comlex2Score
     createdAt
@@ -300,6 +303,7 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
     goldHumanism
     graduateType
     id
+    img
     isProfile
     isProfileString
     location
@@ -331,6 +335,7 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
     step2Score
     step3Score
     updatedAt
+    username
     visaRequired
     yearOfGraduation
     __typename
@@ -368,7 +373,6 @@ export const createUserProfileProgram = /* GraphQL */ `mutation CreateUserProfil
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -376,6 +380,7 @@ export const createUserProfileProgram = /* GraphQL */ `mutation CreateUserProfil
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -403,6 +408,7 @@ export const createUserProfileProgram = /* GraphQL */ `mutation CreateUserProfil
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -444,7 +450,6 @@ export const deleteApplication = /* GraphQL */ `mutation DeleteApplication(
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -452,6 +457,7 @@ export const deleteApplication = /* GraphQL */ `mutation DeleteApplication(
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -479,6 +485,7 @@ export const deleteApplication = /* GraphQL */ `mutation DeleteApplication(
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -525,11 +532,13 @@ export const deleteInterviewInvite = /* GraphQL */ `mutation DeleteInterviewInvi
   deleteInterviewInvite(condition: $condition, input: $input) {
     additionalComments
     anonymous
+    applicationYear
     away
-    comlex1Score
+    comlex1ScorePass
     comlex2Score
     createdAt
     geographicPreference
+    graduateType
     greenCard
     home
     id
@@ -558,6 +567,7 @@ export const deleteInterviewInvite = /* GraphQL */ `mutation DeleteInterviewInvi
     signal
     sortType
     step1Score
+    step1ScorePass
     step2Score
     subI
     updatedAt
@@ -699,7 +709,6 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
       __typename
     }
     classRank
-    codeName
     comlex1ScorePass
     comlex2Score
     createdAt
@@ -707,6 +716,7 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
     goldHumanism
     graduateType
     id
+    img
     isProfile
     isProfileString
     location
@@ -738,6 +748,7 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
     step2Score
     step3Score
     updatedAt
+    username
     visaRequired
     yearOfGraduation
     __typename
@@ -775,7 +786,6 @@ export const deleteUserProfileProgram = /* GraphQL */ `mutation DeleteUserProfil
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -783,6 +793,7 @@ export const deleteUserProfileProgram = /* GraphQL */ `mutation DeleteUserProfil
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -810,6 +821,7 @@ export const deleteUserProfileProgram = /* GraphQL */ `mutation DeleteUserProfil
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -851,7 +863,6 @@ export const updateApplication = /* GraphQL */ `mutation UpdateApplication(
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -859,6 +870,7 @@ export const updateApplication = /* GraphQL */ `mutation UpdateApplication(
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -886,6 +898,7 @@ export const updateApplication = /* GraphQL */ `mutation UpdateApplication(
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -932,11 +945,13 @@ export const updateInterviewInvite = /* GraphQL */ `mutation UpdateInterviewInvi
   updateInterviewInvite(condition: $condition, input: $input) {
     additionalComments
     anonymous
+    applicationYear
     away
-    comlex1Score
+    comlex1ScorePass
     comlex2Score
     createdAt
     geographicPreference
+    graduateType
     greenCard
     home
     id
@@ -965,6 +980,7 @@ export const updateInterviewInvite = /* GraphQL */ `mutation UpdateInterviewInvi
     signal
     sortType
     step1Score
+    step1ScorePass
     step2Score
     subI
     updatedAt
@@ -1106,7 +1122,6 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
       __typename
     }
     classRank
-    codeName
     comlex1ScorePass
     comlex2Score
     createdAt
@@ -1114,6 +1129,7 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
     goldHumanism
     graduateType
     id
+    img
     isProfile
     isProfileString
     location
@@ -1145,6 +1161,7 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
     step2Score
     step3Score
     updatedAt
+    username
     visaRequired
     yearOfGraduation
     __typename
@@ -1182,7 +1199,6 @@ export const updateUserProfileProgram = /* GraphQL */ `mutation UpdateUserProfil
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -1190,6 +1206,7 @@ export const updateUserProfileProgram = /* GraphQL */ `mutation UpdateUserProfil
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -1217,6 +1234,7 @@ export const updateUserProfileProgram = /* GraphQL */ `mutation UpdateUserProfil
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename

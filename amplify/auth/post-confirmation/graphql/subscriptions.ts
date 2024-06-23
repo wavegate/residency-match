@@ -37,7 +37,6 @@ export const onCreateApplication = /* GraphQL */ `subscription OnCreateApplicati
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -45,6 +44,7 @@ export const onCreateApplication = /* GraphQL */ `subscription OnCreateApplicati
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -72,6 +72,7 @@ export const onCreateApplication = /* GraphQL */ `subscription OnCreateApplicati
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -117,11 +118,13 @@ export const onCreateInterviewInvite = /* GraphQL */ `subscription OnCreateInter
   onCreateInterviewInvite(filter: $filter, owner: $owner) {
     additionalComments
     anonymous
+    applicationYear
     away
-    comlex1Score
+    comlex1ScorePass
     comlex2Score
     createdAt
     geographicPreference
+    graduateType
     greenCard
     home
     id
@@ -150,6 +153,7 @@ export const onCreateInterviewInvite = /* GraphQL */ `subscription OnCreateInter
     signal
     sortType
     step1Score
+    step1ScorePass
     step2Score
     subI
     updatedAt
@@ -275,8 +279,13 @@ export const onCreateSpecialtyInstitution = /* GraphQL */ `subscription OnCreate
 export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfile(
   $filter: ModelSubscriptionUserProfileFilterInput
   $owner: String
+  $ownerAccount: String
 ) {
-  onCreateUserProfile(filter: $filter, owner: $owner) {
+  onCreateUserProfile(
+    filter: $filter
+    owner: $owner
+    ownerAccount: $ownerAccount
+  ) {
     aoa
     applicationYear
     applications {
@@ -284,7 +293,6 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
       __typename
     }
     classRank
-    codeName
     comlex1ScorePass
     comlex2Score
     createdAt
@@ -292,6 +300,7 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
     goldHumanism
     graduateType
     id
+    img
     isProfile
     isProfileString
     location
@@ -323,6 +332,7 @@ export const onCreateUserProfile = /* GraphQL */ `subscription OnCreateUserProfi
     step2Score
     step3Score
     updatedAt
+    username
     visaRequired
     yearOfGraduation
     __typename
@@ -360,7 +370,6 @@ export const onCreateUserProfileProgram = /* GraphQL */ `subscription OnCreateUs
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -368,6 +377,7 @@ export const onCreateUserProfileProgram = /* GraphQL */ `subscription OnCreateUs
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -395,6 +405,7 @@ export const onCreateUserProfileProgram = /* GraphQL */ `subscription OnCreateUs
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -436,7 +447,6 @@ export const onDeleteApplication = /* GraphQL */ `subscription OnDeleteApplicati
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -444,6 +454,7 @@ export const onDeleteApplication = /* GraphQL */ `subscription OnDeleteApplicati
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -471,6 +482,7 @@ export const onDeleteApplication = /* GraphQL */ `subscription OnDeleteApplicati
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -516,11 +528,13 @@ export const onDeleteInterviewInvite = /* GraphQL */ `subscription OnDeleteInter
   onDeleteInterviewInvite(filter: $filter, owner: $owner) {
     additionalComments
     anonymous
+    applicationYear
     away
-    comlex1Score
+    comlex1ScorePass
     comlex2Score
     createdAt
     geographicPreference
+    graduateType
     greenCard
     home
     id
@@ -549,6 +563,7 @@ export const onDeleteInterviewInvite = /* GraphQL */ `subscription OnDeleteInter
     signal
     sortType
     step1Score
+    step1ScorePass
     step2Score
     subI
     updatedAt
@@ -674,8 +689,13 @@ export const onDeleteSpecialtyInstitution = /* GraphQL */ `subscription OnDelete
 export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfile(
   $filter: ModelSubscriptionUserProfileFilterInput
   $owner: String
+  $ownerAccount: String
 ) {
-  onDeleteUserProfile(filter: $filter, owner: $owner) {
+  onDeleteUserProfile(
+    filter: $filter
+    owner: $owner
+    ownerAccount: $ownerAccount
+  ) {
     aoa
     applicationYear
     applications {
@@ -683,7 +703,6 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
       __typename
     }
     classRank
-    codeName
     comlex1ScorePass
     comlex2Score
     createdAt
@@ -691,6 +710,7 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
     goldHumanism
     graduateType
     id
+    img
     isProfile
     isProfileString
     location
@@ -722,6 +742,7 @@ export const onDeleteUserProfile = /* GraphQL */ `subscription OnDeleteUserProfi
     step2Score
     step3Score
     updatedAt
+    username
     visaRequired
     yearOfGraduation
     __typename
@@ -759,7 +780,6 @@ export const onDeleteUserProfileProgram = /* GraphQL */ `subscription OnDeleteUs
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -767,6 +787,7 @@ export const onDeleteUserProfileProgram = /* GraphQL */ `subscription OnDeleteUs
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -794,6 +815,7 @@ export const onDeleteUserProfileProgram = /* GraphQL */ `subscription OnDeleteUs
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -835,7 +857,6 @@ export const onUpdateApplication = /* GraphQL */ `subscription OnUpdateApplicati
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -843,6 +864,7 @@ export const onUpdateApplication = /* GraphQL */ `subscription OnUpdateApplicati
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -870,6 +892,7 @@ export const onUpdateApplication = /* GraphQL */ `subscription OnUpdateApplicati
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -915,11 +938,13 @@ export const onUpdateInterviewInvite = /* GraphQL */ `subscription OnUpdateInter
   onUpdateInterviewInvite(filter: $filter, owner: $owner) {
     additionalComments
     anonymous
+    applicationYear
     away
-    comlex1Score
+    comlex1ScorePass
     comlex2Score
     createdAt
     geographicPreference
+    graduateType
     greenCard
     home
     id
@@ -948,6 +973,7 @@ export const onUpdateInterviewInvite = /* GraphQL */ `subscription OnUpdateInter
     signal
     sortType
     step1Score
+    step1ScorePass
     step2Score
     subI
     updatedAt
@@ -1073,8 +1099,13 @@ export const onUpdateSpecialtyInstitution = /* GraphQL */ `subscription OnUpdate
 export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfile(
   $filter: ModelSubscriptionUserProfileFilterInput
   $owner: String
+  $ownerAccount: String
 ) {
-  onUpdateUserProfile(filter: $filter, owner: $owner) {
+  onUpdateUserProfile(
+    filter: $filter
+    owner: $owner
+    ownerAccount: $ownerAccount
+  ) {
     aoa
     applicationYear
     applications {
@@ -1082,7 +1113,6 @@ export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfi
       __typename
     }
     classRank
-    codeName
     comlex1ScorePass
     comlex2Score
     createdAt
@@ -1090,6 +1120,7 @@ export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfi
     goldHumanism
     graduateType
     id
+    img
     isProfile
     isProfileString
     location
@@ -1121,6 +1152,7 @@ export const onUpdateUserProfile = /* GraphQL */ `subscription OnUpdateUserProfi
     step2Score
     step3Score
     updatedAt
+    username
     visaRequired
     yearOfGraduation
     __typename
@@ -1158,7 +1190,6 @@ export const onUpdateUserProfileProgram = /* GraphQL */ `subscription OnUpdateUs
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -1166,6 +1197,7 @@ export const onUpdateUserProfileProgram = /* GraphQL */ `subscription OnUpdateUs
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -1193,6 +1225,7 @@ export const onUpdateUserProfileProgram = /* GraphQL */ `subscription OnUpdateUs
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename

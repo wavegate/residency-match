@@ -12,11 +12,13 @@ export const customQuery = /* GraphQL */ `query CustomQuery {
   customQuery {
     additionalComments
     anonymous
+    applicationYear
     away
-    comlex1Score
+    comlex1ScorePass
     comlex2Score
     createdAt
     geographicPreference
+    graduateType
     greenCard
     home
     id
@@ -45,6 +47,7 @@ export const customQuery = /* GraphQL */ `query CustomQuery {
     signal
     sortType
     step1Score
+    step1ScorePass
     step2Score
     subI
     updatedAt
@@ -83,7 +86,6 @@ export const getApplication = /* GraphQL */ `query GetApplication($id: ID!) {
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -91,6 +93,7 @@ export const getApplication = /* GraphQL */ `query GetApplication($id: ID!) {
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -118,6 +121,7 @@ export const getApplication = /* GraphQL */ `query GetApplication($id: ID!) {
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -158,11 +162,13 @@ export const getInterviewInvite = /* GraphQL */ `query GetInterviewInvite($id: I
   getInterviewInvite(id: $id) {
     additionalComments
     anonymous
+    applicationYear
     away
-    comlex1Score
+    comlex1ScorePass
     comlex2Score
     createdAt
     geographicPreference
+    graduateType
     greenCard
     home
     id
@@ -191,6 +197,7 @@ export const getInterviewInvite = /* GraphQL */ `query GetInterviewInvite($id: I
     signal
     sortType
     step1Score
+    step1ScorePass
     step2Score
     subI
     updatedAt
@@ -320,7 +327,6 @@ export const getUserProfile = /* GraphQL */ `query GetUserProfile($id: ID!) {
       __typename
     }
     classRank
-    codeName
     comlex1ScorePass
     comlex2Score
     createdAt
@@ -328,6 +334,7 @@ export const getUserProfile = /* GraphQL */ `query GetUserProfile($id: ID!) {
     goldHumanism
     graduateType
     id
+    img
     isProfile
     isProfileString
     location
@@ -359,6 +366,7 @@ export const getUserProfile = /* GraphQL */ `query GetUserProfile($id: ID!) {
     step2Score
     step3Score
     updatedAt
+    username
     visaRequired
     yearOfGraduation
     __typename
@@ -393,7 +401,6 @@ export const getUserProfileProgram = /* GraphQL */ `query GetUserProfileProgram(
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -401,6 +408,7 @@ export const getUserProfileProgram = /* GraphQL */ `query GetUserProfileProgram(
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -428,6 +436,7 @@ export const getUserProfileProgram = /* GraphQL */ `query GetUserProfileProgram(
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -571,11 +580,13 @@ export const listInterviewInviteByProgramId = /* GraphQL */ `query ListInterview
     items {
       additionalComments
       anonymous
+      applicationYear
       away
-      comlex1Score
+      comlex1ScorePass
       comlex2Score
       createdAt
       geographicPreference
+      graduateType
       greenCard
       home
       id
@@ -590,6 +601,7 @@ export const listInterviewInviteByProgramId = /* GraphQL */ `query ListInterview
       signal
       sortType
       step1Score
+      step1ScorePass
       step2Score
       subI
       updatedAt
@@ -624,11 +636,13 @@ export const listInterviewInviteBySortTypeAndInviteDateTime = /* GraphQL */ `que
     items {
       additionalComments
       anonymous
+      applicationYear
       away
-      comlex1Score
+      comlex1ScorePass
       comlex2Score
       createdAt
       geographicPreference
+      graduateType
       greenCard
       home
       id
@@ -643,6 +657,7 @@ export const listInterviewInviteBySortTypeAndInviteDateTime = /* GraphQL */ `que
       signal
       sortType
       step1Score
+      step1ScorePass
       step2Score
       subI
       updatedAt
@@ -667,11 +682,13 @@ export const listInterviewInvites = /* GraphQL */ `query ListInterviewInvites(
     items {
       additionalComments
       anonymous
+      applicationYear
       away
-      comlex1Score
+      comlex1ScorePass
       comlex2Score
       createdAt
       geographicPreference
+      graduateType
       greenCard
       home
       id
@@ -686,6 +703,7 @@ export const listInterviewInvites = /* GraphQL */ `query ListInterviewInvites(
       signal
       sortType
       step1Score
+      step1ScorePass
       step2Score
       subI
       updatedAt
@@ -935,7 +953,6 @@ export const listUserProfileByGraduateType = /* GraphQL */ `query ListUserProfil
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -943,6 +960,7 @@ export const listUserProfileByGraduateType = /* GraphQL */ `query ListUserProfil
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -970,6 +988,7 @@ export const listUserProfileByGraduateType = /* GraphQL */ `query ListUserProfil
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -1002,7 +1021,6 @@ export const listUserProfileByOwnerAccountAndIsProfileString = /* GraphQL */ `qu
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -1010,6 +1028,7 @@ export const listUserProfileByOwnerAccountAndIsProfileString = /* GraphQL */ `qu
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -1037,6 +1056,7 @@ export const listUserProfileByOwnerAccountAndIsProfileString = /* GraphQL */ `qu
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -1049,27 +1069,26 @@ export const listUserProfileByOwnerAccountAndIsProfileString = /* GraphQL */ `qu
   APITypes.ListUserProfileByOwnerAccountAndIsProfileStringQueryVariables,
   APITypes.ListUserProfileByOwnerAccountAndIsProfileStringQuery
 >;
-export const listUserProfileBySortTypeAndCodeName = /* GraphQL */ `query ListUserProfileBySortTypeAndCodeName(
-  $codeName: ModelStringKeyConditionInput
+export const listUserProfileBySortTypeAndUsername = /* GraphQL */ `query ListUserProfileBySortTypeAndUsername(
   $filter: ModelUserProfileFilterInput
   $limit: Int
   $nextToken: String
   $sortDirection: ModelSortDirection
   $sortType: String!
+  $username: ModelStringKeyConditionInput
 ) {
-  listUserProfileBySortTypeAndCodeName(
-    codeName: $codeName
+  listUserProfileBySortTypeAndUsername(
     filter: $filter
     limit: $limit
     nextToken: $nextToken
     sortDirection: $sortDirection
     sortType: $sortType
+    username: $username
   ) {
     items {
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -1077,6 +1096,7 @@ export const listUserProfileBySortTypeAndCodeName = /* GraphQL */ `query ListUse
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -1104,6 +1124,7 @@ export const listUserProfileBySortTypeAndCodeName = /* GraphQL */ `query ListUse
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename
@@ -1113,8 +1134,8 @@ export const listUserProfileBySortTypeAndCodeName = /* GraphQL */ `query ListUse
   }
 }
 ` as GeneratedQuery<
-  APITypes.ListUserProfileBySortTypeAndCodeNameQueryVariables,
-  APITypes.ListUserProfileBySortTypeAndCodeNameQuery
+  APITypes.ListUserProfileBySortTypeAndUsernameQueryVariables,
+  APITypes.ListUserProfileBySortTypeAndUsernameQuery
 >;
 export const listUserProfileProgramByUserProfileId = /* GraphQL */ `query ListUserProfileProgramByUserProfileId(
   $filter: ModelUserProfileProgramFilterInput
@@ -1184,7 +1205,6 @@ export const listUserProfiles = /* GraphQL */ `query ListUserProfiles(
       aoa
       applicationYear
       classRank
-      codeName
       comlex1ScorePass
       comlex2Score
       createdAt
@@ -1192,6 +1212,7 @@ export const listUserProfiles = /* GraphQL */ `query ListUserProfiles(
       goldHumanism
       graduateType
       id
+      img
       isProfile
       isProfileString
       location
@@ -1219,6 +1240,7 @@ export const listUserProfiles = /* GraphQL */ `query ListUserProfiles(
       step2Score
       step3Score
       updatedAt
+      username
       visaRequired
       yearOfGraduation
       __typename

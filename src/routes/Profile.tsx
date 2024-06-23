@@ -17,29 +17,9 @@ const client = generateClient<Schema>();
 export default function Profile() {
   const params = useParams();
 
-  const { user } = usePermissions();
+  const { userProfile, loading } = usePermissions();
 
-  console.log(user?.signInDetails?.loginId);
-
-  const { data: userProfile, isLoading: loading } = useQuery({
-    queryKey: ["userProfile", params.id],
-    queryFn: async () => {
-      const response =
-        await client.models.UserProfile.listUserProfileByOwnerAccountAndIsProfileString(
-          {
-            ownerAccount: params.id,
-          },
-          {
-            sortDirection: "DESC",
-          }
-        );
-      const responseData = response.data;
-      if (!responseData || responseData.length === 0) return null;
-      return responseData[0];
-    },
-    enabled: !!params.id,
-  });
-
+  console.log(userProfile);
   const schoolRanking = useMemo(() => {
     if (userProfile?.schoolRanking) {
       const map = {

@@ -134,11 +134,12 @@ const run = async () => {
         }
 
         myObj.sortType = "UserProfile";
+        myObj.username = myObj.codeName;
 
         myObj.isProfile = false;
         myObj.isProfileString = "FALSE";
 
-        myObj.applicationYear = 2023;
+        myObj.applicationYear = 2024;
 
         myObj.ownerAccount = userId;
 

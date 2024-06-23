@@ -17,7 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "../components/ui/form";
-import { Switch } from "@radix-ui/react-switch";
 import { z } from "zod";
 import { generateClient } from "aws-amplify/api";
 import { Schema } from "../../amplify/data/resource";
@@ -31,32 +30,115 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
+import { Button } from "../components/ui/button";
+import usePermissions from "../hooks/usePermissions";
+import { useEffect } from "react";
+import { useToast } from "../components/ui/use-toast";
+import { Loader } from "lucide-react";
 
 const formSchema = z.object({
-  username: z.string(),
-  graduateType: z.string(),
+  username: z.string().optional(),
+  graduateType: z.string().optional(),
+  medicalDegree: z.string().optional(),
+  img: z.string().optional(),
+  step1ScorePass: z.string().optional(),
+  step1Score: z.number().optional(),
+  step2Score: z.number().optional(),
+  step2CSPathway: z.string().optional(),
+  comlex1ScorePass: z.string().optional(),
+  comlex2Score: z.number().optional(),
+  redFlags: z.string().optional(),
+  redFlagsExplanation: z.string().optional(),
+  numPublications: z.number().optional(),
+  numWorkExperiences: z.number().optional(),
+  numVolunteerExperiences: z.number().optional(),
+  schoolRanking: z.string().optional(),
+  classRank: z.string().optional(),
+  otherDegrees: z.string().optional(),
+  numApplications: z.number().optional(),
+  numInterviews: z.number().optional(),
+  numWithdrawn: z.number().optional(),
+  numRejected: z.number().optional(),
+  numWaitlisted: z.number().optional(),
+  applicationYear: z.string().optional(),
+  step3Score: z.number().optional(),
+  ecfmgCertified: z.string().optional(),
+  yearOfGraduation: z.number().optional(),
+  visaRequired: z.string().optional(),
+  monthsOfUSCE: z.number().optional(),
+  aoa: z.string().optional(),
+  sigmaSigmaPhi: z.string().optional(),
+  goldHumanism: z.string().optional(),
+  location: z.string().optional(),
 });
 
 const client = generateClient<Schema>();
 
 export default function EditProfileForm() {
   const params = useParams();
+  const { userProfile, loading } = usePermissions();
+
+  console.log(userProfile);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   username: "",
-    // },
   });
 
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (userProfile) {
+      const transformedUserProfile = { ...userProfile };
+      for (const [key, value] of Object.entries(transformedUserProfile)) {
+        if (value === true) {
+          transformedUserProfile[key] = "Yes";
+        } else if (value === false) {
+          transformedUserProfile[key] = "No";
+        }
+        if (value === null) {
+          transformedUserProfile[key] = undefined;
+        }
+        if (key === "applicationYear") {
+          if (value === 2025) {
+            transformedUserProfile[key] = "2025";
+          }
+          if (value === 2024) {
+            transformedUserProfile[key] = "2024";
+          }
+        }
+      }
+      console.log(transformedUserProfile);
+      form.reset(transformedUserProfile);
+    }
+  }, [userProfile]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!userProfile) {
+      return;
+    }
+    console.log(values);
+    const transformedValues = { ...values };
+    for (const [key, value] of Object.entries(transformedValues)) {
+      if (value === "Yes") {
+        transformedValues[key] = true;
+      } else if (value === "No") {
+        transformedValues[key] = false;
+      }
+    }
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    // await client.models.UserProfile.update(
-    // );
-    // toast({
-    //   title: "Interview Invitation Shared!",
-    // });
+    await client.models.UserProfile.update(
+      {
+        id: userProfile.id,
+        ...transformedValues,
+      },
+      {
+        authMode: "userPool",
+      }
+    );
+    toast({
+      title: "Profile updated!",
+    });
   }
 
   // providing this information allows us to add context to your interview invitations. you can also choose to make your profile public.
@@ -88,7 +170,7 @@ export default function EditProfileForm() {
   // how many programs have you been waitlisted at?
   // percent yield
   return (
-    <div className={`p-[12px]`}>
+    <div className={`p-[12px] flex flex-col gap-[12px]`}>
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -103,559 +185,721 @@ export default function EditProfileForm() {
         </BreadcrumbList>
       </Breadcrumb>
       <h1 className={`font-semibold text-[20px]`}>Edit Profile</h1>
-      <div>
+      <div className={`text-sm`}>
         Filling out your user profile helps us to provide context for your
-        interview invitations. By default, your profile is private.
+        interview invitations.
       </div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="graduateType"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Graduate Type</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+      <div className={`relative`}>
+        {loading ? (
+          <div className={`left-1/2 -translate-x-1/2 absolute top-8`}>
+            <Loader className={`animate-spin`} />
+          </div>
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>What's your username?</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an option." />
-                      </SelectTrigger>
+                      <Input {...field} />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value={"US"}>US</SelectItem>
-                      <SelectItem value={"IMG"}>IMG</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormDescription>
-                  Select whether you are a US medical graduate or an
-                  International Medical Graduate (IMG).
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="medicalDegree"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Medical Degree</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="applicationYear"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>For which year are you applying?</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an option." />
-                      </SelectTrigger>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue value={field.value} />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"2025"}>2024-2025</SelectItem>
+                          <SelectItem value={"2024"}>2023-2024</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value={"MD"}>MD</SelectItem>
-                      <SelectItem value={"DO"}>DO</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormDescription>
-                  Select whether your degree is MD or DO.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="img"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>IMG Applicant Type</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="graduateType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Are you a US medical graduate or IMG?</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an option." />
-                      </SelectTrigger>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"US"}>US</SelectItem>
+                          <SelectItem value={"IMG"}>IMG</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value={"USIMG"}>US IMG</SelectItem>
-                      <SelectItem value={"nonUSIMG"}>Non-US IMG</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormDescription>
-                  Please select your IMG applicant type:
-                  <ul>
-                    <li>
-                      US IMG: If you are an International Medical Graduate but
-                      have completed some medical education or training in the
-                      United States.
-                    </li>
-                    <li>
-                      Non-US IMG: If you have completed all your medical
-                      education and training outside the United States.
-                    </li>
-                  </ul>
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="step1ScorePass"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Step 1 Passed</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {form.watch("graduateType") === "US" && (
+                <FormField
+                  control={form.control}
+                  name="medicalDegree"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Are you an MD or DO applicant?</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"MD"}>MD</SelectItem>
+                            <SelectItem value={"DO"}>DO</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              {form.watch("graduateType") === "IMG" && (
+                <FormField
+                  control={form.control}
+                  name="img"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Are you a US IMG or non-US IMG?</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"USIMG"}>US IMG</SelectItem>
+                            <SelectItem value={"nonUSIMG"}>
+                              Non-US IMG
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormDescription>
+                        US IMG: If you are an International Medical Graduate but
+                        have completed some medical education or training in the
+                        United States. Non-US IMG: If you have completed all
+                        your medical education and training outside the United
+                        States.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              <FormField
+                control={form.control}
+                name="otherDegrees"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Do you have other graduate degrees?</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an option." />
-                      </SelectTrigger>
+                      <Input placeholder="eg. MBA, PhD" {...field} />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value={"Yes"}>Yes</SelectItem>
-                      <SelectItem value={"No"}>No</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormDescription>
-                  Did you pass Step 1? If you took Step 1 prior to the
-                  transition to P/F grading, please skip this question.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="step1Score"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Step 1 Score</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="step2Score"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Step 2 CK Score</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="step2Score"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Step 3 Score</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormDescription>
-                  You can ignore this question if you did not take this test.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="step1ScorePass"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>COMLEX 1 Passed</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="aoa"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Did you receive the AΩA award?</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an option." />
-                      </SelectTrigger>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"Yes"}>Yes</SelectItem>
+                          <SelectItem value={"No"}>No</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value={"Yes"}>Yes</SelectItem>
-                      <SelectItem value={"No"}>No</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormDescription>Did you pass COMLEX 1?</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="comlex2Score"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>COMLEX 2 Score</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="ecfmgCertified"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Are you ECFMG-certified?</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {form.watch("medicalDegree") === "DO" && (
+                <FormField
+                  control={form.control}
+                  name="sigmaSigmaPhi"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Did you receive the Sigma Sigma Phi award?
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"Yes"}>Yes</SelectItem>
+                            <SelectItem value={"No"}>No</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              <FormField
+                control={form.control}
+                name="goldHumanism"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Did you receive the Gold Humanism award?
+                    </FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an option." />
-                      </SelectTrigger>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"Yes"}>Yes</SelectItem>
+                          <SelectItem value={"No"}>No</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value={"Yes"}>Yes</SelectItem>
-                      <SelectItem value={"No"}>No</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="ecfmgCertified"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>What is your Step 2 CS Pathway?</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="step1ScorePass"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Have you passed Step 1?</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an option." />
-                      </SelectTrigger>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"Yes"}>Yes</SelectItem>
+                          <SelectItem value={"No"}>No</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value={"pathway1"}>Pathway 1</SelectItem>
-                      <SelectItem value={"pathway2"}>Pathway 2</SelectItem>
-                      <SelectItem value={"pathway3"}>Pathway 3</SelectItem>
-                      <SelectItem value={"pathway4"}>Pathway 4</SelectItem>
-                      <SelectItem value={"pathway5"}>Pathway 5</SelectItem>
-                      <SelectItem value={"pathway6"}>Pathway 6</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="step1Score"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Step 1 Score</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Ignore this field if you took Step 1 after the transition
+                      to Pass/Fail.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="step2Score"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Step 2 CK Score</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="step3Score"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Step 3 Score</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Ignore this field if you didn't take Step 3.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {form.watch("medicalDegree") === "DO" && (
+                <FormField
+                  control={form.control}
+                  name="comlex1ScorePass"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Have you passed COMLEX 1?</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"Yes"}>Yes</SelectItem>
+                            <SelectItem value={"No"}>No</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              {form.watch("medicalDegree") === "DO" && (
+                <FormField
+                  control={form.control}
+                  name="comlex2Score"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>COMLEX 2 Score</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              {form.watch("graduateType") === "IMG" && (
+                <FormField
+                  control={form.control}
+                  name="ecfmgCertified"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Are you ECFMG-certified?</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"Yes"}>Yes</SelectItem>
+                            <SelectItem value={"No"}>No</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              {form.watch("graduateType") === "IMG" && (
+                <FormField
+                  control={form.control}
+                  name="step2CSPathway"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>What is your Step 2 CS Pathway?</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"pathway1"}>
+                              Pathway 1
+                            </SelectItem>
+                            <SelectItem value={"pathway2"}>
+                              Pathway 2
+                            </SelectItem>
+                            <SelectItem value={"pathway3"}>
+                              Pathway 3
+                            </SelectItem>
+                            <SelectItem value={"pathway4"}>
+                              Pathway 4
+                            </SelectItem>
+                            <SelectItem value={"pathway5"}>
+                              Pathway 5
+                            </SelectItem>
+                            <SelectItem value={"pathway6"}>
+                              Pathway 6
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="yearOfGraduation"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  If you already graduated medical school, what year did you
-                  graduate?
-                </FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="visaRequired"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Do you require visa sponsorship?</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              <FormField
+                control={form.control}
+                name="yearOfGraduation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      If you already graduated medical school, what year did you
+                      graduate?
+                    </FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an option." />
-                      </SelectTrigger>
+                      <Input type="number" {...field} />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value={"Yes"}>Yes</SelectItem>
-                      <SelectItem value={"No"}>No</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="schoolRanking"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  In your opinion, how does your school rank amongst other
-                  schools?
-                </FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {form.watch("graduateType") === "IMG" && (
+                <FormField
+                  control={form.control}
+                  name="visaRequired"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Do you require visa sponsorship?</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value={"Yes"}>Yes</SelectItem>
+                            <SelectItem value={"No"}>No</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              {form.watch("graduateType") === "IMG" && (
+                <FormField
+                  control={form.control}
+                  name="monthsOfUSCE"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        How many months of US clinical experience do you have?
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              <FormField
+                control={form.control}
+                name="schoolRanking"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      How does your school rank amongst other schools?
+                    </FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an option." />
-                      </SelectTrigger>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"top20"}>Top 20</SelectItem>
+                          <SelectItem value={"top50"}>Top 50</SelectItem>
+                          <SelectItem value={"mid"}>Mid-Tier</SelectItem>
+                          <SelectItem value={"low"}>Low-Tier</SelectItem>
+                          <SelectItem value={"unranked"}>Unranked</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value={"top20"}>Top 20</SelectItem>
-                      <SelectItem value={"top50"}>Top 50</SelectItem>
-                      <SelectItem value={"mid"}>Mid-Tier</SelectItem>
-                      <SelectItem value={"low"}>Low-Tier</SelectItem>
-                      <SelectItem value={"unranked"}>Unranked</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="classRank"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  In your opinion, how do you rank amongst your class?
-                </FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="classRank"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>How do you rank amongst your class?</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an option." />
-                      </SelectTrigger>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"top10"}>Top 10%</SelectItem>
+                          <SelectItem value={"top25"}>Top 25%</SelectItem>
+                          <SelectItem value={"bottom50"}>Bottom 50%</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value={"top10"}>Top 10%</SelectItem>
-                      <SelectItem value={"top25"}>Top 25%</SelectItem>
-                      <SelectItem value={"bottom50"}>Bottom 50%</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="numPublications"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  How many publications do you have, including posters and
-                  presentations?
-                </FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="numWorkExperiences"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  How many clinical work experiences do you have?
-                </FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="numVolunteerExperiences"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  How many clinical volunteering experiences do you have?
-                </FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="redFlags"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Does your application have any red flags?</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="numPublications"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      How many publications do you have, including posters and
+                      presentations?
+                    </FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an option." />
-                      </SelectTrigger>
+                      <Input type="number" {...field} />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value={"Yes"}>Yes</SelectItem>
-                      <SelectItem value={"No"}>No</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="redFlagsExplanation"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Can you provide more information about your red flag(s)?
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="numApplications"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>how many applications have you sent?</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="numInterviews"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>How many interviews have you received?</FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="numWithdrawn"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  How many programs have you withdrawn from?
-                </FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="numRejected"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  How many programs have you been rejected from?
-                </FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="numWaitlisted"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  How many programs have you been waitlisted at?
-                </FormLabel>
-                <FormControl>
-                  <Input type="number" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="numWorkExperiences"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      How many clinical work experiences do you have?
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="numVolunteerExperiences"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      How many clinical volunteering experiences do you have?
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="redFlags"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Does your application have any red flags?
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={"Yes"}>Yes</SelectItem>
+                          <SelectItem value={"No"}>No</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {form.watch("redFlags") === "Yes" && (
+                <FormField
+                  control={form.control}
+                  name="redFlagsExplanation"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Can you provide more information about your red flag(s)?
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              <FormField
+                control={form.control}
+                name="numApplications"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>How many applications have you sent?</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="numInterviews"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      How many interviews have you received?
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="numWithdrawn"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      How many programs have you withdrawn from?
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="numRejected"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      How many programs have you been rejected from?
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="numWaitlisted"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      How many programs have you been waitlisted at?
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Submit</Button>
+            </form>
+          </Form>
+        )}
+      </div>
     </div>
   );
 }

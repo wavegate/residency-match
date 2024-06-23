@@ -183,7 +183,8 @@ const schema = a
         location: a.string(),
         graduateType: a.enum(["US", "IMG"]),
         medicalDegree: a.ref("MedicalDegree"),
-        codeName: a.string(),
+        img: a.enum(["nonUSIMG", "USIMG"]),
+        username: a.string(),
         step1ScorePass: a.boolean(),
         step1Score: a.integer(),
         step2Score: a.integer(),
@@ -210,7 +211,7 @@ const schema = a
         isProfileString: a.string(),
       })
       .secondaryIndexes((index) => [
-        index("sortType").sortKeys(["codeName"]),
+        index("sortType").sortKeys(["username"]),
         index("graduateType"),
         index("ownerAccount").sortKeys(["isProfileString"]),
       ])
