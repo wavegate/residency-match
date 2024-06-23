@@ -11,5 +11,11 @@ export default function Auth() {
     }
   }, [user, navigate]);
 
-  return <Authenticator />;
+  return (
+    <div className={``}>
+      <div className={`pt-12`}>
+        <Authenticator />
+      </div>
+    </div>
+  );
 }

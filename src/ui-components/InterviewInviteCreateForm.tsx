@@ -15,34 +15,22 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Schema } from "../../amplify/data/resource";
 import { toast } from "../components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
+import usePermissions from "../hooks/usePermissions";
 const client = generateClient<Schema>();
 export default function InterviewInviteCreateForm(props) {
   const navigate = useNavigate();
   const { user } = useAuthenticator((context) => [context.user]);
   const queryClient = useQueryClient();
-  const { data: userProfile } = useQuery({
-    queryKey: ["userProfile", user?.userId],
-    enabled: !!user?.userId,
-    queryFn: async () => {
-      const response = await client.models.UserProfile.list({
-        filter: {
-          owner: {
-            contains: user?.userId,
-          },
-        },
-      });
-      const responseData = response.data;
-      if (!responseData || responseData?.length === 0) return null;
-      return responseData[0];
-    },
-  });
+  const { userProfile } = usePermissions();
 
   const { data: programs } = useQuery({
     queryKey: ["programs"],
     queryFn: async () => {
-      const response = await client.models.Program.listProgramBySortTypeAndName(
-        { sortType: "Program" }
-      );
+      const response =
+        await client.models.Program.listProgramBySortTypeAndInstitutionNameLowerCase(
+          { sortType: "Program" },
+          { selectionSet: ["id", "institutionName", "name"] }
+        );
       const responseData = response.data;
       if (!responseData) return null;
       return responseData;
@@ -198,7 +186,7 @@ export default function InterviewInviteCreateForm(props) {
   };
   function importMyStats() {
     if (userProfile) {
-      setImg(userProfile.img);
+      setImg(userProfile.graduateType);
       setMedicalDegree(userProfile.medicalDegree);
       setStep1Score(userProfile.step1Score);
       setStep2Score(userProfile.step2Score);
@@ -337,7 +325,7 @@ export default function InterviewInviteCreateForm(props) {
         {programs?.map((program) => {
           return (
             <option key={program.id} value={program.id}>
-              {program.name}
+              {program.name} at {program.institutionName}
             </option>
           );
         })}
@@ -386,7 +374,7 @@ export default function InterviewInviteCreateForm(props) {
         {...getOverrideProps(overrides, "anonymous")}
       ></SwitchField>
       <SelectField
-        label="Img"
+        label="IMG"
         placeholder="Please select an option"
         isDisabled={false}
         value={img}
@@ -429,12 +417,12 @@ export default function InterviewInviteCreateForm(props) {
         {...getOverrideProps(overrides, "img")}
       >
         <option
-          children="Non usimg"
+          children="nonUSIMG"
           value="nonUSIMG"
           {...getOverrideProps(overrides, "imgoption0")}
         ></option>
         <option
-          children="Usimg"
+          children="USIMG"
           value="USIMG"
           {...getOverrideProps(overrides, "imgoption1")}
         ></option>

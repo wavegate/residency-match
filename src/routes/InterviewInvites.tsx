@@ -51,8 +51,9 @@ export default function InterviewInvites() {
               "subI",
               "home",
               "away",
-              "comlex1Score",
+              "comlex1ScorePass",
               "comlex2Score",
+              "step1ScorePass",
               "step1Score",
               "step2Score",
               "geographicPreference",
@@ -68,7 +69,7 @@ export default function InterviewInvites() {
     },
   });
 
-  const { userProfile } = usePermissions();
+  const { user, userProfile } = usePermissions();
 
   const { data: followedPrograms, isLoading: followedProgramsLoading } =
     useQuery({
@@ -115,8 +116,9 @@ export default function InterviewInvites() {
               "subI",
               "home",
               "away",
-              "comlex1Score",
+              "comlex1ScorePass",
               "comlex2Score",
+              "step1ScorePass",
               "step1Score",
               "step2Score",
               "geographicPreference",
@@ -176,15 +178,18 @@ export default function InterviewInvites() {
 
   return (
     <>
-      <Link to="/create-interview-invite">
-        <Button
-          className={`fixed left-1/2 -translate-x-1/2 bottom-[55px] rounded-full shadow-md z-10`}
-        >
-          <Plus />
-        </Button>
-      </Link>
+      {user && (
+        <Link to="/create-interview-invite">
+          <Button
+            className={`fixed left-1/2 -translate-x-1/2 bottom-[55px] rounded-full shadow-md z-10`}
+          >
+            <Plus />
+          </Button>
+        </Link>
+      )}
       <div className={`flex items-center gap-2 px-[12px] pt-2`}>
         <Button
+          disabled={!user}
           variant="secondary"
           className={`flex gap-2 h-auto py-2`}
           onClick={() => setFollowed((prev) => !prev)}

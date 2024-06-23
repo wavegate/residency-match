@@ -8,7 +8,7 @@ function Root() {
   return (
     <ThemeProvider>
       <Authenticator.Provider>
-        <div className={`pb-[48px] pt-[52px]`}>
+        <div className={`pb-[48px] pt-[48px]`}>
           <Header />
           <Outlet />
           <Toaster />

@@ -98,9 +98,19 @@ const run = async () => {
         const medicalDegree = row["Degree Type"];
         const geographicPreference = row["Geo"];
         const signal = row["Sig"];
-        const step1Score = row["Step1"];
+        let step1Score = row["Step1"];
+        let step1ScorePass;
+        let comlex1ScorePass;
+
+        if (step1Score === "P") {
+          step1ScorePass = true;
+          step1Score = undefined;
+        }
+        let comlex1Score = row["Comlex1"];
+        if (comlex1Score === "P") {
+          comlex1ScorePass = true;
+        }
         const step2Score = row["Step2"];
-        const comlex1Score = row["Comlex1"];
         const comlex2Score = row["Comlex2"];
         const visaRequired = row["Visa Required"];
         const subI = row["SubI"];
@@ -118,9 +128,10 @@ const run = async () => {
             programCode,
             signal,
             medicalDegree,
+            step1ScorePass,
             step1Score,
             step2Score,
-            comlex1Score,
+            comlex1ScorePass,
             comlex2Score,
             visaRequired,
             subI,
@@ -169,9 +180,10 @@ const run = async () => {
               location: ivs[i].location,
               programId,
               medicalDegree: ivs[i].medicalDegree,
+              step1ScorePass: ivs[i].step1ScorePass,
               step1Score: ivs[i].step1Score,
               step2Score: ivs[i].step2Score,
-              comlex1Score: ivs[i].comlex1Score,
+              comlex1ScorePass: ivs[i].comlex1ScorePass,
               comlex2Score: ivs[i].comlex2Score,
               visaRequired: ivs[i].visaRequired,
               subI: ivs[i].subI,
@@ -181,6 +193,7 @@ const run = async () => {
               away: ivs[i].away,
               institutionName,
               institutionNameLowerCase: institutionName.toLowerCase(),
+              applicationYear: 2023,
             };
             if (programId) {
               createNewProgram(createObj);

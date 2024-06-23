@@ -169,11 +169,18 @@ export default function Programs() {
     }
   };
 
+  const [followed, setFollowed] = useState(false);
+
   return (
     <>
       <div className={`flex items-center gap-2 px-[12px] pt-2`}>
-        <Button variant="secondary" className={`flex gap-2 h-auto py-2`}>
-          <Checkbox></Checkbox>Followed
+        <Button
+          variant="secondary"
+          className={`flex gap-2 h-auto py-2`}
+          onClick={() => setFollowed((prev) => !prev)}
+        >
+          <Checkbox checked={followed}></Checkbox>
+          <Label>Followed</Label>
         </Button>
         <Label>
           <Search strokeWidth={1} />

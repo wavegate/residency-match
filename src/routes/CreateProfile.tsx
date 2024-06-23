@@ -1,5 +1,6 @@
 import UserProfileCreateForm from "../ui-components/UserProfileCreateForm";
+import UserProfileUpdateForm from "../ui-components/UserProfileUpdateForm";
 
 export default function CreateUserProfile() {
-  return <UserProfileCreateForm isProfile />;
+  return <UserProfileUpdateForm isProfile />;
 }

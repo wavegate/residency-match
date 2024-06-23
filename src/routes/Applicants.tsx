@@ -129,7 +129,7 @@ export default function Applicants() {
 
   return (
     <div className={`flex flex-col gap-[6px] p-[12px]`}>
-      <div className={`flex items-center gap-2 px-[12px] pt-2`}>
+      <div className={`flex items-center gap-2`}>
         <div className="flex items-center space-x-2">
           <Switch
             id="imgSwitch"

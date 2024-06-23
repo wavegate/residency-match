@@ -1,8 +1,9 @@
 export default function Dashboard() {
   return (
     <div className={`p-[12px]`}>
-      <div>Interview invites for followed programs this past week</div>
-      <div>My application statuses</div>
+      <div className={`text-[20px] font-semibold`}>
+        Content here to be determined
+      </div>
     </div>
   );
 }

@@ -22,6 +22,7 @@ import Dashboard from "./routes/Dashboard";
 import { TooltipProvider } from "./components/ui/tooltip";
 import CreateProfile from "./routes/CreateProfile";
 import Program from "./routes/Program";
+import EditProfileForm from "./routes/EditProfileForm";
 
 Amplify.configure(outputs);
 
@@ -74,8 +75,8 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "create-profile",
-        element: <CreateProfile />,
+        path: "profile/edit/:id",
+        element: <EditProfileForm />,
       },
       {
         path: "auth",
