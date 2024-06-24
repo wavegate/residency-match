@@ -301,7 +301,6 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
     comlex1ScorePass
     comlex2Score
     createdAt
-    email
     ecfmgCertified
     goldHumanism
     graduateType
