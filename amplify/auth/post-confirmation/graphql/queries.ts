@@ -26,7 +26,7 @@ export const customQuery = /* GraphQL */ `query CustomQuery {
     institutionName
     institutionNameLowerCase
     inviteDateTime
-    location
+    locationState
     medicalDegree
     owner
     program {
@@ -176,7 +176,7 @@ export const getInterviewInvite = /* GraphQL */ `query GetInterviewInvite($id: I
     institutionName
     institutionNameLowerCase
     inviteDateTime
-    location
+    locationState
     medicalDegree
     owner
     program {
@@ -594,7 +594,7 @@ export const listInterviewInviteByProgramId = /* GraphQL */ `query ListInterview
       institutionName
       institutionNameLowerCase
       inviteDateTime
-      location
+      locationState
       medicalDegree
       owner
       programId
@@ -650,7 +650,7 @@ export const listInterviewInviteBySortTypeAndInviteDateTime = /* GraphQL */ `que
       institutionName
       institutionNameLowerCase
       inviteDateTime
-      location
+      locationState
       medicalDegree
       owner
       programId
@@ -696,7 +696,7 @@ export const listInterviewInvites = /* GraphQL */ `query ListInterviewInvites(
       institutionName
       institutionNameLowerCase
       inviteDateTime
-      location
+      locationState
       medicalDegree
       owner
       programId

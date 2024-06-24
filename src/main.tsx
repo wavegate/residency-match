@@ -36,12 +36,12 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Dashboard />,
-      },
-      {
-        path: "invites",
         element: <InterviewInvites />,
       },
+      // {
+      //   path: "invites",
+      //   element: <InterviewInvites />,
+      // },
       {
         path: "create-interview-invite",
         element: <CreateInterviewInvite />,

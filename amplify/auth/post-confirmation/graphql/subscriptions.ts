@@ -132,7 +132,7 @@ export const onCreateInterviewInvite = /* GraphQL */ `subscription OnCreateInter
     institutionName
     institutionNameLowerCase
     inviteDateTime
-    location
+    locationState
     medicalDegree
     owner
     program {
@@ -542,7 +542,7 @@ export const onDeleteInterviewInvite = /* GraphQL */ `subscription OnDeleteInter
     institutionName
     institutionNameLowerCase
     inviteDateTime
-    location
+    locationState
     medicalDegree
     owner
     program {
@@ -952,7 +952,7 @@ export const onUpdateInterviewInvite = /* GraphQL */ `subscription OnUpdateInter
     institutionName
     institutionNameLowerCase
     inviteDateTime
-    location
+    locationState
     medicalDegree
     owner
     program {

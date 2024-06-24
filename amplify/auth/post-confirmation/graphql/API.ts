@@ -20,7 +20,7 @@ export type InterviewInvite = {
   institutionName?: string | null,
   institutionNameLowerCase?: string | null,
   inviteDateTime: string,
-  location?: InterviewInviteLocation | null,
+  locationState?: InterviewInviteLocationState | null,
   medicalDegree?: MedicalDegree | null,
   owner?: string | null,
   program?: Program | null,
@@ -48,7 +48,7 @@ export enum InterviewInviteImg {
 }
 
 
-export enum InterviewInviteLocation {
+export enum InterviewInviteLocationState {
   IS = "IS",
   OOS = "OOS",
 }
@@ -406,7 +406,7 @@ export type ModelInterviewInviteFilterInput = {
   institutionName?: ModelStringInput | null,
   institutionNameLowerCase?: ModelStringInput | null,
   inviteDateTime?: ModelStringInput | null,
-  location?: ModelInterviewInviteLocationInput | null,
+  locationState?: ModelInterviewInviteLocationStateInput | null,
   medicalDegree?: ModelMedicalDegreeInput | null,
   not?: ModelInterviewInviteFilterInput | null,
   or?: Array< ModelInterviewInviteFilterInput | null > | null,
@@ -452,9 +452,9 @@ export type ModelInterviewInviteImgInput = {
   ne?: InterviewInviteImg | null,
 };
 
-export type ModelInterviewInviteLocationInput = {
-  eq?: InterviewInviteLocation | null,
-  ne?: InterviewInviteLocation | null,
+export type ModelInterviewInviteLocationStateInput = {
+  eq?: InterviewInviteLocationState | null,
+  ne?: InterviewInviteLocationState | null,
 };
 
 export type ModelMedicalDegreeInput = {
@@ -660,7 +660,7 @@ export type ModelInterviewInviteConditionInput = {
   institutionName?: ModelStringInput | null,
   institutionNameLowerCase?: ModelStringInput | null,
   inviteDateTime?: ModelStringInput | null,
-  location?: ModelInterviewInviteLocationInput | null,
+  locationState?: ModelInterviewInviteLocationStateInput | null,
   medicalDegree?: ModelMedicalDegreeInput | null,
   not?: ModelInterviewInviteConditionInput | null,
   or?: Array< ModelInterviewInviteConditionInput | null > | null,
@@ -693,7 +693,7 @@ export type CreateInterviewInviteInput = {
   institutionName?: string | null,
   institutionNameLowerCase?: string | null,
   inviteDateTime: string,
-  location?: InterviewInviteLocation | null,
+  locationState?: InterviewInviteLocationState | null,
   medicalDegree?: MedicalDegree | null,
   programId: string,
   signal?: boolean | null,
@@ -937,7 +937,7 @@ export type UpdateInterviewInviteInput = {
   institutionName?: string | null,
   institutionNameLowerCase?: string | null,
   inviteDateTime?: string | null,
-  location?: InterviewInviteLocation | null,
+  locationState?: InterviewInviteLocationState | null,
   medicalDegree?: MedicalDegree | null,
   programId?: string | null,
   signal?: boolean | null,
@@ -1095,7 +1095,7 @@ export type ModelSubscriptionInterviewInviteFilterInput = {
   institutionName?: ModelSubscriptionStringInput | null,
   institutionNameLowerCase?: ModelSubscriptionStringInput | null,
   inviteDateTime?: ModelSubscriptionStringInput | null,
-  location?: ModelSubscriptionStringInput | null,
+  locationState?: ModelSubscriptionStringInput | null,
   medicalDegree?: ModelSubscriptionStringInput | null,
   or?: Array< ModelSubscriptionInterviewInviteFilterInput | null > | null,
   owner?: ModelStringInput | null,
@@ -1245,7 +1245,7 @@ export type CustomQueryQuery = {
     institutionName?: string | null,
     institutionNameLowerCase?: string | null,
     inviteDateTime: string,
-    location?: InterviewInviteLocation | null,
+    locationState?: InterviewInviteLocationState | null,
     medicalDegree?: MedicalDegree | null,
     owner?: string | null,
     program?:  {
@@ -1398,7 +1398,7 @@ export type GetInterviewInviteQuery = {
     institutionName?: string | null,
     institutionNameLowerCase?: string | null,
     inviteDateTime: string,
-    location?: InterviewInviteLocation | null,
+    locationState?: InterviewInviteLocationState | null,
     medicalDegree?: MedicalDegree | null,
     owner?: string | null,
     program?:  {
@@ -1798,7 +1798,7 @@ export type ListInterviewInviteByProgramIdQuery = {
       institutionName?: string | null,
       institutionNameLowerCase?: string | null,
       inviteDateTime: string,
-      location?: InterviewInviteLocation | null,
+      locationState?: InterviewInviteLocationState | null,
       medicalDegree?: MedicalDegree | null,
       owner?: string | null,
       programId: string,
@@ -1846,7 +1846,7 @@ export type ListInterviewInviteBySortTypeAndInviteDateTimeQuery = {
       institutionName?: string | null,
       institutionNameLowerCase?: string | null,
       inviteDateTime: string,
-      location?: InterviewInviteLocation | null,
+      locationState?: InterviewInviteLocationState | null,
       medicalDegree?: MedicalDegree | null,
       owner?: string | null,
       programId: string,
@@ -1891,7 +1891,7 @@ export type ListInterviewInvitesQuery = {
       institutionName?: string | null,
       institutionNameLowerCase?: string | null,
       inviteDateTime: string,
-      location?: InterviewInviteLocation | null,
+      locationState?: InterviewInviteLocationState | null,
       medicalDegree?: MedicalDegree | null,
       owner?: string | null,
       programId: string,
@@ -2496,7 +2496,7 @@ export type CreateInterviewInviteMutation = {
     institutionName?: string | null,
     institutionNameLowerCase?: string | null,
     inviteDateTime: string,
-    location?: InterviewInviteLocation | null,
+    locationState?: InterviewInviteLocationState | null,
     medicalDegree?: MedicalDegree | null,
     owner?: string | null,
     program?:  {
@@ -2901,7 +2901,7 @@ export type DeleteInterviewInviteMutation = {
     institutionName?: string | null,
     institutionNameLowerCase?: string | null,
     inviteDateTime: string,
-    location?: InterviewInviteLocation | null,
+    locationState?: InterviewInviteLocationState | null,
     medicalDegree?: MedicalDegree | null,
     owner?: string | null,
     program?:  {
@@ -3306,7 +3306,7 @@ export type UpdateInterviewInviteMutation = {
     institutionName?: string | null,
     institutionNameLowerCase?: string | null,
     inviteDateTime: string,
-    location?: InterviewInviteLocation | null,
+    locationState?: InterviewInviteLocationState | null,
     medicalDegree?: MedicalDegree | null,
     owner?: string | null,
     program?:  {
@@ -3710,7 +3710,7 @@ export type OnCreateInterviewInviteSubscription = {
     institutionName?: string | null,
     institutionNameLowerCase?: string | null,
     inviteDateTime: string,
-    location?: InterviewInviteLocation | null,
+    locationState?: InterviewInviteLocationState | null,
     medicalDegree?: MedicalDegree | null,
     owner?: string | null,
     program?:  {
@@ -4112,7 +4112,7 @@ export type OnDeleteInterviewInviteSubscription = {
     institutionName?: string | null,
     institutionNameLowerCase?: string | null,
     inviteDateTime: string,
-    location?: InterviewInviteLocation | null,
+    locationState?: InterviewInviteLocationState | null,
     medicalDegree?: MedicalDegree | null,
     owner?: string | null,
     program?:  {
@@ -4514,7 +4514,7 @@ export type OnUpdateInterviewInviteSubscription = {
     institutionName?: string | null,
     institutionNameLowerCase?: string | null,
     inviteDateTime: string,
-    location?: InterviewInviteLocation | null,
+    locationState?: InterviewInviteLocationState | null,
     medicalDegree?: MedicalDegree | null,
     owner?: string | null,
     program?:  {

@@ -101,11 +101,11 @@ export default function Programs() {
     setSearch(e.target.value);
   };
 
-  const { userProfile } = usePermissions();
+  const { user, userProfile } = usePermissions();
 
   const { data: followedPrograms, isLoading: followedProgramsLoading } =
     useQuery({
-      queryKey: ["followedPrograms"],
+      queryKey: ["followedPrograms", userProfile?.id],
       queryFn: async () => {
         const response =
           await client.models.UserProfileProgram.listUserProfileProgramByUserProfileId(
@@ -206,6 +206,7 @@ export default function Programs() {
           variant="secondary"
           className={`flex gap-2 h-auto py-2`}
           onClick={() => setFollowed((prev) => !prev)}
+          disabled={!user}
         >
           <Checkbox checked={followed}></Checkbox>
           <Label>Followed</Label>
@@ -242,28 +243,29 @@ export default function Programs() {
                       <div className={`font-semibold text-[14px]`}>
                         {program.name} at {program.institution.name}
                       </div>
-                      {programIds?.includes(program.id) ? (
-                        <Button
-                          className={`text-[11px] p-1 py-0 h-auto`}
-                          onClick={() => unfollowProgram(program.id)}
-                        >
-                          <Check size={14} className={`pr-1`} />
-                          Following
-                        </Button>
-                      ) : (
-                        <Button
-                          className={`text-[11px] p-1 py-0 h-auto`}
-                          variant={"secondary"}
-                          onClick={async () => {
-                            await followProgram(program.id);
-                            queryClient.invalidateQueries({
-                              queryKey: ["followedPrograms"],
-                            });
-                          }}
-                        >
-                          Follow
-                        </Button>
-                      )}
+                      {user &&
+                        (programIds?.includes(program.id) ? (
+                          <Button
+                            className={`text-[11px] p-1 py-0 h-auto`}
+                            onClick={() => unfollowProgram(program.id)}
+                          >
+                            <Check size={14} className={`pr-1`} />
+                            Following
+                          </Button>
+                        ) : (
+                          <Button
+                            className={`text-[11px] p-1 py-0 h-auto`}
+                            variant={"secondary"}
+                            onClick={async () => {
+                              await followProgram(program.id);
+                              queryClient.invalidateQueries({
+                                queryKey: ["followedPrograms"],
+                              });
+                            }}
+                          >
+                            Follow
+                          </Button>
+                        ))}
                     </div>
                     // </Link>
                   )

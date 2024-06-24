@@ -115,6 +115,8 @@ const schema = a
         away: a.boolean(),
         institutionName: a.string(),
         institutionNameLowerCase: a.string(),
+        userProfileId: a.id(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
       })
       .secondaryIndexes((index) => [
         // index("sortType").sortKeys([
@@ -163,8 +165,10 @@ const schema = a
       ]),
     UserProfile: a
       .model({
+        email: a.string(),
         programs: a.hasMany("UserProfileProgram", "userProfileId"),
         applications: a.hasMany("Application", "userProfileId"),
+        interviewInvites: a.hasMany("InterviewInvite", "userProfileId"),
         sortType: a.string().required(),
         isProfile: a.boolean(),
         step2CSPathway: a.enum([

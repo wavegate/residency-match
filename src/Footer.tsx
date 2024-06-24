@@ -19,8 +19,8 @@ export default function Footer() {
   return (
     <footer className={`bg-[#2B4C6D] fixed bottom-0 w-full z-10`}>
       <NavigationMenu className={`text-[11px] w-full max-w-full nav-menu py-1`}>
-        <NavigationMenuList className={`grid grid-cols-4 w-full`}>
-          <NavigationMenuItem>
+        <NavigationMenuList className={`grid grid-cols-3 w-full`}>
+          {/* <NavigationMenuItem>
             <Link
               to="/"
               className={`text-[#F9FEFF] flex flex-col items-center`}
@@ -28,12 +28,9 @@ export default function Footer() {
               <Home strokeWidth={1.5} />
               <div className={`text-center`}>Home</div>
             </Link>
-          </NavigationMenuItem>
+          </NavigationMenuItem> */}
           <NavigationMenuItem>
-            <Link
-              to="invites"
-              className={`text-zinc-200 flex flex-col items-center`}
-            >
+            <Link to="/" className={`text-zinc-200 flex flex-col items-center`}>
               <CalendarFold strokeWidth={1.5} />
               <div className={``}>IVs</div>
             </Link>

@@ -112,7 +112,8 @@ export const createInstitution = /* GraphQL */ `mutation CreateInstitution(
   APITypes.CreateInstitutionMutationVariables,
   APITypes.CreateInstitutionMutation
 >;
-export const createInterviewInvite = /* GraphQL */ `mutation CreateInterviewInvite(
+export const createInterviewInvite =
+  /* GraphQL */ `mutation CreateInterviewInvite(
   $condition: ModelInterviewInviteConditionInput
   $input: CreateInterviewInviteInput!
 ) {
@@ -133,7 +134,7 @@ export const createInterviewInvite = /* GraphQL */ `mutation CreateInterviewInvi
     institutionName
     institutionNameLowerCase
     inviteDateTime
-    location
+    locationState
     medicalDegree
     owner
     program {
@@ -164,9 +165,9 @@ export const createInterviewInvite = /* GraphQL */ `mutation CreateInterviewInvi
   }
 }
 ` as GeneratedMutation<
-  APITypes.CreateInterviewInviteMutationVariables,
-  APITypes.CreateInterviewInviteMutation
->;
+    APITypes.CreateInterviewInviteMutationVariables,
+    APITypes.CreateInterviewInviteMutation
+  >;
 export const createProgram = /* GraphQL */ `mutation CreateProgram(
   $condition: ModelProgramConditionInput
   $input: CreateProgramInput!
@@ -247,7 +248,8 @@ export const createSpecialty = /* GraphQL */ `mutation CreateSpecialty(
   APITypes.CreateSpecialtyMutationVariables,
   APITypes.CreateSpecialtyMutation
 >;
-export const createSpecialtyInstitution = /* GraphQL */ `mutation CreateSpecialtyInstitution(
+export const createSpecialtyInstitution =
+  /* GraphQL */ `mutation CreateSpecialtyInstitution(
   $condition: ModelSpecialtyInstitutionConditionInput
   $input: CreateSpecialtyInstitutionInput!
 ) {
@@ -281,9 +283,9 @@ export const createSpecialtyInstitution = /* GraphQL */ `mutation CreateSpecialt
   }
 }
 ` as GeneratedMutation<
-  APITypes.CreateSpecialtyInstitutionMutationVariables,
-  APITypes.CreateSpecialtyInstitutionMutation
->;
+    APITypes.CreateSpecialtyInstitutionMutationVariables,
+    APITypes.CreateSpecialtyInstitutionMutation
+  >;
 export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
   $condition: ModelUserProfileConditionInput
   $input: CreateUserProfileInput!
@@ -299,6 +301,7 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
     comlex1ScorePass
     comlex2Score
     createdAt
+    email
     ecfmgCertified
     goldHumanism
     graduateType
@@ -345,7 +348,8 @@ export const createUserProfile = /* GraphQL */ `mutation CreateUserProfile(
   APITypes.CreateUserProfileMutationVariables,
   APITypes.CreateUserProfileMutation
 >;
-export const createUserProfileProgram = /* GraphQL */ `mutation CreateUserProfileProgram(
+export const createUserProfileProgram =
+  /* GraphQL */ `mutation CreateUserProfileProgram(
   $condition: ModelUserProfileProgramConditionInput
   $input: CreateUserProfileProgramInput!
 ) {
@@ -418,9 +422,9 @@ export const createUserProfileProgram = /* GraphQL */ `mutation CreateUserProfil
   }
 }
 ` as GeneratedMutation<
-  APITypes.CreateUserProfileProgramMutationVariables,
-  APITypes.CreateUserProfileProgramMutation
->;
+    APITypes.CreateUserProfileProgramMutationVariables,
+    APITypes.CreateUserProfileProgramMutation
+  >;
 export const deleteApplication = /* GraphQL */ `mutation DeleteApplication(
   $condition: ModelApplicationConditionInput
   $input: DeleteApplicationInput!
@@ -525,7 +529,8 @@ export const deleteInstitution = /* GraphQL */ `mutation DeleteInstitution(
   APITypes.DeleteInstitutionMutationVariables,
   APITypes.DeleteInstitutionMutation
 >;
-export const deleteInterviewInvite = /* GraphQL */ `mutation DeleteInterviewInvite(
+export const deleteInterviewInvite =
+  /* GraphQL */ `mutation DeleteInterviewInvite(
   $condition: ModelInterviewInviteConditionInput
   $input: DeleteInterviewInviteInput!
 ) {
@@ -546,7 +551,7 @@ export const deleteInterviewInvite = /* GraphQL */ `mutation DeleteInterviewInvi
     institutionName
     institutionNameLowerCase
     inviteDateTime
-    location
+    locationState
     medicalDegree
     owner
     program {
@@ -577,9 +582,9 @@ export const deleteInterviewInvite = /* GraphQL */ `mutation DeleteInterviewInvi
   }
 }
 ` as GeneratedMutation<
-  APITypes.DeleteInterviewInviteMutationVariables,
-  APITypes.DeleteInterviewInviteMutation
->;
+    APITypes.DeleteInterviewInviteMutationVariables,
+    APITypes.DeleteInterviewInviteMutation
+  >;
 export const deleteProgram = /* GraphQL */ `mutation DeleteProgram(
   $condition: ModelProgramConditionInput
   $input: DeleteProgramInput!
@@ -660,7 +665,8 @@ export const deleteSpecialty = /* GraphQL */ `mutation DeleteSpecialty(
   APITypes.DeleteSpecialtyMutationVariables,
   APITypes.DeleteSpecialtyMutation
 >;
-export const deleteSpecialtyInstitution = /* GraphQL */ `mutation DeleteSpecialtyInstitution(
+export const deleteSpecialtyInstitution =
+  /* GraphQL */ `mutation DeleteSpecialtyInstitution(
   $condition: ModelSpecialtyInstitutionConditionInput
   $input: DeleteSpecialtyInstitutionInput!
 ) {
@@ -694,9 +700,9 @@ export const deleteSpecialtyInstitution = /* GraphQL */ `mutation DeleteSpecialt
   }
 }
 ` as GeneratedMutation<
-  APITypes.DeleteSpecialtyInstitutionMutationVariables,
-  APITypes.DeleteSpecialtyInstitutionMutation
->;
+    APITypes.DeleteSpecialtyInstitutionMutationVariables,
+    APITypes.DeleteSpecialtyInstitutionMutation
+  >;
 export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
   $condition: ModelUserProfileConditionInput
   $input: DeleteUserProfileInput!
@@ -758,7 +764,8 @@ export const deleteUserProfile = /* GraphQL */ `mutation DeleteUserProfile(
   APITypes.DeleteUserProfileMutationVariables,
   APITypes.DeleteUserProfileMutation
 >;
-export const deleteUserProfileProgram = /* GraphQL */ `mutation DeleteUserProfileProgram(
+export const deleteUserProfileProgram =
+  /* GraphQL */ `mutation DeleteUserProfileProgram(
   $condition: ModelUserProfileProgramConditionInput
   $input: DeleteUserProfileProgramInput!
 ) {
@@ -831,9 +838,9 @@ export const deleteUserProfileProgram = /* GraphQL */ `mutation DeleteUserProfil
   }
 }
 ` as GeneratedMutation<
-  APITypes.DeleteUserProfileProgramMutationVariables,
-  APITypes.DeleteUserProfileProgramMutation
->;
+    APITypes.DeleteUserProfileProgramMutationVariables,
+    APITypes.DeleteUserProfileProgramMutation
+  >;
 export const updateApplication = /* GraphQL */ `mutation UpdateApplication(
   $condition: ModelApplicationConditionInput
   $input: UpdateApplicationInput!
@@ -938,7 +945,8 @@ export const updateInstitution = /* GraphQL */ `mutation UpdateInstitution(
   APITypes.UpdateInstitutionMutationVariables,
   APITypes.UpdateInstitutionMutation
 >;
-export const updateInterviewInvite = /* GraphQL */ `mutation UpdateInterviewInvite(
+export const updateInterviewInvite =
+  /* GraphQL */ `mutation UpdateInterviewInvite(
   $condition: ModelInterviewInviteConditionInput
   $input: UpdateInterviewInviteInput!
 ) {
@@ -959,7 +967,7 @@ export const updateInterviewInvite = /* GraphQL */ `mutation UpdateInterviewInvi
     institutionName
     institutionNameLowerCase
     inviteDateTime
-    location
+    locationState
     medicalDegree
     owner
     program {
@@ -990,9 +998,9 @@ export const updateInterviewInvite = /* GraphQL */ `mutation UpdateInterviewInvi
   }
 }
 ` as GeneratedMutation<
-  APITypes.UpdateInterviewInviteMutationVariables,
-  APITypes.UpdateInterviewInviteMutation
->;
+    APITypes.UpdateInterviewInviteMutationVariables,
+    APITypes.UpdateInterviewInviteMutation
+  >;
 export const updateProgram = /* GraphQL */ `mutation UpdateProgram(
   $condition: ModelProgramConditionInput
   $input: UpdateProgramInput!
@@ -1073,7 +1081,8 @@ export const updateSpecialty = /* GraphQL */ `mutation UpdateSpecialty(
   APITypes.UpdateSpecialtyMutationVariables,
   APITypes.UpdateSpecialtyMutation
 >;
-export const updateSpecialtyInstitution = /* GraphQL */ `mutation UpdateSpecialtyInstitution(
+export const updateSpecialtyInstitution =
+  /* GraphQL */ `mutation UpdateSpecialtyInstitution(
   $condition: ModelSpecialtyInstitutionConditionInput
   $input: UpdateSpecialtyInstitutionInput!
 ) {
@@ -1107,9 +1116,9 @@ export const updateSpecialtyInstitution = /* GraphQL */ `mutation UpdateSpecialt
   }
 }
 ` as GeneratedMutation<
-  APITypes.UpdateSpecialtyInstitutionMutationVariables,
-  APITypes.UpdateSpecialtyInstitutionMutation
->;
+    APITypes.UpdateSpecialtyInstitutionMutationVariables,
+    APITypes.UpdateSpecialtyInstitutionMutation
+  >;
 export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
   $condition: ModelUserProfileConditionInput
   $input: UpdateUserProfileInput!
@@ -1171,7 +1180,8 @@ export const updateUserProfile = /* GraphQL */ `mutation UpdateUserProfile(
   APITypes.UpdateUserProfileMutationVariables,
   APITypes.UpdateUserProfileMutation
 >;
-export const updateUserProfileProgram = /* GraphQL */ `mutation UpdateUserProfileProgram(
+export const updateUserProfileProgram =
+  /* GraphQL */ `mutation UpdateUserProfileProgram(
   $condition: ModelUserProfileProgramConditionInput
   $input: UpdateUserProfileProgramInput!
 ) {
@@ -1244,6 +1254,6 @@ export const updateUserProfileProgram = /* GraphQL */ `mutation UpdateUserProfil
   }
 }
 ` as GeneratedMutation<
-  APITypes.UpdateUserProfileProgramMutationVariables,
-  APITypes.UpdateUserProfileProgramMutation
->;
+    APITypes.UpdateUserProfileProgramMutationVariables,
+    APITypes.UpdateUserProfileProgramMutation
+  >;

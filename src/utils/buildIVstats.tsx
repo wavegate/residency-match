@@ -1,5 +1,7 @@
+import { Link } from "react-router-dom";
+
 function buildIVstats(interviewInvite) {
-  const stuffArray = ["username"];
+  const stuffArray = [""];
   if (interviewInvite.location) {
     stuffArray.push(interviewInvite.location ? "IS" : "OOS");
   }
@@ -39,7 +41,18 @@ function buildIVstats(interviewInvite) {
   if (interviewInvite.away) {
     stuffArray.push(interviewInvite.away ? "+away" : "-away");
   }
-  return stuffArray.join(" · ");
+
+  return (
+    <span>
+      <Link
+        to={`profile/${interviewInvite.userProfile.id}`}
+        className={`underline`}
+      >
+        {interviewInvite.userProfile.username}
+      </Link>
+      {stuffArray.length > 1 ? stuffArray.join(" · ") : null}
+    </span>
+  );
 }
 
 export default buildIVstats;

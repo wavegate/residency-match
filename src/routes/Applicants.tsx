@@ -6,6 +6,7 @@ import UserProfileCreateForm from "../ui-components/UserProfileCreateForm-old";
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -42,14 +43,11 @@ export default function Applicants() {
             beginsWith: debouncedSearch ? debouncedSearch : undefined,
           },
         });
-      console.log(response);
       const responseData = response.data;
       if (!responseData) return null;
       return responseData;
     },
   });
-
-  console.log(userProfiles);
 
   const { permissions } = usePermissions();
 
@@ -128,12 +126,10 @@ export default function Applicants() {
     }
   };
 
-  const [imgSwitch, setImgSwitch] = useState(false);
-
   return (
     <div className={`flex flex-col gap-[6px] p-[12px]`}>
       <div className={`flex items-center gap-2`}>
-        <div className="flex items-center space-x-2">
+        {/* <div className="flex items-center space-x-2">
           <Switch
             id="imgSwitch"
             checked={imgSwitch}
@@ -144,7 +140,7 @@ export default function Applicants() {
           <Label htmlFor="imgSwitch" className={`whitespace-nowrap`}>
             {imgSwitch ? "Switch to US" : "Switch to IMG"}
           </Label>
-        </div>
+        </div> */}
         <Label>
           <Search strokeWidth={1} />
         </Label>
@@ -160,339 +156,389 @@ export default function Applicants() {
             <Loader className={`animate-spin`} />
           </div>
         ) : (
-          <Table className={`table`}>
-            <TableHeader>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Username
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>
-                      {profile.isProfile ? (
-                        <Link
-                          to={`/profile/${profile.owner}`}
-                          className={`font-semibold`}
-                        >
-                          {profile.username ?? "anonymous"}
-                        </Link>
-                      ) : (
-                        <div>{profile.username ?? "anonymous"}</div>
-                      )}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Class Ranking
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell className={`whitespace-nowrap`}>
-                      {convertClassRanking(profile.classRank) ?? "-"}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  School Ranking
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>
-                      {convertSchoolRanking(profile.schoolRanking) ?? "-"}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Graduate Type
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.graduateType ?? "-"}</TableCell>;
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Medical Degree
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.medicalDegree ?? "-"}</TableCell>;
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Other Degrees
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.otherDegrees ?? "-"}</TableCell>;
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>Step 1</TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>
-                      {profile.step1ScorePass
-                        ? "Pass"
-                        : profile.step1Score
-                        ? profile.step1Score
-                        : "-"}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>Step 2</TableHead>
-                {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.step2Score ?? "-"}</TableCell>;
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Step 2 CS Pathway
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell className={`whitespace-nowrap`}>
-                      {convertCSPathway(profile.step2CSPathway) ?? "-"}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>Step 3</TableHead>
-                {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.step3Score ?? "-"}</TableCell>;
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  COMLEX 1
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>
-                      {profile.comlex1ScorePass ? "Pass" : "-"}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  COMLEX 2
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.comlex2Score ?? "-"}</TableCell>;
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Red Flags
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>
-                      {profile.redFlags
-                        ? profile.redFlagsExplanation
+          <div>
+            <Table className={`table`}>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Username
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.isProfile ? (
+                          <Link
+                            to={`/profile/${profile.id}`}
+                            className={`font-semibold underline`}
+                          >
+                            {profile.username ?? "anonymous"}
+                          </Link>
+                        ) : (
+                          <div>{profile.username ?? "anonymous"}</div>
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Class Ranking
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell
+                        className={`whitespace-nowrap`}
+                        key={profile.id}
+                      >
+                        {convertClassRanking(profile.classRank) ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    School Ranking
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {convertSchoolRanking(profile.schoolRanking) ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Graduate Type
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.graduateType ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Medical Degree
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.medicalDegree ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Other Degrees
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.otherDegrees ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Step 1
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.step1ScorePass
+                          ? "Pass"
+                          : profile.step1Score
+                          ? profile.step1Score
+                          : "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Step 2
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.step2Score ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Step 2 CS Pathway
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell
+                        className={`whitespace-nowrap`}
+                        key={profile.id}
+                      >
+                        {convertCSPathway(profile.step2CSPathway) ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Step 3
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.step3Score ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    COMLEX 1
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.comlex1ScorePass ? "Pass" : "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    COMLEX 2
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.comlex2Score ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Red Flags
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.redFlags
                           ? profile.redFlagsExplanation
-                          : "Yes"
-                        : "-"}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  # Publications
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>{profile.numPublications ?? "-"}</TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  # Work Experiences
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>{profile.numWorkExperiences ?? "-"}</TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  # Volunteer Experiences
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>
-                      {profile.numVolunteerExperiences ?? "-"}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>AOA</TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>
-                      {profile.aoa === true
-                        ? "Yes"
-                        : profile.aoa === false
-                        ? "No"
-                        : "-"}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Sigma Sigma Phi
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>
-                      {" "}
-                      {profile.sigmaSigmaPhi === true
-                        ? "Yes"
-                        : profile.sigmaSigmaPhi === false
-                        ? "No"
-                        : "-"}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Gold Humanism
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>
-                      {" "}
-                      {profile.goldHumanism === true
-                        ? "Yes"
-                        : profile.goldHumanism === false
-                        ? "No"
-                        : "-"}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Visa Required
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>{profile.visaRequired ? "Yes" : "-"}</TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Months of USCE
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.monthsOfUSCE ?? "-"}</TableCell>;
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  ECFMG Certified
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.ecfmgCertified ?? "-"}</TableCell>;
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Year of Graduation
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>{profile.yearOfGraduation ?? "-"}</TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Locations
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>
-                      <Tooltip>
-                        <TooltipTrigger className={`truncate max-w-[100px]`}>
-                          {profile.location ?? "-"}
-                        </TooltipTrigger>{" "}
-                        <TooltipContent className={`max-w-[200px]`}>
-                          <p>{profile.location}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  # Applications
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>{profile.numApplications ?? "-"}</TableCell>
-                  );
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  # Interviews
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.numInterviews ?? "-"}</TableCell>;
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  # Rejected
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.numRejected ?? "-"}</TableCell>;
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  # Waitlisted
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return <TableCell>{profile.numWaitlisted ?? "-"}</TableCell>;
-                })}
-              </TableRow>
-              <TableRow>
-                <TableHead className={`sticky-col first-col`}>
-                  Percent Yield
-                </TableHead>
-                {userProfiles?.map((profile) => {
-                  return (
-                    <TableCell>
-                      {calculateYield(
-                        profile.numInterviews,
-                        profile.numApplications
-                      )}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            </TableBody>
-          </Table>
+                            ? profile.redFlagsExplanation
+                            : "Yes"
+                          : "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    # Publications
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.numPublications ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    # Work Experiences
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.numWorkExperiences ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    # Volunteer Experiences
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.numVolunteerExperiences ?? "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>AOA</TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {profile.aoa === true
+                          ? "Yes"
+                          : profile.aoa === false
+                          ? "No"
+                          : "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Sigma Sigma Phi
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {" "}
+                        {profile.sigmaSigmaPhi === true
+                          ? "Yes"
+                          : profile.sigmaSigmaPhi === false
+                          ? "No"
+                          : "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Gold Humanism
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell key={profile.id}>
+                        {" "}
+                        {profile.goldHumanism === true
+                          ? "Yes"
+                          : profile.goldHumanism === false
+                          ? "No"
+                          : "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Visa Required
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell>
+                        {profile.visaRequired ? "Yes" : "-"}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Months of USCE
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return <TableCell>{profile.monthsOfUSCE ?? "-"}</TableCell>;
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    ECFMG Certified
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell>{profile.ecfmgCertified ?? "-"}</TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Year of Graduation
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell>{profile.yearOfGraduation ?? "-"}</TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Locations
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell>
+                        <Tooltip>
+                          <TooltipTrigger className={`truncate max-w-[100px]`}>
+                            {profile.location ?? "-"}
+                          </TooltipTrigger>{" "}
+                          <TooltipContent className={`max-w-[200px]`}>
+                            <p>{profile.location}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    # Applications
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell>{profile.numApplications ?? "-"}</TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    # Interviews
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell>{profile.numInterviews ?? "-"}</TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    # Rejected
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return <TableCell>{profile.numRejected ?? "-"}</TableCell>;
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    # Waitlisted
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell>{profile.numWaitlisted ?? "-"}</TableCell>
+                    );
+                  })}
+                </TableRow>
+                <TableRow>
+                  <TableHead className={`sticky-col first-col`}>
+                    Percent Yield
+                  </TableHead>
+                  {userProfiles?.map((profile) => {
+                    return (
+                      <TableCell>
+                        {calculateYield(
+                          profile.numInterviews,
+                          profile.numApplications
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
 

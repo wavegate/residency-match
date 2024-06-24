@@ -1,8 +1,5 @@
-// import InterviewInviteCreateForm from "../ui-components/InterviewInviteCreateForm";
-// import { useEffect } from "react";
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-// import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useQuery } from "@tanstack/react-query";
 import { Loader, Plus, Search } from "lucide-react";
 import { Button } from "../components/ui/button";
@@ -11,7 +8,7 @@ import dayjs from "../utils/dayjs";
 import { Checkbox } from "../components/ui/checkbox";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDebounce } from "@uidotdev/usehooks";
 import usePermissions from "../hooks/usePermissions";
@@ -44,7 +41,6 @@ export default function InterviewInvites() {
               "inviteDateTime",
               "locationState",
               "medicalDegree",
-              "owner",
               "anonymous",
               "img",
               "visaRequired",
@@ -59,6 +55,8 @@ export default function InterviewInvites() {
               "geographicPreference",
               "signal",
               "anonymous",
+              "userProfileId",
+              "userProfile.*",
             ],
             sortDirection: "DESC",
           }
@@ -124,6 +122,8 @@ export default function InterviewInvites() {
               "geographicPreference",
               "signal",
               "anonymous",
+              "userProfileId",
+              "userProfile.*",
             ],
           }
         );

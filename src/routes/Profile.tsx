@@ -11,15 +11,35 @@ import { Link, useParams } from "react-router-dom";
 import { Card } from "../components/ui/card";
 import DataValue from "../components/DataValue";
 import { Loader } from "lucide-react";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "../components/ui/breadcrumb";
 
 const client = generateClient<Schema>();
 
 export default function Profile() {
   const params = useParams();
 
-  const { userProfile, loading } = usePermissions();
+  const { data: userProfile, isLoading: loading } = useQuery({
+    queryKey: ["userProfile", params.id],
+    queryFn: async () => {
+      const response = await client.models.UserProfile.get({
+        id: params.id,
+      });
+      const responseData = response.data;
+      if (!responseData) return null;
+      return responseData;
+    },
+    enabled: !!params.id,
+  });
 
-  console.log(userProfile);
+  const { user } = usePermissions();
+
   const schoolRanking = useMemo(() => {
     if (userProfile?.schoolRanking) {
       const map = {
@@ -60,18 +80,33 @@ export default function Profile() {
 
   return (
     <div className={`p-[12px] relative`}>
-      <Link
-        to={`/profile/edit/${userProfile?.id}`}
-        className={`fixed left-1/2 -translate-x-1/2 bottom-[55px]`}
-      >
-        <Button>Edit</Button>
-      </Link>
+      {user?.userId === userProfile?.ownerAccount && (
+        <Link
+          to={`/profile/edit/${userProfile?.id}`}
+          className={`fixed left-1/2 -translate-x-1/2 bottom-[55px]`}
+        >
+          <Button>Edit</Button>
+        </Link>
+      )}
       {loading ? (
         <div className={`left-1/2 -translate-x-1/2 absolute top-8`}>
           <Loader className={`animate-spin`} />
         </div>
       ) : (
         <div className={`flex flex-col gap-[12px]`}>
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <Link to="/applicants">
+                  <BreadcrumbLink>Applicants</BreadcrumbLink>
+                </Link>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{userProfile?.username}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           <div className={`flex flex-col items-center`}>
             <div className={`text-[18px] font-semibold`}>
               {userProfile?.username}
@@ -163,6 +198,10 @@ export default function Profile() {
                   ? "No"
                   : "-"
               }
+            />
+            <DataValue
+              label={"Months of US clinical experience"}
+              value={userProfile?.monthsOfUSCE || "-"}
             />
           </Card>
           <Card className={`grid grid-cols-2 p-2 gap-[12px]`}>

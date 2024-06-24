@@ -3,9 +3,11 @@ import { Stethoscope } from "lucide-react";
 import { Link } from "react-router-dom";
 import { signOut } from "aws-amplify/auth";
 import { Button } from "./components/ui/button";
+import usePermissions from "./hooks/usePermissions";
 
 export default function Header() {
-  const { user } = useAuthenticator((context) => [context.user]);
+  const { user, userProfile } = usePermissions();
+
   return (
     <>
       <header
@@ -19,7 +21,7 @@ export default function Header() {
         <div className={`flex gap-[6px]`}>
           {user === undefined && <Link to="auth">Sign in</Link>}
           {user && (
-            <Link to={`profile/${user.userId}`}>
+            <Link to={`profile/${userProfile?.id}`}>
               <Button className={`px-2 py-[2px] h-auto text-base`}>
                 Profile
               </Button>

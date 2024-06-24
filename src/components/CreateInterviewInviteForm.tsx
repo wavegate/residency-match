@@ -69,8 +69,6 @@ export default function CreateInterviewInviteForm() {
     resolver: zodResolver(formSchema),
   });
 
-  console.log(form.formState.errors);
-
   const { data: programs } = useQuery({
     queryKey: ["programs"],
     queryFn: async () => {
@@ -105,6 +103,7 @@ export default function CreateInterviewInviteForm() {
         sortType: "InterviewInvite",
         institutionName,
         institutionNameLowerCase,
+        userProfileId: userProfile?.id,
       },
       {
         authMode: "userPool",
@@ -113,7 +112,7 @@ export default function CreateInterviewInviteForm() {
     toast({
       title: "Interview Invitation Shared!",
     });
-    navigate("/invites");
+    navigate("/");
   }
 
   const handleImportProfile = () => {
@@ -126,8 +125,6 @@ export default function CreateInterviewInviteForm() {
       }
       const formValues = form.getValues();
       Object.assign(formValues, newProfile);
-      console.log(formValues);
-
       form.reset(formValues);
     }
   };
