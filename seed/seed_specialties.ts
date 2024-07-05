@@ -23,11 +23,9 @@ const specialtyInput = {
 // Function to create a new specialty
 const createNewSpecialty = async (input: typeof specialtyInput) => {
   try {
-    client.models.Specialty.create(input, {
+    return client.models.Specialty.create(input, {
       authMode: "userPool",
     });
-    console.log("success");
-    return "success";
   } catch (error) {
     console.error("Error creating specialty:", error);
     throw error;
@@ -58,7 +56,9 @@ const run = async () => {
         console.log("CSV file successfully processed");
         for (let i = 0; i < specialties.length; i++) {
           try {
-            await createNewSpecialty(specialties[i]);
+            const result = await createNewSpecialty(specialties[i]);
+            console.log(result);
+            console.log("success");
           } catch (e) {
             console.log(e);
             console.log(i + "error");

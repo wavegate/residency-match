@@ -14,11 +14,9 @@ const client = generateClient<Schema>();
 // Function to create a new specialty
 const createNewProgram = async (input) => {
   try {
-    client.models.Program.create(input, {
+    return client.models.Program.create(input, {
       authMode: "userPool",
     });
-    console.log("success");
-    return "success";
   } catch (error) {
     console.error("Error creating program:", error);
     throw error;
@@ -124,7 +122,7 @@ const run = async () => {
               continue;
             }
             if (institutionId && specialtyId) {
-              createNewProgram({
+              const result = await createNewProgram({
                 sortType: "Program",
                 name: programs[i].name,
                 nrmpProgramCode: programs[i].code,
@@ -134,6 +132,7 @@ const run = async () => {
                 institutionNameLowerCase: institutionName.toLowerCase(),
                 specialtyId,
               });
+              console.log(result);
             }
           } catch (e) {
             console.log(e);

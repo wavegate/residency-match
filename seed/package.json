@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "seed": "ts-node seed_institutions.ts",
+    "seed-institutions": "ts-node seed_institutions.ts",
     "seed-specialties": "ts-node seed_specialties.ts",
     "seed-programs": "ts-node seed_programs.ts",
     "seed-ivs": "ts-node seed_ivs.ts",
