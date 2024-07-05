@@ -8,7 +8,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "../components/ui/breadcrumb";
-import InterviewInviteCreateForm from "../ui-components/InterviewInviteCreateForm";
 
 export default function CreateInterviewInvite() {
   return (
@@ -16,7 +15,7 @@ export default function CreateInterviewInvite() {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <Link to="/invites">
+            <Link to="/interview-invites">
               <BreadcrumbLink>Interview Invites</BreadcrumbLink>
             </Link>
           </BreadcrumbItem>

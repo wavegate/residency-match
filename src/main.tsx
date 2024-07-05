@@ -23,6 +23,23 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import CreateProfile from "./routes/CreateProfile";
 import Program from "./routes/Program";
 import EditProfileForm from "./routes/EditProfileForm";
+import InterviewLogistics from "./routes/InterviewLogistics";
+import InterviewImpressions from "./routes/InterviewImpressions";
+import RankLists from "./routes/RankLists";
+import XvsY from "./routes/XvsY";
+import InterviewRejections from "./routes/InterviewRejections";
+import InterviewWithdrawals from "./routes/InterviewWithdrawals";
+import Chat from "./routes/Chat";
+import LOIDiscussion from "./routes/LOIDiscussion";
+import M4InternImpressions from "./routes/M4InternImpressions";
+import Cities from "./routes/Cities";
+import TierList from "./routes/TierList";
+import FellowshipMatch from "./routes/FellowshipMatch";
+import PSTP from "./routes/PSTP";
+import CreateInterviewLogistics from "./routes/CreateInterviewLogistics";
+import CreateRankList from "./routes/CreateRankList";
+import CreateComparison from "./routes/CreateComparison";
+import Comparison from "./routes/Comparison";
 
 Amplify.configure(outputs);
 
@@ -36,15 +53,27 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <Dashboard />,
+      },
+      {
+        path: "interview-invites",
         element: <InterviewInvites />,
       },
-      // {
-      //   path: "invites",
-      //   element: <InterviewInvites />,
-      // },
       {
         path: "create-interview-invite",
         element: <CreateInterviewInvite />,
+      },
+      {
+        path: "create-interview-logistics",
+        element: <CreateInterviewLogistics />,
+      },
+      {
+        path: "create-rank-list",
+        element: <CreateRankList />,
+      },
+      {
+        path: "create-comparison",
+        element: <CreateComparison />,
       },
       {
         path: "institutions/edit/:id",
@@ -81,6 +110,62 @@ const router = createBrowserRouter([
       {
         path: "auth",
         element: <Auth />,
+      },
+      {
+        path: "interview-logistics",
+        element: <InterviewLogistics />,
+      },
+      {
+        path: "interview-impressions",
+        element: <InterviewImpressions />,
+      },
+      {
+        path: "rank-lists",
+        element: <RankLists />,
+      },
+      {
+        path: "x-vs-y",
+        element: <XvsY />,
+      },
+      {
+        path: "x-vs-y/:id",
+        element: <Comparison />,
+      },
+      {
+        path: "interview-rejections",
+        element: <InterviewRejections />,
+      },
+      {
+        path: "interview-withdrawals",
+        element: <InterviewWithdrawals />,
+      },
+      {
+        path: "chat",
+        element: <Chat />,
+      },
+      {
+        path: "loi-discussion",
+        element: <LOIDiscussion />,
+      },
+      {
+        path: "m4-intern-impressions",
+        element: <M4InternImpressions />,
+      },
+      {
+        path: "cities",
+        element: <Cities />,
+      },
+      {
+        path: "tier-list",
+        element: <TierList />,
+      },
+      {
+        path: "fellowship-match",
+        element: <FellowshipMatch />,
+      },
+      {
+        path: "pstp",
+        element: <PSTP />,
       },
     ],
   },

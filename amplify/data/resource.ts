@@ -1,5 +1,13 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 import { postConfirmation } from "../auth/post-confirmation/resource";
+import InterviewInvite from "./models/InterviewInvite";
+import Program from "./models/Program";
+import RankList from "./models/RankList";
+import RankListProgram from "./models/RankListProgram";
+import Comment from "./models/Comment";
+import UserProfile from "./models/UserProfile";
+import Comparison from "./models/Comparison";
+import ProgramComparison from "./models/ProgramComparison";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -34,30 +42,7 @@ const schema = a
         allow.publicApiKey().to(["read"]),
         allow.group("Admin"),
       ]),
-    Program: a
-      .model({
-        userProfiles: a.hasMany("UserProfileProgram", "programId"),
-        sortType: a.string().required(),
-        name: a.string(),
-        nrmpProgramCode: a.string(),
-        type: a.ref("ProgramType"),
-        institutionId: a.id().required(),
-        institution: a.belongsTo("Institution", "institutionId"),
-        specialtyId: a.id().required(),
-        specialty: a.belongsTo("Specialty", "specialtyId"),
-        interviewInvites: a.hasMany("InterviewInvite", "programId"),
-        applications: a.hasMany("Application", "programId"),
-        institutionName: a.string(),
-        institutionNameLowerCase: a.string(),
-      })
-      .secondaryIndexes((index) => [
-        index("sortType").sortKeys(["institutionNameLowerCase"]),
-        index("nrmpProgramCode"),
-      ])
-      .authorization((allow) => [
-        allow.publicApiKey().to(["read"]),
-        allow.group("Admin"),
-      ]),
+    ...Program,
     Institution: a
       .model({
         sortType: a.string().required(),
@@ -87,51 +72,7 @@ const schema = a
         allow.publicApiKey().to(["read"]),
         allow.group("Admin"),
       ]),
-    InterviewInvite: a
-      .model({
-        applicationYear: a.integer(),
-        anonymous: a.boolean(),
-        graduateType: a.enum(["US", "IMG"]),
-        img: a.enum(["nonUSIMG", "USIMG"]),
-        sortType: a.string().required(),
-        inviteDateTime: a.datetime().required(),
-        geographicPreference: a.boolean(),
-        signal: a.boolean(),
-        locationState: a.enum(["IS", "OOS"]),
-        programId: a.id().required(),
-        program: a.belongsTo("Program", "programId"),
-        additionalComments: a.string(),
-        medicalDegree: a.ref("MedicalDegree"),
-        step1ScorePass: a.boolean(),
-        step1Score: a.integer(),
-        step2Score: a.string(),
-        comlex1ScorePass: a.boolean(),
-        comlex2Score: a.string(),
-        visaRequired: a.boolean(),
-        subI: a.boolean(),
-        home: a.boolean(),
-        yearOfGraduation: a.integer(),
-        greenCard: a.boolean(),
-        away: a.boolean(),
-        institutionName: a.string(),
-        institutionNameLowerCase: a.string(),
-        userProfileId: a.id(),
-        userProfile: a.belongsTo("UserProfile", "userProfileId"),
-      })
-      .secondaryIndexes((index) => [
-        // index("sortType").sortKeys([
-        //   "institutionNameLowerCase",
-        //   "inviteDateTime",
-        // ]),
-        index("sortType").sortKeys(["inviteDateTime"]),
-        index("programId"),
-      ])
-      .authorization((allow) => [
-        allow.publicApiKey().to(["read"]),
-        allow.group("Admin"),
-        allow.group("Moderator"),
-        allow.owner(),
-      ]),
+    ...InterviewInvite,
     customQuery: a
       .query()
       .returns(a.ref("InterviewInvite").array())
@@ -163,68 +104,7 @@ const schema = a
         allow.group("Admin"),
         allow.owner(),
       ]),
-    UserProfile: a
-      .model({
-        email: a.string(),
-        programs: a.hasMany("UserProfileProgram", "userProfileId"),
-        applications: a.hasMany("Application", "userProfileId"),
-        interviewInvites: a.hasMany("InterviewInvite", "userProfileId"),
-        sortType: a.string().required(),
-        isProfile: a.boolean(),
-        step2CSPathway: a.enum([
-          "pathway1",
-          "pathway2",
-          "pathway3",
-          "pathway4",
-          "pathway5",
-          "pathway6",
-        ]),
-        schoolRanking: a.enum(["top20", "top50", "mid", "low", "unranked"]),
-        yearOfGraduation: a.integer(),
-        monthsOfUSCE: a.integer(),
-        ecfmgCertified: a.boolean(),
-        visaRequired: a.boolean(),
-        location: a.string(),
-        graduateType: a.enum(["US", "IMG"]),
-        medicalDegree: a.ref("MedicalDegree"),
-        img: a.enum(["nonUSIMG", "USIMG"]),
-        username: a.string(),
-        step1ScorePass: a.boolean(),
-        step1Score: a.integer(),
-        step2Score: a.integer(),
-        step3Score: a.integer(),
-        comlex1ScorePass: a.boolean(),
-        comlex2Score: a.integer(),
-        redFlags: a.boolean(),
-        redFlagsExplanation: a.string(),
-        aoa: a.boolean(),
-        sigmaSigmaPhi: a.boolean(),
-        goldHumanism: a.boolean(),
-        numPublications: a.integer(),
-        numWorkExperiences: a.integer(),
-        numVolunteerExperiences: a.integer(),
-        classRank: a.enum(["top10", "top25", "top50", "bottom50"]),
-        otherDegrees: a.string(),
-        numApplications: a.integer(),
-        numInterviews: a.integer(),
-        numWithdrawn: a.integer(),
-        numRejected: a.integer(),
-        numWaitlisted: a.integer(),
-        applicationYear: a.integer(),
-        ownerAccount: a.string(),
-        isProfileString: a.string(),
-      })
-      .secondaryIndexes((index) => [
-        index("sortType").sortKeys(["username"]),
-        index("graduateType"),
-        index("ownerAccount").sortKeys(["isProfileString"]),
-      ])
-      .authorization((allow) => [
-        allow.ownerDefinedIn("ownerAccount"),
-        allow.owner(),
-        allow.publicApiKey().to(["read"]),
-        allow.group("Admin"),
-      ]),
+    ...UserProfile,
     UserProfileProgram: a
       .model({
         userProfileId: a.id().required(),
@@ -244,6 +124,218 @@ const schema = a
     //       dataSource: "osDataSource",
     //     })
     //   ),
+    InterviewImpression: a
+      .model({
+        sortType: a.string().required(),
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        programId: a.id().required(),
+        program: a.belongsTo("Program", "programId"),
+        positives: a.string(),
+        negatives: a.string(),
+        howInterviewDayAffectsRank: a.string(),
+        gift: a.string(),
+        timeGiftReceived: a.string(),
+        comments: a.hasMany("Comment", "interviewImpressionId"),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    LOIResponse: a
+      .model({
+        sortType: a.string().required(),
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        programId: a.id().required(),
+        program: a.belongsTo("Program", "programId"),
+        intent: a.boolean(),
+        sentTo: a.string(),
+        dateSent: a.date(),
+        response: a.boolean(),
+        responseTone: a.string(),
+        timeBetweenSentAndResponse: a.string(),
+        mentionedTopChoice: a.boolean(),
+        comments: a.hasMany("Comment", "LOIResponseId"),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    SecondLook: a
+      .model({
+        sortType: a.string().required(),
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        programId: a.id().required(),
+        program: a.belongsTo("Program", "programId"),
+        setting: a.string(),
+        date: a.date(),
+        bearingOnRank: a.string(),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    FameShame: a
+      .model({
+        sortType: a.string().required(),
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        programId: a.id().required(),
+        program: a.belongsTo("Program", "programId"),
+        fame: a.string(),
+        shame: a.string(),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    InterviewLogistics: a
+      .model({
+        sortType: a.string().required(),
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        programId: a.id().required(),
+        program: a.belongsTo("Program", "programId"),
+        schedulerPlatform: a.string(),
+        ivFormat: a.string(),
+        timeSlots: a.string(),
+        ivPlatform: a.string(),
+        openIVDates: a.date().array(),
+        interviewInviteId: a.id().required(),
+        interviewInvite: a.belongsTo("InterviewInvite", "interviewInviteId"),
+      })
+      .authorization((allow) => [
+        allow.publicApiKey().to(["read"]),
+        allow.group("Admin"),
+        allow.group("Moderator"),
+        allow.owner(),
+      ]),
+    UserProgramInput: a
+      .model({
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        content: a.string(),
+        userProgramInputType: a.enum([
+          "fame",
+          "shame",
+          "schedulerPlatform",
+          "ivFormat",
+          "timeSlots",
+          "ivPlatform",
+        ]),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    ...Comparison,
+    ...ProgramComparison,
+    InterviewRejection: a
+      .model({
+        programId: a.id().required(),
+        program: a.belongsTo("Program", "programId"),
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        date: a.datetime().required(),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    InterviewWithdrawal: a
+      .model({
+        programId: a.id().required(),
+        program: a.belongsTo("Program", "programId"),
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        date: a.datetime().required(),
+        reason: a.string(),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    M4InternImpression: a
+      .model({
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        programId: a.id().required(),
+        program: a.belongsTo("Program", "programId"),
+        positiveImpression: a.string(),
+        negativeImpression: a.string(),
+        comments: a.hasMany("Comment", "M4InternImpressionId"),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    Malignant: a
+      .model({
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        programId: a.id().required(),
+        program: a.belongsTo("Program", "programId"),
+        malignant: a.enum(["Yes", "No", "Maybe"]),
+        source: a.string(),
+        explanation: a.string(),
+        comments: a.hasMany("Comment", "malignantId"),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    ScheduleDetails: a
+      .model({
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        programId: a.id().required(),
+        program: a.belongsTo("Program", "programId"),
+        longOvernightCall: a.string(),
+        scheduleContinuity: a.string(),
+        locations: a.string(),
+        emr: a.string(),
+        startDateOrientation: a.date(),
+        visaInfo: a.string(),
+        union: a.string(),
+        midlevel: a.string(),
+        ancillary: a.string(),
+        teamRatios: a.string(),
+        internCap: a.string(),
+        admittingSystem: a.string(),
+        icuHours: a.string(),
+        nightFloat: a.string(),
+        sickCallSystem: a.string(),
+        moonlighting: a.string(),
+        stayUntilSignout: a.string(),
+        didactics: a.string(),
+        vacationHolidays: a.string(),
+        gym: a.string(),
+        food: a.string(),
+        salary: a.string(),
+        comments: a.hasMany("Comment", "scheduleDetailsId"),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    PostIVCommunication: a
+      .model({
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        programId: a.id().required(),
+        program: a.belongsTo("Program", "programId"),
+        communicationReceived: a.string(),
+        thankYouLetterPolicy: a.string(),
+        rankImpact: a.string(),
+        source: a.string(),
+        comments: a.hasMany("Comment", "postIVCommunicationId"),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    ...RankList,
+    ...RankListProgram,
+    State: a
+      .model({
+        name: a.string().required(),
+        cities: a.hasMany("City", "stateId"),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    City: a
+      .model({
+        name: a.string(),
+        stateId: a.id().required(),
+        state: a.belongsTo("State", "stateId"),
+        cityUserInputs: a.hasMany("CityUserInput", "cityId"),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    CityUserInput: a
+      .model({
+        cityId: a.id().required(),
+        city: a.belongsTo("City", "cityId"),
+        userProfileId: a.id().required(),
+        userProfile: a.belongsTo("UserProfile", "userProfileId"),
+        pros: a.string(),
+        cons: a.string(),
+        publicTransportation: a.string(),
+        weather: a.string(),
+        dating: a.string(),
+        lgbtq: a.string(),
+        diversity: a.string(),
+        safetyCrime: a.string(),
+      })
+      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    ...Comment,
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);
 

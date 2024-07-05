@@ -75,6 +75,7 @@ export default function CreateInterviewInviteForm() {
       const response =
         await client.models.Program.listProgramBySortTypeAndInstitutionNameLowerCase(
           { sortType: "Program" },
+          // @ts-expect-error
           { selectionSet: ["id", "institutionName", "name"] }
         );
       const responseData = response.data;
