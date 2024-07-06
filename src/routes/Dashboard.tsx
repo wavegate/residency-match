@@ -1,8 +1,14 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useOutletContext } from "react-router-dom";
 
 export default function Dashboard() {
+  const { setBreadcrumbs, setTitle } = useOutletContext();
+  useEffect(() => {
+    setBreadcrumbs([{ text: "Dashboard" }]);
+    setTitle("Dashboard");
+  }, []);
   return (
-    <div className={`p-[12px]`}>
+    <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
       <div className="grid grid-cols-2 gap-2">
         <Link to="/interview-invites" className={`underline`}>
           Interview Invites
@@ -53,6 +59,6 @@ export default function Dashboard() {
           PSTP
         </Link>
       </div>
-    </div>
+    </main>
   );
 }

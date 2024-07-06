@@ -16,7 +16,11 @@ const RankList = {
       hardestPartOfRanking: a.string(),
     })
     .secondaryIndexes((index) => [index("userProfileId")])
-    .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    .authorization((allow) => [
+      allow.publicApiKey().to(["read"]),
+      allow.group("Admin"),
+      allow.owner(),
+    ]),
 };
 
 export default RankList;

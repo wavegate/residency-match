@@ -3,7 +3,7 @@ import { a } from "@aws-amplify/backend";
 const UserProfile = {
   UserProfile: a
     .model({
-      email: a.string(),
+      userEmail: a.string(),
       programs: a.hasMany("UserProfileProgram", "userProfileId"),
       applications: a.hasMany("Application", "userProfileId"),
       interviewInvites: a.hasMany("InterviewInvite", "userProfileId"),
@@ -52,7 +52,7 @@ const UserProfile = {
       ownerAccount: a.string(),
       isProfileString: a.string(),
       comments: a.hasMany("Comment", "userProfileId"),
-      rankList: a.hasOne("RankList", "userProfileId"),
+      rankLists: a.hasMany("RankList", "userProfileId"),
       userProgramInput: a.hasMany("UserProgramInput", "userProfileId"),
       interviewRejections: a.hasMany("InterviewRejection", "userProfileId"),
       interviewWithdrawals: a.hasMany("InterviewWithdrawal", "userProfileId"),

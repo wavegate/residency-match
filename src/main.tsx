@@ -40,6 +40,8 @@ import CreateInterviewLogistics from "./routes/CreateInterviewLogistics";
 import CreateRankList from "./routes/CreateRankList";
 import CreateComparison from "./routes/CreateComparison";
 import Comparison from "./routes/Comparison";
+import CreateCityUserInput from "./routes/CreateCityUserInput";
+import InterviewInvites2 from "./routes/InterviewInvites2";
 
 Amplify.configure(outputs);
 
@@ -57,7 +59,7 @@ const router = createBrowserRouter([
       },
       {
         path: "interview-invites",
-        element: <InterviewInvites />,
+        element: <InterviewInvites2 />,
       },
       {
         path: "create-interview-invite",
@@ -74,6 +76,10 @@ const router = createBrowserRouter([
       {
         path: "create-comparison",
         element: <CreateComparison />,
+      },
+      {
+        path: "create-city-user-input",
+        element: <CreateCityUserInput />,
       },
       {
         path: "institutions/edit/:id",

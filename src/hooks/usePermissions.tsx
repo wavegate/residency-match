@@ -1,11 +1,9 @@
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useQuery } from "@tanstack/react-query";
-import { generateClient } from "aws-amplify/api";
+
 import { fetchAuthSession } from "aws-amplify/auth";
 import { useEffect, useState } from "react";
-import { Schema } from "../../amplify/data/resource";
-
-const client = generateClient<Schema>();
+import client from "../utils/client";
 
 export default function usePermissions() {
   const { user } = useAuthenticator((context) => [context.user]);
@@ -44,5 +42,6 @@ export default function usePermissions() {
         console.log(e);
       });
   }, [user]);
+
   return { permissions, user, userProfile, loading };
 }

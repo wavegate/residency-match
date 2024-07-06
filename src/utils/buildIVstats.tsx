@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
+import { Badge } from "../components/ui/badge";
 
 function buildIVstats(interviewInvite) {
-  const stuffArray = [""];
+  const stuffArray = [];
   if (interviewInvite.location) {
     stuffArray.push(interviewInvite.location ? "IS" : "OOS");
   }
@@ -24,34 +25,30 @@ function buildIVstats(interviewInvite) {
     stuffArray.push(interviewInvite.comlex2Score);
   }
   if (interviewInvite.geographicPreference) {
-    stuffArray.push(interviewInvite.geographicPreference ? "+geo" : "-geo");
+    stuffArray.push("Geographically Preferred");
   }
   if (interviewInvite.signal) {
-    stuffArray.push(interviewInvite.signal ? "+sig" : "-sig");
+    stuffArray.push("Signal");
   }
   if (interviewInvite.visaRequired) {
-    stuffArray.push(interviewInvite.visaRequired ? "+visa" : "-visa");
+    stuffArray.push("Visa Requried");
   }
   if (interviewInvite.subI) {
-    stuffArray.push(interviewInvite.subI ? "+subI" : "-subI");
+    stuffArray.push("Sub-internship");
   }
   if (interviewInvite.home) {
-    stuffArray.push(interviewInvite.home ? "+home" : "-home");
+    stuffArray.push("Home");
   }
   if (interviewInvite.away) {
-    stuffArray.push(interviewInvite.away ? "+away" : "-away");
+    stuffArray.push("Away");
   }
 
   return (
-    <span>
-      <Link
-        to={`profile/${interviewInvite.userProfile.id}`}
-        className={`underline`}
-      >
-        {interviewInvite.userProfile.username}
-      </Link>
-      {stuffArray.length > 1 ? stuffArray.join(" · ") : null}
-    </span>
+    <div className={`flex flex-wrap gap-1`}>
+      {stuffArray.map((stuff) => {
+        return <Badge variant="secondary">{stuff}</Badge>;
+      })}
+    </div>
   );
 }
 

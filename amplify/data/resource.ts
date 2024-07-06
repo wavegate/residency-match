@@ -8,6 +8,9 @@ import Comment from "./models/Comment";
 import UserProfile from "./models/UserProfile";
 import Comparison from "./models/Comparison";
 import ProgramComparison from "./models/ProgramComparison";
+import City from "./models/City";
+import State from "./models/State";
+import CityUserInput from "./models/CityUserInput";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -305,36 +308,9 @@ const schema = a
       .authorization((allow) => [allow.group("Admin"), allow.owner()]),
     ...RankList,
     ...RankListProgram,
-    State: a
-      .model({
-        name: a.string().required(),
-        cities: a.hasMany("City", "stateId"),
-      })
-      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
-    City: a
-      .model({
-        name: a.string(),
-        stateId: a.id().required(),
-        state: a.belongsTo("State", "stateId"),
-        cityUserInputs: a.hasMany("CityUserInput", "cityId"),
-      })
-      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
-    CityUserInput: a
-      .model({
-        cityId: a.id().required(),
-        city: a.belongsTo("City", "cityId"),
-        userProfileId: a.id().required(),
-        userProfile: a.belongsTo("UserProfile", "userProfileId"),
-        pros: a.string(),
-        cons: a.string(),
-        publicTransportation: a.string(),
-        weather: a.string(),
-        dating: a.string(),
-        lgbtq: a.string(),
-        diversity: a.string(),
-        safetyCrime: a.string(),
-      })
-      .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    ...State,
+    ...City,
+    ...CityUserInput,
     ...Comment,
   })
   .authorization((allow) => [allow.resource(postConfirmation)]);

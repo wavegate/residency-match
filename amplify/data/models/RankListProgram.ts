@@ -9,7 +9,11 @@ const RankListProgram = {
       program: a.belongsTo("Program", "programId"),
       rank: a.integer(),
     })
-    .authorization((allow) => [allow.group("Admin"), allow.owner()]),
+    .authorization((allow) => [
+      allow.publicApiKey().to(["read"]),
+      allow.group("Admin"),
+      allow.owner(),
+    ]),
 };
 
 export default RankListProgram;
