@@ -45,8 +45,12 @@ function buildIVstats(interviewInvite) {
 
   return (
     <div className={`flex flex-wrap gap-1`}>
-      {stuffArray.map((stuff) => {
-        return <Badge variant="secondary">{stuff}</Badge>;
+      {stuffArray.map((stuff, index) => {
+        return (
+          <Badge variant="secondary" key={index}>
+            {stuff}
+          </Badge>
+        );
       })}
     </div>
   );

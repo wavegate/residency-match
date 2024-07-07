@@ -17,6 +17,7 @@ const UserProfile = {
         "pathway5",
         "pathway6",
       ]),
+      greenCard: a.boolean(),
       schoolRanking: a.enum(["top20", "top50", "mid", "low", "unranked"]),
       yearOfGraduation: a.integer(),
       monthsOfUSCE: a.integer(),

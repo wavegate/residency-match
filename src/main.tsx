@@ -16,7 +16,7 @@ import Applicants from "./routes/Applicants";
 import Profile from "./routes/Profile";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import CreateInterviewInvite from "./routes/CreateInterviewInvite";
+import AddInterviewInvite2 from "./routes/AddInterviewInvite2";
 import EditInstitution from "./routes/EditInstitution";
 import Dashboard from "./routes/Dashboard";
 import { TooltipProvider } from "./components/ui/tooltip";
@@ -41,7 +41,7 @@ import CreateRankList from "./routes/CreateRankList";
 import CreateComparison from "./routes/CreateComparison";
 import Comparison from "./routes/Comparison";
 import CreateCityUserInput from "./routes/CreateCityUserInput";
-import InterviewInvites2 from "./routes/InterviewInvites2";
+import InterviewInvite from "./routes/InterviewInvite";
 
 Amplify.configure(outputs);
 
@@ -59,11 +59,19 @@ const router = createBrowserRouter([
       },
       {
         path: "interview-invites",
-        element: <InterviewInvites2 />,
+        element: <InterviewInvites />,
       },
       {
-        path: "create-interview-invite",
-        element: <CreateInterviewInvite />,
+        path: "interview-invites/:id",
+        element: <InterviewInvite />,
+      },
+      {
+        path: "interview-invites/:id/edit",
+        element: <AddInterviewInvite2 edit />,
+      },
+      {
+        path: "interview-invites/add",
+        element: <AddInterviewInvite2 />,
       },
       {
         path: "create-interview-logistics",

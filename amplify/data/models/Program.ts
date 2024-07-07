@@ -45,6 +45,7 @@ const Program = {
     .secondaryIndexes((index) => [
       index("sortType").sortKeys(["institutionNameLowerCase"]),
       index("nrmpProgramCode"),
+      index("institutionNameLowerCase"),
     ])
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),

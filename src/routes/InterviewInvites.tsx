@@ -1,262 +1,131 @@
-import type { Schema } from "../../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
-import { useQuery } from "@tanstack/react-query";
-import { Loader, Plus, Search } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import { Button } from "../components/ui/button";
-import buildIVstats from "../utils/buildIVstats";
-import dayjs from "../utils/dayjs";
-import { Checkbox } from "../components/ui/checkbox";
-import { Label } from "../components/ui/label";
-import { Input } from "../components/ui/input";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useDebounce } from "@uidotdev/usehooks";
-import usePermissions from "../hooks/usePermissions";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
+import { Link, useOutletContext } from "react-router-dom";
+import { useEffect } from "react";
+import { useState } from "react";
 
-const client = generateClient<Schema>();
+import SelectProgram from "../components/SelectProgram";
+import AllInterviewInvitesTable from "../components/AllInterviewInvitesTable";
+import ProgramInterviewInvitesTable from "../components/ProgramInterviewInvitesTable";
+import MyInterviewInvitesTable from "../components/MyInterviewInvitesTable";
+import FollowedInterviewInvitesTable from "../components/FollowedInterviewInvitesTable";
 
 export default function InterviewInvites() {
-  const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 1000);
+  const { setBreadcrumbs, setTitle } = useOutletContext();
 
-  const { data: interviewInvites, isLoading: loading } = useQuery({
-    queryKey: ["interviewInvites", debouncedSearch],
-    queryFn: async () => {
-      const response =
-        await client.models.InterviewInvite.listInterviewInviteBySortTypeAndInviteDateTime(
-          {
-            sortType: "InterviewInvite",
-          },
-          {
-            filter: {
-              institutionNameLowerCase: {
-                contains: debouncedSearch.toLowerCase(),
-              },
-            },
-            limit: 1000,
-            selectionSet: [
-              "id",
-              "program.*",
-              "program.institution.*",
-              "inviteDateTime",
-              "locationState",
-              "medicalDegree",
-              "anonymous",
-              "img",
-              "visaRequired",
-              "subI",
-              "home",
-              "away",
-              "comlex1ScorePass",
-              "comlex2Score",
-              "step1ScorePass",
-              "step1Score",
-              "step2Score",
-              "geographicPreference",
-              "signal",
-              "anonymous",
-              "userProfileId",
-              "userProfile.*",
-            ],
-            sortDirection: "DESC",
-          }
-        );
-      const responseData = response.data;
-      if (!responseData) return null;
-      return responseData;
-    },
-  });
+  useEffect(() => {
+    setBreadcrumbs([{ text: "Interview Invites" }]);
+    setTitle("Interview Invites");
+  }, []);
 
-  const { user, userProfile } = usePermissions();
+  const [programId, setProgramId] = useState("");
 
-  const { data: followedPrograms, isLoading: followedProgramsLoading } =
-    useQuery({
-      queryKey: ["followedPrograms"],
-      queryFn: async () => {
-        const response =
-          await client.models.UserProfileProgram.listUserProfileProgramByUserProfileId(
-            {
-              userProfileId: userProfile?.id,
-            },
-            { authMode: "userPool" }
-          );
+  const [tab, setTab] = useState("all");
+  const [programValue, setProgramValue] = useState("");
 
-        const responseData = response.data;
-        if (!responseData) return null;
-        return responseData;
-      },
-      enabled: !!userProfile?.id,
-    });
-
-  const {
-    data: followedInterviewInvites,
-    isLoading: followedInterviewInvitesLoading,
-  } = useQuery({
-    queryKey: ["interviewInvites", "followed"],
-    queryFn: async () => {
-      const promises = followedPrograms?.map((program) => {
-        return client.models.InterviewInvite.listInterviewInviteByProgramId(
-          {
-            programId: program.programId,
-          },
-          {
-            selectionSet: [
-              "id",
-              "program.*",
-              "program.institution.*",
-              "inviteDateTime",
-              "locationState",
-              "medicalDegree",
-              "owner",
-              "anonymous",
-              "img",
-              "visaRequired",
-              "subI",
-              "home",
-              "away",
-              "comlex1ScorePass",
-              "comlex2Score",
-              "step1ScorePass",
-              "step1Score",
-              "step2Score",
-              "geographicPreference",
-              "signal",
-              "anonymous",
-              "userProfileId",
-              "userProfile.*",
-            ],
-          }
-        );
-      });
-
-      const results = await Promise.all(promises);
-      const responseData = results.flatMap((item) => item.data);
-      const responseDataSorted = responseData.sort(
-        (x, y) =>
-          new Date(y.inviteDateTime).getTime() -
-          new Date(x.inviteDateTime).getTime()
-      );
-      if (!responseDataSorted) return null;
-      return responseDataSorted;
-    },
-    enabled: !!followedPrograms,
-  });
-
-  // const { data: ivUserProfiles } = useQuery({
-  //   queryKey: ["ivUserProfiles"],
-  //   queryFn: async () => {
-  //     const response = await client.models.UserProfile.list({
-  //       filter: {
-  //         or: interviewInvites?.map((invite) => {
-  //           return {
-  //             owner: { contains: invite.owner },
-  //           };
-  //         }),
-  //       },
-  //     });
-  //     const responseData = response.data;
-  //     if (!responseData) return null;
-  //     return responseData;
-  //   },
-  //   enabled: !!interviewInvites,
-  // });
-
-  // const profileMap = useMemo(() => {
-  //   if (ivUserProfiles) {
-  //   }
-  // }, [ivUserProfiles]);
-
-  // function deleteInterviewInvite(id: string) {
-  //   client.models.InterviewInvite.delete(
-  //     { id },
-  //     {
-  //       authMode: "userPool",
-  //     }
-  //   );
-  // }
-
-  const handleSearchChange = (e) => {
-    setSearch(e.target.value);
+  const handleChangeTab = (e: string) => {
+    setProgramValue("");
+    setProgramId("");
+    setTab(e);
   };
 
-  const [followed, setFollowed] = useState(false);
-
   return (
-    <>
-      {user && (
-        <Link to="/create-interview-invite">
-          <Button
-            className={`fixed left-1/2 -translate-x-1/2 bottom-[55px] rounded-full shadow-md z-10`}
-          >
-            <Plus />
-          </Button>
-        </Link>
-      )}
-      <div className={`flex items-center gap-2 px-[12px] pt-2`}>
-        <Button
-          disabled={!user}
-          variant="secondary"
-          className={`flex gap-2 h-auto py-2`}
-          onClick={() => setFollowed((prev) => !prev)}
-        >
-          <Checkbox checked={followed}></Checkbox>
-          <Label>Followed</Label>
-        </Button>
-        <Label>
-          <Search strokeWidth={1} />
-        </Label>
-        <Input
-          placeholder="Search by institution name"
-          value={search}
-          onChange={handleSearchChange}
-        ></Input>
-      </div>
-      <div className={`relative`}>
-        {(followed ? followedInterviewInvitesLoading : loading) ? (
-          <div className={`left-1/2 -translate-x-1/2 absolute top-8`}>
-            <Loader className={`animate-spin`} />
+    <main className="grid flex-1 items-start gap-4 p-2 sm:p-4 sm:px-6 sm:py-0 md:gap-8">
+      <Tabs value={tab} onValueChange={handleChangeTab}>
+        <div className="flex items-center gap-2">
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="my">My IVs</TabsTrigger>
+            <TabsTrigger value="followed">Followed</TabsTrigger>
+          </TabsList>
+          <div className="ml-auto flex items-center gap-2">
+            <SelectProgram
+              setTab={setTab}
+              programId={programId}
+              setProgramId={setProgramId}
+              programValue={programValue}
+              setProgramValue={setProgramValue}
+            />
+            <Link to="/interview-invites/add">
+              <Button size="sm" className="gap-1">
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  Add Interview Invite
+                </span>
+              </Button>
+            </Link>
           </div>
-        ) : (
-          <div className={`flex flex-col gap-[12px] flex-1`}>
-            <div className={`flex flex-col px-[12px]`}>
-              {(followed ? followedInterviewInvites : interviewInvites)?.map(
-                (interviewInvite) => (
-                  <div
-                    key={interviewInvite.id}
-                    className={`flex flex-col gap-[6px]`}
-                  >
-                    <div
-                      className={`grid grid-cols-[1fr_60px] border-b-[1px] py-[12px] border-gray-300 border-solid`}
-                    >
-                      <div>
-                        <div className={`font-semibold text-[14px]`}>
-                          {interviewInvite.program.name} at{" "}
-                          {interviewInvite.program.institution.name}
-                        </div>
-                        <div className={`text-[12px] text-slate-500`}>
-                          {buildIVstats(interviewInvite)}
-                        </div>
-                      </div>
-                      <div className={`flex flex-col text-right`}>
-                        <div className={`text-[14px]`}>
-                          {dayjs(interviewInvite.inviteDateTime)
-                            .utc()
-                            .format("MMM")}
-                        </div>
-                        <div
-                          className={`text-[30px] font-semibold leading-[30px]`}
-                        >
-                          {dayjs(interviewInvite.inviteDateTime).format("D")}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </>
+        </div>
+        <TabsContent value="all">
+          <Card x-chunk="dashboard-06-chunk-0">
+            <CardHeader className={`p-4 pb-0 sm:p-6`}>
+              <CardTitle>Interview Invites</CardTitle>
+              <CardDescription>
+                For more interview details, visit Interview Logistics and
+                Interview Impressions.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className={`p-4 sm:p-6`}>
+              <AllInterviewInvitesTable />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="my">
+          <Card x-chunk="dashboard-06-chunk-0">
+            <CardHeader className={`p-4 pb-0 sm:p-6`}>
+              <CardTitle>Interview Invites</CardTitle>
+              <CardDescription>
+                For more interview details, visit Interview Logistics and
+                Interview Impressions.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className={`p-4 sm:p-6`}>
+              <MyInterviewInvitesTable />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="followed">
+          <Card x-chunk="dashboard-06-chunk-0">
+            <CardHeader className={`p-4 pb-0 sm:p-6`}>
+              <CardTitle>Interview Invites</CardTitle>
+              <CardDescription>
+                For more interview details, visit Interview Logistics and
+                Interview Impressions.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className={`p-4 sm:p-6`}>
+              <FollowedInterviewInvitesTable />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="program">
+          <Card x-chunk="dashboard-06-chunk-0">
+            <CardHeader className={`p-4 pb-0 sm:p-6`}>
+              <CardTitle>Interview Invites</CardTitle>
+              <CardDescription>
+                For more interview details, visit Interview Logistics and
+                Interview Impressions.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className={`p-4 sm:p-6`}>
+              <ProgramInterviewInvitesTable programId={programId} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </main>
   );
 }

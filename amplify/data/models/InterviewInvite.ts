@@ -39,8 +39,8 @@ const InterviewInvite = {
       //   "inviteDateTime",
       // ]),
       index("sortType").sortKeys(["inviteDateTime"]),
-      index("userProfileId"),
-      index("programId"),
+      index("userProfileId").sortKeys(["inviteDateTime"]),
+      index("programId").sortKeys(["inviteDateTime"]),
     ])
     .authorization((allow) => [
       allow.publicApiKey().to(["read"]),

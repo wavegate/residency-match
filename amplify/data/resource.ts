@@ -11,6 +11,7 @@ import ProgramComparison from "./models/ProgramComparison";
 import City from "./models/City";
 import State from "./models/State";
 import CityUserInput from "./models/CityUserInput";
+import Institution from "./models/Institution";
 
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
@@ -46,23 +47,7 @@ const schema = a
         allow.group("Admin"),
       ]),
     ...Program,
-    Institution: a
-      .model({
-        sortType: a.string().required(),
-        name: a.string(),
-        institutionCode: a.string(),
-        programs: a.hasMany("Program", "institutionId"),
-        specialties: a.hasMany("SpecialtyInstitution", "institutionId"),
-        imageLink: a.string(),
-      })
-      .secondaryIndexes((index) => [
-        index("sortType").sortKeys(["name"]),
-        index("institutionCode"),
-      ])
-      .authorization((allow) => [
-        allow.publicApiKey().to(["read"]),
-        allow.group("Admin"),
-      ]),
+    ...Institution,
     SpecialtyInstitution: a
       .model({
         sortType: a.string().required(),

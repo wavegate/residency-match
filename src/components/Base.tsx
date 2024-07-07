@@ -64,11 +64,12 @@ import {
 } from "./ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { Link, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet } from "react-router-dom";
 import { useState } from "react";
 import usePermissions from "../hooks/usePermissions";
 import gravatar from "gravatar";
 import { signOut } from "aws-amplify/auth";
+import { Toaster } from "../components/ui/toaster";
 
 const routes = [
   {
@@ -166,26 +167,33 @@ export default function Base() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
+      <Toaster />
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-          <Link
-            href="#"
+          <NavLink
+            to="#"
             className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
           >
             <Stethoscope className="h-4 w-4 transition-all group-hover:scale-110" />
             <span className="sr-only">MediResi</span>
-          </Link>
-          {routes.map((route) => {
+          </NavLink>
+          {routes.map((route, index) => {
             return (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Link
+              <Tooltip key={index}>
+                <TooltipTrigger>
+                  <NavLink
                     to={route.link}
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                    className={({ isActive }) =>
+                      `flex h-9 w-9 items-center justify-center rounded-lg ${
+                        isActive
+                          ? "bg-accent text-accent-foreground"
+                          : "text-muted-foreground"
+                      } transition-colors hover:text-foreground md:h-8 md:w-8`
+                    }
                   >
                     {route.icon}
                     <span className="sr-only">{route.text}</span>
-                  </Link>
+                  </NavLink>
                 </TooltipTrigger>
                 <TooltipContent side="right">{route.text}</TooltipContent>
               </Tooltip>
@@ -196,7 +204,7 @@ export default function Base() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                to="#"
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <Settings className="h-5 w-5" />
@@ -225,11 +233,12 @@ export default function Base() {
                   <Stethoscope className="h-5 w-5 transition-all group-hover:scale-110" />
                   <span className="sr-only">MediResi</span>
                 </Link>
-                {routes.map((route) => {
+                {routes.map((route, index) => {
                   return (
                     <Link
                       to={route.link}
                       className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+                      key={index}
                     >
                       {route.icon}
                       {route.text}
@@ -241,17 +250,22 @@ export default function Base() {
           </Sheet>
           <Breadcrumb className="hidden md:flex">
             <BreadcrumbList>
-              {breadcrumbs.map((breadcrumb) => {
+              {breadcrumbs.map((breadcrumb, index) => {
                 return (
-                  <BreadcrumbItem>
-                    {breadcrumb.link !== undefined ? (
-                      <BreadcrumbLink asChild>
-                        <Link href={breadcrumb.link}>{breadcrumb.text}</Link>
-                      </BreadcrumbLink>
-                    ) : (
-                      <BreadcrumbPage>{breadcrumb.text}</BreadcrumbPage>
+                  <>
+                    <BreadcrumbItem key={index}>
+                      {breadcrumb.link !== undefined ? (
+                        <BreadcrumbLink asChild>
+                          <Link to={breadcrumb.link}>{breadcrumb.text}</Link>
+                        </BreadcrumbLink>
+                      ) : (
+                        <BreadcrumbPage>{breadcrumb.text}</BreadcrumbPage>
+                      )}
+                    </BreadcrumbItem>
+                    {index !== breadcrumbs.length - 1 && (
+                      <BreadcrumbSeparator />
                     )}
-                  </BreadcrumbItem>
+                  </>
                 );
               })}
             </BreadcrumbList>

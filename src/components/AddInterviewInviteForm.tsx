@@ -64,7 +64,7 @@ const formSchema = z.object({
 
 const client = generateClient<Schema>();
 
-export default function CreateInterviewInviteForm() {
+export default function AddInterviewInviteForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -113,7 +113,7 @@ export default function CreateInterviewInviteForm() {
     toast({
       title: "Interview Invitation Shared!",
     });
-    navigate("/");
+    navigate("/interview-invites");
   }
 
   const handleImportProfile = () => {
