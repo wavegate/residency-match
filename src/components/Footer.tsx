@@ -3,7 +3,7 @@ import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
-} from "./components/ui/navigation-menu";
+} from "./ui/navigation-menu";
 import {
   CalendarFold,
   CircleUserRound,
@@ -11,13 +11,13 @@ import {
   Hospital,
   Stethoscope,
 } from "lucide-react";
-import usePermissions from "./hooks/usePermissions";
-import "./styles/Footer.css";
+import usePermissions from "../hooks/usePermissions";
+import "../styles/Footer.css";
 
 export default function Footer() {
   const { permissions } = usePermissions();
   return (
-    <footer className={`bg-[#2B4C6D] fixed bottom-0 w-full z-10`}>
+    <footer className={`bg-[#2B4C6D] fixed bottom-0 w-full z-10 sm:hidden`}>
       <NavigationMenu className={`text-[11px] w-full max-w-full nav-menu py-1`}>
         <NavigationMenuList className={`grid grid-cols-4 w-full`}>
           <NavigationMenuItem>

@@ -11,14 +11,13 @@ import {
 import { useEffect } from "react";
 
 export default function AddInterviewInvite() {
-  const { setBreadcrumbs, setTitle } = useOutletContext();
+  const { setBreadcrumbs } = useOutletContext();
 
   useEffect(() => {
     setBreadcrumbs([
       { text: "Interview Invites", link: "/interview-invites" },
       { text: "Add Interview Invite" },
     ]);
-    setTitle("Add Interview Invite");
   }, []);
 
   return (

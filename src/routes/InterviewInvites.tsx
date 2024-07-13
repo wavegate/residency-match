@@ -24,11 +24,10 @@ import MyInterviewInvitesTable from "../components/MyInterviewInvitesTable";
 import FollowedInterviewInvitesTable from "../components/FollowedInterviewInvitesTable";
 
 export default function InterviewInvites() {
-  const { setBreadcrumbs, setTitle } = useOutletContext();
+  const { setBreadcrumbs } = useOutletContext();
 
   useEffect(() => {
     setBreadcrumbs([{ text: "Interview Invites" }]);
-    setTitle("Interview Invites");
   }, []);
 
   const [programId, setProgramId] = useState("");
@@ -48,7 +47,7 @@ export default function InterviewInvites() {
         <div className="flex items-center gap-2">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="my">My IVs</TabsTrigger>
+            <TabsTrigger value="me">By Me</TabsTrigger>
             <TabsTrigger value="followed">Followed</TabsTrigger>
           </TabsList>
           <div className="ml-auto flex items-center gap-2">
@@ -78,12 +77,12 @@ export default function InterviewInvites() {
                 Interview Impressions.
               </CardDescription>
             </CardHeader>
-            <CardContent className={`p-4 sm:p-6`}>
+            <CardContent className={`p-2 sm:p-6`}>
               <AllInterviewInvitesTable />
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="my">
+        <TabsContent value="me">
           <Card x-chunk="dashboard-06-chunk-0">
             <CardHeader className={`p-4 pb-0 sm:p-6`}>
               <CardTitle>Interview Invites</CardTitle>

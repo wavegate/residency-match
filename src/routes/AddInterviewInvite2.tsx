@@ -30,8 +30,8 @@ import {
 import { cn } from "../lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "../components/ui/calendar";
-import { CalendarIcon, ChevronLeft } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { CalendarIcon, ChevronLeft, Pencil } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "../components/ui/use-toast";
 import {
   Card,
@@ -47,6 +47,7 @@ import SelectProgram from "../components/SelectProgram";
 import client from "../utils/client";
 import { useParams } from "react-router-dom";
 import preprocessData from "../utils/preprocessData";
+import Delete from "@/components/Delete";
 
 const formSchema = z.object({
   anonymous: z.boolean().optional(),
@@ -72,17 +73,24 @@ const formSchema = z.object({
   medicalDegree: z.string().optional(),
 });
 
-export default function AddInterviewInvite({ edit }) {
-  const { setBreadcrumbs, setTitle } = useOutletContext();
+export default function AddInterviewInvite({ action }) {
+  const { setBreadcrumbs } = useOutletContext();
   const [programValue, setProgramValue] = useState("");
   const params = useParams();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setBreadcrumbs([
       { text: "Interview Invites", link: "/interview-invites" },
-      { text: edit ? "Edit Interview Invite" : "Add Interview Invite" },
+      {
+        text:
+          action === "edit"
+            ? "Edit Interview Invite"
+            : action === "add"
+            ? "Add Interview Invite"
+            : "View Interview Invite",
+      },
     ]);
-    setTitle("Add Interview Invite");
   }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -92,12 +100,11 @@ export default function AddInterviewInvite({ edit }) {
   const { data: programs } = useQuery({
     queryKey: ["programs"],
     queryFn: async () => {
-      const response =
-        await client.models.Program.listProgramBySortTypeAndInstitutionNameLowerCase(
-          { sortType: "Program" },
-          // @ts-expect-error
-          { selectionSet: ["id", "institutionName", "name"] }
-        );
+      const response = await client.models.Program.listProgramBySortTypeAndInstitutionNameLowerCase(
+        { sortType: "Program" },
+        // @ts-expect-error
+        { selectionSet: ["id", "institutionName", "name"] }
+      );
       const responseData = response.data;
       if (!responseData) return null;
       return responseData;
@@ -144,7 +151,6 @@ export default function AddInterviewInvite({ edit }) {
         console.log(e);
       }
     },
-    enabled: !!edit,
   });
 
   useEffect(() => {
@@ -156,8 +162,6 @@ export default function AddInterviewInvite({ edit }) {
     }
   }, [interviewInvite]);
 
-  console.log(interviewInvite);
-
   const { userProfile } = usePermissions();
 
   const { toast } = useToast();
@@ -165,11 +169,8 @@ export default function AddInterviewInvite({ edit }) {
   const navigate = useNavigate();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    const institutionName = programs?.find(
-      (x) => x.id === values.programId
-    )?.institutionName;
+    const institutionName = programs?.find((x) => x.id === values.programId)
+      ?.institutionName;
     const institutionNameLowerCase = institutionName?.toLowerCase();
     await client.models.InterviewInvite.create(
       {
@@ -203,11 +204,37 @@ export default function AddInterviewInvite({ edit }) {
     }
   };
 
+  const deleteById = async (id) => {
+    setDeleteLoading(true);
+    const response = await client.models.InterviewInvite.delete(
+      { id },
+      { authMode: "userPool" }
+    );
+    if (response.data) {
+      toast({ title: "Interview invite deleted." });
+      queryClient.invalidateQueries({
+        queryKey: ["interviewInvites"],
+      });
+      setOpen(false);
+      setDeleteLoading(false);
+      navigate("/interview-invites");
+    }
+  };
+
+  const [open, setOpen] = useState<boolean>(false);
+  const [deleteRecord, setDeleteRecord] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  function handleDelete(invite) {
+    setOpen(true);
+    setDeleteRecord(invite);
+  }
+
   return (
-    <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+    <main className="grid flex-1 items-start gap-4 p-2 sm:p-4 sm:px-6 sm:py-0 md:gap-8">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+          <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-2 sm:gap-4">
             <div className="flex items-center gap-4">
               <Link to="/interview-invites">
                 <Button variant="outline" size="icon" className="h-7 w-7">
@@ -216,14 +243,26 @@ export default function AddInterviewInvite({ edit }) {
                 </Button>
               </Link>
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                {edit ? "Edit" : "Add"} Interview Invite
+                {action === "edit" ? "Edit" : action === "add" ? "Add" : "View"}{" "}
+                Interview Invite
               </h1>
+              {action === "view" &&
+                userProfile?.id === interviewInvite?.userProfile?.id && (
+                  <Button onClick={() => navigate("edit")} className={`h-auto`}>
+                    <Pencil size={16} />
+                  </Button>
+                )}
               {/* <Badge variant="outline" className="ml-auto sm:ml-0">
             In stock
           </Badge> */}
               <div className="hidden items-center gap-2 md:ml-auto md:flex">
                 <Link to="/interview-invites">
-                  <Button variant="outline" size="sm">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    type="button"
+                    onClick={() => navigate("/interview-invites")}
+                  >
                     Discard
                   </Button>
                 </Link>
@@ -233,12 +272,16 @@ export default function AddInterviewInvite({ edit }) {
               </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-              <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+            <div className="grid gap-2 sm:gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+              <div className="grid auto-rows-max items-start gap-2 sm:gap-4 lg:col-span-2 lg:gap-8">
                 <Card x-chunk="dashboard-07-chunk-0">
                   <CardHeader>
                     <CardTitle>Invite Details</CardTitle>
-                    <CardDescription>This section is required.</CardDescription>
+                    {action !== "view" && (
+                      <CardDescription>
+                        This section is required.
+                      </CardDescription>
+                    )}
                   </CardHeader>
                   <CardContent>
                     <div className="grid gap-6">
@@ -248,9 +291,13 @@ export default function AddInterviewInvite({ edit }) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Program</FormLabel>
-                            <div>
-                              <FormControl>
-                                {/* <Select
+                            {action === "view" ? (
+                              <FormDescription>{programValue}</FormDescription>
+                            ) : (
+                              <>
+                                <div>
+                                  <FormControl>
+                                    {/* <Select
                                 onValueChange={field.onChange}
                                 value={field.value}
                               >
@@ -273,18 +320,20 @@ export default function AddInterviewInvite({ edit }) {
                                   })}
                                 </SelectContent>
                               </Select> */}
-                                <SelectProgram
-                                  programId={field.value}
-                                  setProgramId={field.onChange}
-                                  programValue={programValue}
-                                  setProgramValue={setProgramValue}
-                                />
-                              </FormControl>
-                            </div>
-                            <FormDescription>
-                              For which program were you invited to interview
-                              for?
-                            </FormDescription>
+                                    <SelectProgram
+                                      programId={field.value}
+                                      setProgramId={field.onChange}
+                                      programValue={programValue}
+                                      setProgramValue={setProgramValue}
+                                    />
+                                  </FormControl>
+                                </div>
+                                <FormDescription>
+                                  For which program were you invited to
+                                  interview for?
+                                </FormDescription>
+                              </>
+                            )}
                             <FormMessage />
                           </FormItem>
                         )}
@@ -296,40 +345,49 @@ export default function AddInterviewInvite({ edit }) {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Invitation Date</FormLabel>
-                            <div>
-                              <FormControl>
-                                <Popover>
-                                  <PopoverTrigger asChild>
-                                    <Button
-                                      variant={"outline"}
-                                      className={cn(
-                                        "w-[280px] justify-start text-left font-normal",
-                                        !field.value && "text-muted-foreground"
-                                      )}
-                                    >
-                                      <CalendarIcon className="mr-2 h-4 w-4" />
-                                      {field.value ? (
-                                        format(field.value, "PPP")
-                                      ) : (
-                                        <span>Pick a date</span>
-                                      )}
-                                    </Button>
-                                  </PopoverTrigger>
-                                  <PopoverContent className="w-auto p-0">
-                                    <Calendar
-                                      mode="single"
-                                      selected={field.value}
-                                      onSelect={field.onChange}
-                                      initialFocus
-                                    />
-                                  </PopoverContent>
-                                </Popover>
-                              </FormControl>
-                            </div>
-                            <FormDescription>
-                              The date when you received the interview invite,
-                              not the date of the interview.
-                            </FormDescription>
+                            {action === "view" ? (
+                              <FormDescription>
+                                {field.value && format(field.value, "PPP")}
+                              </FormDescription>
+                            ) : (
+                              <>
+                                <div>
+                                  <FormControl>
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          variant={"outline"}
+                                          className={cn(
+                                            "w-[280px] justify-start text-left font-normal",
+                                            !field.value &&
+                                              "text-muted-foreground"
+                                          )}
+                                        >
+                                          <CalendarIcon className="mr-2 h-4 w-4" />
+                                          {field.value ? (
+                                            format(field.value, "PPP")
+                                          ) : (
+                                            <span>Pick a date</span>
+                                          )}
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent className="w-auto p-0">
+                                        <Calendar
+                                          mode="single"
+                                          selected={field.value}
+                                          onSelect={field.onChange}
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  </FormControl>
+                                </div>
+                                <FormDescription>
+                                  The date when you received the interview
+                                  invite, not the date of the interview.
+                                </FormDescription>
+                              </>
+                            )}
                             <FormMessage />
                           </FormItem>
                         )}
@@ -340,35 +398,50 @@ export default function AddInterviewInvite({ edit }) {
                 <Card x-chunk="dashboard-07-chunk-1">
                   <CardHeader>
                     <CardTitle>Additional Information</CardTitle>
-                    <CardDescription>
-                      This section is optional, but provides additional context
-                      about your invite.
-                    </CardDescription>
+                    {action !== "view" && (
+                      <CardDescription>
+                        This section is optional, but provides additional
+                        context about your invite.
+                      </CardDescription>
+                    )}
                   </CardHeader>
                   <CardContent>
                     <div className={`grid gap-6`}>
-                      <Button
-                        type="button"
-                        onClick={() => handleImportProfile()}
-                      >
-                        Import My Profile
-                      </Button>
+                      {action !== "view" && (
+                        <Button
+                          type="button"
+                          onClick={() => handleImportProfile()}
+                        >
+                          Import My Profile
+                        </Button>
+                      )}
                       <FormField
                         control={form.control}
                         name="signal"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>
-                              Did you signal to the program?
-                            </FormLabel>
-                            <FormControl>
-                              <Switch
-                                className={`block`}
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <FormMessage />
+                            {action === "view" ? (
+                              <>
+                                <FormLabel>Signaled</FormLabel>
+                                <FormDescription>
+                                  {field.value || "-"}
+                                </FormDescription>
+                              </>
+                            ) : (
+                              <>
+                                <FormLabel>
+                                  Did you signal to the program?
+                                </FormLabel>
+                                <FormControl>
+                                  <Switch
+                                    className={`block`}
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </>
+                            )}
                           </FormItem>
                         )}
                       />
@@ -399,26 +472,35 @@ export default function AddInterviewInvite({ edit }) {
                         name="graduateType"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>
-                              Are you a US medical graduate or IMG?
-                            </FormLabel>
-                            <FormControl>
-                              <Select
-                                onValueChange={field.onChange}
-                                value={field.value}
-                              >
+                            {action === "view" ? (
+                              <>
+                                <FormLabel>Graduate Type</FormLabel>
+                                <FormDescription>{field.value}</FormDescription>
+                              </>
+                            ) : (
+                              <>
+                                <FormLabel>
+                                  Are you a US medical graduate or IMG?
+                                </FormLabel>
                                 <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue />
-                                  </SelectTrigger>
+                                  <Select
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      <SelectItem value={"US"}>US</SelectItem>
+                                      <SelectItem value={"IMG"}>IMG</SelectItem>
+                                    </SelectContent>
+                                  </Select>
                                 </FormControl>
-                                <SelectContent>
-                                  <SelectItem value={"US"}>US</SelectItem>
-                                  <SelectItem value={"IMG"}>IMG</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                            <FormMessage />
+                                <FormMessage />
+                              </>
+                            )}
                           </FormItem>
                         )}
                       />
@@ -746,7 +828,7 @@ export default function AddInterviewInvite({ edit }) {
                     </div>
                   </CardContent>
                 </Card>
-                {edit && (
+                {action === "edit" && (
                   <Card x-chunk="dashboard-07-chunk-5">
                     <CardHeader>
                       <CardTitle>Delete Invite</CardTitle>
@@ -755,8 +837,12 @@ export default function AddInterviewInvite({ edit }) {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div></div>
-                      <Button size="sm" variant="destructive">
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        type="button"
+                        onClick={() => handleDelete(interviewInvite)}
+                      >
                         Delete Invite
                       </Button>
                     </CardContent>
@@ -764,8 +850,13 @@ export default function AddInterviewInvite({ edit }) {
                 )}
               </div>
             </div>
-            <div className="flex items-center justify-center gap-2 md:hidden mt-4 md:mt-0">
-              <Button variant="outline" size="sm">
+            <div className="flex items-center justify-center gap-2 mb-4 md:hidden mt-4 md:mt-0">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/interview-invites")}
+                type="button"
+              >
                 Discard
               </Button>
               <Button size="sm">Save Invite</Button>
@@ -773,6 +864,13 @@ export default function AddInterviewInvite({ edit }) {
           </div>
         </form>
       </Form>
+      <Delete
+        open={open}
+        setOpen={setOpen}
+        record={deleteRecord}
+        handleSubmit={() => deleteById(deleteRecord.id)}
+        loading={deleteLoading}
+      />
     </main>
   );
 }

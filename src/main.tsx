@@ -63,15 +63,15 @@ const router = createBrowserRouter([
       },
       {
         path: "interview-invites/:id",
-        element: <InterviewInvite />,
+        element: <AddInterviewInvite2 action="view" />,
       },
       {
         path: "interview-invites/:id/edit",
-        element: <AddInterviewInvite2 edit />,
+        element: <AddInterviewInvite2 action="edit" />,
       },
       {
         path: "interview-invites/add",
-        element: <AddInterviewInvite2 />,
+        element: <AddInterviewInvite2 action="add" />,
       },
       {
         path: "create-interview-logistics",

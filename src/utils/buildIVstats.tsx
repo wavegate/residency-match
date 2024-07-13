@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-import { Badge } from "../components/ui/badge";
 
-function buildIVstats(interviewInvite) {
-  const stuffArray = [];
+export default function buildIVstats(interviewInvite) {
+  const stuffArray = [""];
   if (interviewInvite.location) {
     stuffArray.push(interviewInvite.location ? "IS" : "OOS");
   }
@@ -25,35 +24,33 @@ function buildIVstats(interviewInvite) {
     stuffArray.push(interviewInvite.comlex2Score);
   }
   if (interviewInvite.geographicPreference) {
-    stuffArray.push("Geographically Preferred");
+    stuffArray.push(interviewInvite.geographicPreference ? "+geo" : "-geo");
   }
   if (interviewInvite.signal) {
-    stuffArray.push("Signal");
+    stuffArray.push(interviewInvite.signal ? "+sig" : "-sig");
   }
   if (interviewInvite.visaRequired) {
-    stuffArray.push("Visa Requried");
+    stuffArray.push(interviewInvite.visaRequired ? "+visa" : "-visa");
   }
   if (interviewInvite.subI) {
-    stuffArray.push("Sub-internship");
+    stuffArray.push(interviewInvite.subI ? "+subI" : "-subI");
   }
   if (interviewInvite.home) {
-    stuffArray.push("Home");
+    stuffArray.push(interviewInvite.home ? "+home" : "-home");
   }
   if (interviewInvite.away) {
-    stuffArray.push("Away");
+    stuffArray.push(interviewInvite.away ? "+away" : "-away");
   }
 
   return (
-    <div className={`flex flex-wrap gap-1`}>
-      {stuffArray.map((stuff, index) => {
-        return (
-          <Badge variant="secondary" key={index}>
-            {stuff}
-          </Badge>
-        );
-      })}
-    </div>
+    <span>
+      <Link
+        to={`/profile/${interviewInvite.userProfile.id}`}
+        className={`underline`}
+      >
+        {interviewInvite.userProfile.username}
+      </Link>
+      {stuffArray.length > 1 ? stuffArray.join(" · ") : null}
+    </span>
   );
 }
-
-export default buildIVstats;
