@@ -7,7 +7,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import Button from "@/components/Button";
+import LoadButton from "@/components/LoadButton";
 
 export default function Delete({
   open,
@@ -30,9 +30,9 @@ export default function Delete({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button type="submit" onClick={handleSubmit} loading={loading}>
+          <LoadButton type="submit" onClick={handleSubmit} loading={loading}>
             Confirm
-          </Button>
+          </LoadButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

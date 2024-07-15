@@ -1,4 +1,3 @@
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import { Stethoscope } from "lucide-react";
 import { Link } from "react-router-dom";
 import { signOut } from "aws-amplify/auth";

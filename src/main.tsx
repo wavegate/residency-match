@@ -11,12 +11,10 @@ import Auth from "./routes/Auth";
 import "@aws-amplify/ui-react/styles.css";
 import Institutions from "./routes/Institutions";
 import Programs from "./routes/Programs";
-import InterviewInvites from "./routes/InterviewInvites";
 import Applicants from "./routes/Applicants";
 import Profile from "./routes/Profile";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import AddInterviewInvite2 from "./routes/AddInterviewInvite2";
 import EditInstitution from "./routes/EditInstitution";
 import Dashboard from "./routes/Dashboard";
 import { TooltipProvider } from "./components/ui/tooltip";
@@ -41,7 +39,8 @@ import CreateRankList from "./routes/CreateRankList";
 import CreateComparison from "./routes/CreateComparison";
 import Comparison from "./routes/Comparison";
 import CreateCityUserInput from "./routes/CreateCityUserInput";
-import InterviewInvite from "./routes/InterviewInvite";
+import InterviewInvite from "./routes/interview-invites/InterviewInvite";
+import InterviewInvites from "./routes/interview-invites/InterviewInvites";
 
 Amplify.configure(outputs);
 
@@ -63,124 +62,124 @@ const router = createBrowserRouter([
       },
       {
         path: "interview-invites/:id",
-        element: <AddInterviewInvite2 action="view" />,
+        element: <InterviewInvite action="view" />,
       },
       {
         path: "interview-invites/:id/edit",
-        element: <AddInterviewInvite2 action="edit" />,
+        element: <InterviewInvite action="edit" />,
       },
       {
         path: "interview-invites/add",
-        element: <AddInterviewInvite2 action="add" />,
+        element: <InterviewInvite action="add" />,
       },
+      // {
+      //   path: "create-interview-logistics",
+      //   element: <CreateInterviewLogistics />,
+      // },
+      // {
+      //   path: "create-rank-list",
+      //   element: <CreateRankList />,
+      // },
+      // {
+      //   path: "create-comparison",
+      //   element: <CreateComparison />,
+      // },
+      // {
+      //   path: "create-city-user-input",
+      //   element: <CreateCityUserInput />,
+      // },
+      // {
+      //   path: "institutions/edit/:id",
+      //   element: <EditInstitution />,
+      // },
+      // {
+      //   path: "specialties",
+      //   element: <Specialties />,
+      // },
+      // {
+      //   path: "institutions",
+      //   element: <Institutions />,
+      // },
+      // {
+      //   path: "programs",
+      //   element: <Programs />,
+      // },
+      // {
+      //   path: "program/:id",
+      //   element: <Program />,
+      // },
+      // {
+      //   path: "applicants",
+      //   element: <Applicants />,
+      // },
       {
-        path: "create-interview-logistics",
-        element: <CreateInterviewLogistics />,
-      },
-      {
-        path: "create-rank-list",
-        element: <CreateRankList />,
-      },
-      {
-        path: "create-comparison",
-        element: <CreateComparison />,
-      },
-      {
-        path: "create-city-user-input",
-        element: <CreateCityUserInput />,
-      },
-      {
-        path: "institutions/edit/:id",
-        element: <EditInstitution />,
-      },
-      {
-        path: "specialties",
-        element: <Specialties />,
-      },
-      {
-        path: "institutions",
-        element: <Institutions />,
-      },
-      {
-        path: "programs",
-        element: <Programs />,
-      },
-      {
-        path: "program/:id",
-        element: <Program />,
-      },
-      {
-        path: "applicants",
-        element: <Applicants />,
-      },
-      {
-        path: "profile/:id",
+        path: "profiles/:id",
         element: <Profile />,
       },
-      {
-        path: "profile/edit/:id",
-        element: <EditProfileForm />,
-      },
-      {
-        path: "auth",
-        element: <Auth />,
-      },
-      {
-        path: "interview-logistics",
-        element: <InterviewLogistics />,
-      },
-      {
-        path: "interview-impressions",
-        element: <InterviewImpressions />,
-      },
-      {
-        path: "rank-lists",
-        element: <RankLists />,
-      },
-      {
-        path: "x-vs-y",
-        element: <XvsY />,
-      },
-      {
-        path: "x-vs-y/:id",
-        element: <Comparison />,
-      },
-      {
-        path: "interview-rejections",
-        element: <InterviewRejections />,
-      },
-      {
-        path: "interview-withdrawals",
-        element: <InterviewWithdrawals />,
-      },
-      {
-        path: "chat",
-        element: <Chat />,
-      },
-      {
-        path: "loi-discussion",
-        element: <LOIDiscussion />,
-      },
-      {
-        path: "m4-intern-impressions",
-        element: <M4InternImpressions />,
-      },
-      {
-        path: "cities",
-        element: <Cities />,
-      },
-      {
-        path: "tier-list",
-        element: <TierList />,
-      },
-      {
-        path: "fellowship-match",
-        element: <FellowshipMatch />,
-      },
-      {
-        path: "pstp",
-        element: <PSTP />,
-      },
+      // {
+      //   path: "profile/edit/:id",
+      //   element: <EditProfileForm />,
+      // },
+      // {
+      //   path: "auth",
+      //   element: <Auth />,
+      // },
+      // {
+      //   path: "interview-logistics",
+      //   element: <InterviewLogistics />,
+      // },
+      // {
+      //   path: "interview-impressions",
+      //   element: <InterviewImpressions />,
+      // },
+      // {
+      //   path: "rank-lists",
+      //   element: <RankLists />,
+      // },
+      // {
+      //   path: "x-vs-y",
+      //   element: <XvsY />,
+      // },
+      // {
+      //   path: "x-vs-y/:id",
+      //   element: <Comparison />,
+      // },
+      // {
+      //   path: "interview-rejections",
+      //   element: <InterviewRejections />,
+      // },
+      // {
+      //   path: "interview-withdrawals",
+      //   element: <InterviewWithdrawals />,
+      // },
+      // {
+      //   path: "chat",
+      //   element: <Chat />,
+      // },
+      // {
+      //   path: "loi-discussion",
+      //   element: <LOIDiscussion />,
+      // },
+      // {
+      //   path: "m4-intern-impressions",
+      //   element: <M4InternImpressions />,
+      // },
+      // {
+      //   path: "cities",
+      //   element: <Cities />,
+      // },
+      // {
+      //   path: "tier-list",
+      //   element: <TierList />,
+      // },
+      // {
+      //   path: "fellowship-match",
+      //   element: <FellowshipMatch />,
+      // },
+      // {
+      //   path: "pstp",
+      //   element: <PSTP />,
+      // },
     ],
   },
 ]);

@@ -24,6 +24,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src", "src/routes/interview-invites/**/*"],
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "exclude": ["src/routes/**"]
 }

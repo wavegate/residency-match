@@ -69,8 +69,9 @@ import { useState } from "react";
 import usePermissions from "../hooks/usePermissions";
 import gravatar from "gravatar";
 import { signOut } from "aws-amplify/auth";
-import { Toaster } from "../components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import Footer from "./Footer";
+import { APP_NAME } from "@/constants";
 
 const routes = [
   {
@@ -167,7 +168,7 @@ export default function Base() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <Toaster />
+      <Toaster richColors closeButton />
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
         <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
           <NavLink
@@ -282,7 +283,7 @@ export default function Base() {
               className={`flex text-[16px] font-semibold gap-[6px]`}
             >
               <Stethoscope />
-              <div>AppName</div>
+              <div>{APP_NAME}</div>
             </Link>
           </div>
           {user === undefined ? (
